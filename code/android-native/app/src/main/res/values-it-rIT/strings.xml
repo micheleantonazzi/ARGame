@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ARGame</string>
+    <string name="main_menu_item_account">Impostazioni account</string>
 </resources>
