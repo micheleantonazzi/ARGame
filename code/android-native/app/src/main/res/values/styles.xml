@@ -7,4 +7,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppThemeDark" parent="Theme.MaterialComponents.DayNight">
+    </style>
+
 </resources>
