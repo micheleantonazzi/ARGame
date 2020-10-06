@@ -12,7 +12,8 @@
     <string name="title_activity_application_settings">Application settings</string>
     <string name="group_aspect">Aspect</string>
     <string name="list_preference_theme">Choose theme</string>
-    <string name="coloured_theme">Coloured theme</string>
-    <string name="dark_theme">Dark theme</string>
+    <string name="system_theme">System</string>
+    <string name="coloured_theme">Coloured</string>
+    <string name="dark_theme">Dark</string>
 
 </resources>
