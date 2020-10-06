@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Main Activity -->
     <string name="app_name">ARGame</string>
     <string name="main_menu_item_account">Impostazioni account</string>
     <string name="main_menu_item_application">Impostazioni applicazione</string>
-    <string name="title_activity_account_settings">Impostazioni account</string>
+
+    <!-- Account Settings Activity -->
+    <string name="title_activity_account_settings">Impostazione account</string>
+
+    <!-- Application Settings Activity -->
     <string name="title_activity_application_settings">Impostazioni applicazione</string>
+    <string name="group_aspect">Aspetto</string>
 
 </resources>

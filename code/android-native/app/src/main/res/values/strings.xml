@@ -1,9 +1,17 @@
 <resources>
-    <string name="app_name">ARGame</string>
+    <!-- General strings -->
     <string name="facebook_application_id" translatable="false">ARGame</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb_ARGame</string>
+
+    <!-- Main Activity -->
+    <string name="app_name">ARGame</string>
     <string name="main_menu_item_account">Account settings</string>
-    <string name="title_activity_account_settings">Account settings</string>
     <string name="main_menu_item_application">App settings</string>
+
+    <!-- Account Settings Activity -->
+    <string name="title_activity_account_settings">Account settings</string>
+
+    <!-- Application Settings Activity -->
     <string name="title_activity_application_settings">Application settings</string>
+    <string name="group_aspect">Aspect</string>
 </resources>
