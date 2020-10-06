@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:visibility="visible">
 
+    <PreferenceCategory android:title="@string/group_aspect">
+
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/array_themes_strings"
+            android:entryValues="@array/array_themes_values"
+            android:key="list_preference_theme"
+            android:title="@string/list_preference_theme"
+            />
+    </PreferenceCategory>
 </PreferenceScreen>

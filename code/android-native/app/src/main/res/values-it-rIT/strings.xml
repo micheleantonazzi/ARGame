@@ -11,5 +11,8 @@
     <!-- Application Settings Activity -->
     <string name="title_activity_application_settings">Impostazioni applicazione</string>
     <string name="group_aspect">Aspetto</string>
+    <string name="list_preference_theme">Scegli tema</string>
+    <string name="coloured_theme">Tema colorato</string>
+    <string name="dark_theme">Tema scuro</string>
 
 </resources>
