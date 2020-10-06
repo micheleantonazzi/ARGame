@@ -2,15 +2,19 @@ package com.argame;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.argame.settings.AccountSettingsActivity;
 import com.argame.settings.ApplicationSettingsActivity;
+import com.argame.utilities.ThemeSelector;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +32,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.authService = FirebaseAuth.getInstance();
+
+        // Set theme according to the user preference
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        new ThemeSelector().selectTheme(preferences.getString("list_preference_theme", "0"));
     }
 
     // Check if the user is logged, otherwise load the login intent
