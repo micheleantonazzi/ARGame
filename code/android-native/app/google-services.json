@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "446439466105",
+    "firebase_url": "https://arvideocall-38d60.firebaseio.com",
+    "project_id": "arvideocall-38d60",
+    "storage_bucket": "arvideocall-38d60.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:446439466105:android:c09be05ba035b4454aa0a8",
+        "android_client_info": {
+          "package_name": "com.argame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "446439466105-v59gukvhth0c177h25v5gm5m2hui37tc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCA1jil7OdylPpi47sizyqTWGHWMEyGh-s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "446439466105-v59gukvhth0c177h25v5gm5m2hui37tc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
