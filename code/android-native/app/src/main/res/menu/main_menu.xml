@@ -9,4 +9,9 @@
         android:title="@string/main_menu_item_account"
         android:visible="true"
          />
+    <item
+        android:id="@+id/menu_item_application_settings"
+        android:enabled="true"
+        android:title="@string/main_menu_item_application"
+        android:visible="true" />
 </menu>

@@ -2,4 +2,8 @@
 <resources>
     <string name="app_name">ARGame</string>
     <string name="main_menu_item_account">Account settings</string>
+    <string name="main_menu_item_application">App settings</string>
+    <string name="title_activity_account_settings">Account settings</string>
+    <string name="title_activity_application_settings">Application settings</string>
+
 </resources>

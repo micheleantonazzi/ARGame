@@ -7,15 +7,15 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+import com.argame.settings.AccountSettingsActivity;
+import com.argame.settings.ApplicationSettingsActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -89,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_item_account_settings:
                 startActivity(new Intent(MainActivity.this, AccountSettingsActivity.class));
+                return true;
+            case R.id.menu_item_application_settings:
+                startActivity(new Intent(MainActivity.this, ApplicationSettingsActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
