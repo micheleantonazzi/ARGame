@@ -12,13 +12,11 @@ import androidx.preference.PreferenceManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.argame.R;
-import com.argame.activities.fragments.FragmentFriends;
 import com.argame.activities.fragments.FragmentFriendsDirections;
 import com.argame.activities.fragments.FragmentGamesDirections;
 import com.argame.activities.settings.AccountSettingsActivity;
@@ -55,20 +53,24 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, this.navControllerBottomNavigation, appBarConfiguration);
 
         // Setup the bottom navigation view
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        final BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if(bottomNavigationView.getSelectedItemId() == item.getItemId())
+                    return false;
+
                 switch (item.getItemId()){
                     case R.id.item_bottom_menu_games:
 
                         navControllerBottomNavigation.navigate(
-                                R.id.navigation_fragment_games
+                                FragmentFriendsDirections.actionNavigationFragmentFriendsToNavigationFragmentGames()
+
                         );
                         return true;
                     case R.id.item_bottom_menu_friends:
                         navControllerBottomNavigation.navigate(
-                                R.id.navigation_fragment_friends
+                                FragmentGamesDirections.actionNavigationFragmentGamesToNavigationFragmentFriends()
                         );
                         return true;
                 }
