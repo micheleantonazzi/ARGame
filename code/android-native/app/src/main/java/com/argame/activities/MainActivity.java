@@ -34,6 +34,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth authService;
+    private BottomNavigationView bottomNavigationView;
     private NavController navControllerBottomNavigation;
     private static final int SIGN_IN_CODE = 123;
 
@@ -47,13 +48,14 @@ public class MainActivity extends AppCompatActivity {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.bottom_navigation_host_fragment);
         this.navControllerBottomNavigation = navHostFragment.getNavController();
 
+        // Connect the app bar with the bottom navigation
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_fragment_games, R.id.navigation_fragment_friends)
                 .build();
         NavigationUI.setupActionBarWithNavController(this, this.navControllerBottomNavigation, appBarConfiguration);
 
         // Setup the bottom navigation view
-        final BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        this.bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -93,6 +95,14 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = this.authService.getCurrentUser();
         if (currentUser == null)
             createSignInIntent();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(this.bottomNavigationView.getSelectedItemId() == R.id.item_bottom_menu_games)
+            finish();
+
+        this.bottomNavigationView.setSelectedItemId(R.id.item_bottom_menu_games);
     }
 
     // Create the login intend provided by Firebase
