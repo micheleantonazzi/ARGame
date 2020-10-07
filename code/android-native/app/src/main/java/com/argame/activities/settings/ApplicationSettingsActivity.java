@@ -1,4 +1,4 @@
-package com.argame.settings;
+package com.argame.activities.settings;
 
 import android.os.Bundle;
 

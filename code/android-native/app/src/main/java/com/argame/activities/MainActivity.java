@@ -1,7 +1,12 @@
-package com.argame;
+package com.argame.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
@@ -12,11 +17,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.argame.settings.AccountSettingsActivity;
-import com.argame.settings.ApplicationSettingsActivity;
+import com.argame.R;
+import com.argame.activities.fragments.FragmentFriends;
+import com.argame.activities.fragments.FragmentFriendsDirections;
+import com.argame.activities.fragments.FragmentGamesDirections;
+import com.argame.activities.settings.AccountSettingsActivity;
+import com.argame.activities.settings.ApplicationSettingsActivity;
 import com.argame.utilities.ThemeSelector;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -26,12 +36,47 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth authService;
+    private NavController navControllerBottomNavigation;
     private static final int SIGN_IN_CODE = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         this.authService = FirebaseAuth.getInstance();
+
+        // Get the nav controller for the fragment that manage the bottom navigation
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.bottom_navigation_host_fragment);
+        this.navControllerBottomNavigation = navHostFragment.getNavController();
+
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_fragment_games, R.id.navigation_fragment_friends)
+                .build();
+        NavigationUI.setupActionBarWithNavController(this, this.navControllerBottomNavigation, appBarConfiguration);
+
+        // Setup the bottom navigation view
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.item_bottom_menu_games:
+
+                        navControllerBottomNavigation.navigate(
+                                R.id.navigation_fragment_games
+                        );
+                        return true;
+                    case R.id.item_bottom_menu_friends:
+                        navControllerBottomNavigation.navigate(
+                                R.id.navigation_fragment_friends
+                        );
+                        return true;
+                }
+                return false;
+            }
+        });
+
+
 
         // Set theme according to the user preference
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -87,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
+        inflater.inflate(R.menu.menu_main_activity, menu);
         return true;
     }
 

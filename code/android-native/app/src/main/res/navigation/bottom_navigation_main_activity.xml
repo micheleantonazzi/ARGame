@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_navigation_main_activity"
+    app:startDestination="@id/navigation_fragment_games">
+
+    <fragment
+        android:id="@+id/navigation_fragment_games"
+        android:name="com.argame.activities.fragments.FragmentGames"
+        android:label="@string/title_fragment_games"
+        tools:layout="@layout/fragment_games">
+        <action
+            android:id="@+id/action_navigation_fragment_games_to_navigation_fragment_friends"
+            app:destination="@id/navigation_fragment_friends" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_fragment_friends"
+        android:name="com.argame.activities.fragments.FragmentFriends"
+        android:label="@string/title_fragment_friends"
+        tools:layout="@layout/fragment_friends">
+        <action
+            android:id="@+id/action_navigation_fragment_friends_to_navigation_fragment_games"
+            app:destination="@id/navigation_fragment_games" />
+    </fragment>
+</navigation>

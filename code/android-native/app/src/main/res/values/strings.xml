@@ -5,8 +5,15 @@
 
     <!-- Main Activity -->
     <string name="app_name">ARGame</string>
-    <string name="main_menu_item_account">Account settings</string>
-    <string name="main_menu_item_application">App settings</string>
+    <string name="title_fragment_games">Games</string>
+    <string name="title_fragment_friends">Friends</string>
+        <!-- Bottom menu -->
+        <string name="item_bottom_menu_games">Games</string>
+        <string name="item_bottom_menu_friends">Friends</string>
+        <!-- Main menu -->
+        <string name="item_menu_main_activity_account">Account settings</string>
+        <string name="item_menu_main_activity_application">App settings</string>
+
 
     <!-- Account Settings Activity -->
     <string name="title_activity_account_settings">Account settings</string>

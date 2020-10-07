@@ -10,12 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".settings.ApplicationSettingsActivity"
+            android:name=".activities.settings.ApplicationSettingsActivity"
             android:label="@string/title_activity_application_settings"></activity>
         <activity
-            android:name=".settings.AccountSettingsActivity"
+            android:name=".activities.settings.AccountSettingsActivity"
             android:label="@string/title_activity_account_settings" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -2,8 +2,14 @@
 <resources>
     <!-- Main Activity -->
     <string name="app_name">ARGame</string>
-    <string name="main_menu_item_account">Impostazioni account</string>
-    <string name="main_menu_item_application">Impostazioni applicazione</string>
+    <string name="title_fragment_games">Giochi</string>
+    <string name="title_fragment_friends">Amici</string>
+        <!-- Bottom menu -->
+        <string name="item_bottom_menu_games">Giochi</string>
+        <string name="item_bottom_menu_friends">Amici</string>
+        <!-- Main menu -->
+        <string name="item_menu_main_activity_account">Impostazioni account</string>
+        <string name="item_menu_main_activity_application">Impostazioni applicazione</string>
 
     <!-- Account Settings Activity -->
     <string name="title_activity_account_settings">Impostazione account</string>

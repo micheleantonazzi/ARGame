@@ -6,12 +6,12 @@
         android:id="@+id/menu_item_account_settings"
         android:checkable="false"
         android:enabled="true"
-        android:title="@string/main_menu_item_account"
+        android:title="@string/item_menu_main_activity_account"
         android:visible="true"
          />
     <item
         android:id="@+id/menu_item_application_settings"
         android:enabled="true"
-        android:title="@string/main_menu_item_application"
+        android:title="@string/item_menu_main_activity_application"
         android:visible="true" />
 </menu>
