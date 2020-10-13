@@ -13,6 +13,7 @@
 
     <!-- Account Settings Activity -->
     <string name="title_activity_account_settings">Impostazioni account</string>
+    <string name="image_view_profile_photo_description">Foto di profilo</string>
 
     <!-- Application Settings Activity -->
     <string name="title_activity_application_settings">Impostazioni applicazione</string>

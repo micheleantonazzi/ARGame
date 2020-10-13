@@ -17,6 +17,7 @@
 
     <!-- Account Settings Activity -->
     <string name="title_activity_account_settings">Account settings</string>
+    <string name="image_view_profile_photo_description">Profile image</string>
 
     <!-- Application Settings Activity -->
     <string name="title_activity_application_settings">Application settings</string>

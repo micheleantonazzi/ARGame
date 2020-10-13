@@ -1,5 +1,6 @@
 package com.argame.activities.settings;
 
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.appbar.AppBarLayout;
@@ -9,11 +10,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.argame.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class AccountSettingsActivity extends AppCompatActivity {
 
@@ -22,11 +25,18 @@ public class AccountSettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_settings);
 
-        // Add back button
-
+        // Acquire graphic components
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         CollapsingToolbarLayout toolBarLayout = findViewById(R.id.collapsing_layout_app_bar_account_activity);
+        LinearLayout linearLayoutStatusBar = findViewById(R.id.linear_layout_status_bar_account_activity);
+        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout_account_activity);
+        ImageView imageViewProfilePhoto = findViewById(R.id.image_view_profile_photo);
+        TextView textViewUserName = findViewById(R.id.textViewUserName);
+        TextView textViewUserEmail = findViewById(R.id.textViewUserEmail);
+
+
+        // Add back button
+        setSupportActionBar(toolbar);
         toolBarLayout.setTitle(getTitle());
 
         // Setup back button
@@ -37,14 +47,28 @@ public class AccountSettingsActivity extends AppCompatActivity {
         }
 
         // Modify alpha while scrolling
-        LinearLayout linearLayoutStatusBar = findViewById(R.id.linear_layout_status_bar_account_activity);
-        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout_account_activity);
-        ImageView imageViewProfilePhoto = findViewById(R.id.image_view_profile_photo);
         appBarLayout.addOnOffsetChangedListener((layout, verticalOffset) -> {
-            float offsetAlpha = (layout.getY() / layout.getTotalScrollRange());
-            linearLayoutStatusBar.setAlpha(1);
-            imageViewProfilePhoto.setAlpha(1.0f + offsetAlpha * 1.5f);
+            float offsetAlpha = 1.0f + (layout.getY() / layout.getTotalScrollRange()) * 1.5f;
+            imageViewProfilePhoto.setAlpha(offsetAlpha);
+            textViewUserName.setAlpha(offsetAlpha);
+            textViewUserEmail.setAlpha(offsetAlpha);
         });
+
+        // Retrieve the profile data: name, surname, and the profile image
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+
+            // User's name and email
+            String userName = currentUser.getDisplayName();
+            String userEmail = currentUser.getEmail();
+            textViewUserName.setText(userName);
+            textViewUserEmail.setText(userEmail);
+            // User is signed in
+            Uri profilePhotoUrl = currentUser.getPhotoUrl();
+            if (profilePhotoUrl != null) {
+                Log.d("debugg", profilePhotoUrl.toString());
+            }
+        }
 
     }
 }
