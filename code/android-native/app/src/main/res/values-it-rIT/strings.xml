@@ -12,7 +12,7 @@
         <string name="item_menu_main_activity_application">Impostazioni applicazione</string>
 
     <!-- Account Settings Activity -->
-    <string name="title_activity_account_settings">Impostazione account</string>
+    <string name="title_activity_account_settings">Impostazioni account</string>
 
     <!-- Application Settings Activity -->
     <string name="title_activity_application_settings">Impostazioni applicazione</string>
