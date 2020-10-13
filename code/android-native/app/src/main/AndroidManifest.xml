@@ -13,7 +13,7 @@
             android:name=".activities.settings.AccountSettingsActivity"
             android:label="@string/title_activity_account_settings"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".activities.MainActivity"></activity>
+            android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.settings.ApplicationSettingsActivity"
             android:label="@string/title_activity_application_settings"
