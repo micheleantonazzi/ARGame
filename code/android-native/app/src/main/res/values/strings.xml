@@ -17,7 +17,11 @@
 
     <!-- Account Settings Activity -->
     <string name="title_activity_account_settings">Account settings</string>
+    <string name="menu_item_confirm_title">Confirm</string>
+    <string name="profile_data_changed">Profile data changed</string>
     <string name="image_view_profile_photo_description">Profile image</string>
+    <string name="text_view_complete_name">Complete name</string>
+    <string name="text_view_nick_name">Nickname</string>
 
     <!-- Application Settings Activity -->
     <string name="title_activity_application_settings">Application settings</string>

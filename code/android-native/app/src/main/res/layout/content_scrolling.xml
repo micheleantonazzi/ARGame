@@ -8,4 +8,39 @@
     tools:context=".activities.settings.AccountSettingsActivity"
     tools:showIn="@layout/activity_account_settings">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_view_complete_name" />
+
+        <EditText
+            android:id="@+id/edit_text_complete_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/text_view_complete_name"
+            android:ems="10"
+            android:hint="@string/text_view_nick_name"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/text_view_nick_name" />
+
+        <EditText
+            android:id="@+id/edit_text_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/text_view_nick_name"
+            android:ems="10"
+            android:hint="@string/text_view_nick_name"
+            android:inputType="textPersonName" />
+    </LinearLayout>
 </androidx.core.widget.NestedScrollView>

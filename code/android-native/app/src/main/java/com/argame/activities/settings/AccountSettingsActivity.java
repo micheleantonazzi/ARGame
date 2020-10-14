@@ -1,8 +1,10 @@
 package com.argame.activities.settings;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.argame.activities.MainActivity;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import androidx.appcompat.app.ActionBar;
@@ -10,15 +12,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.argame.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class AccountSettingsActivity extends AppCompatActivity {
+
+    private String userNameOldValue;
+    private String userNicknameOldValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +37,12 @@ public class AccountSettingsActivity extends AppCompatActivity {
         // Acquire graphic components
         Toolbar toolbar = findViewById(R.id.toolbar);
         CollapsingToolbarLayout toolBarLayout = findViewById(R.id.collapsing_layout_app_bar_account_activity);
-        LinearLayout linearLayoutStatusBar = findViewById(R.id.linear_layout_status_bar_account_activity);
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout_account_activity);
         ImageView imageViewProfilePhoto = findViewById(R.id.image_view_profile_photo);
         TextView textViewUserName = findViewById(R.id.textViewUserName);
         TextView textViewUserEmail = findViewById(R.id.textViewUserEmail);
-
+        EditText editTextName = findViewById(R.id.edit_text_complete_name);
+        EditText editTextNickName = findViewById(R.id.edit_text_nickname);
 
         // Add back button
         setSupportActionBar(toolbar);
@@ -69,6 +78,31 @@ public class AccountSettingsActivity extends AppCompatActivity {
                 Log.d("debugg", profilePhotoUrl.toString());
             }
         }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_account_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu (Menu menu) {
+        menu.findItem(R.id.menu_item_confirm).setVisible(false);
+        return true;
+    }
+
+    // Call actions when menu item is pressed
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.menu_item_confirm:
+                Toast.makeText(getApplicationContext(), R.string.profile_data_changed, Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

@@ -13,7 +13,11 @@
 
     <!-- Account Settings Activity -->
     <string name="title_activity_account_settings">Impostazioni account</string>
+    <string name="menu_item_confirm_title">Confirm</string>
+    <string name="profile_data_changed">Dati di profilo modificati</string>
     <string name="image_view_profile_photo_description">Foto di profilo</string>
+    <string name="text_view_complete_name">Nome completo</string>
+    <string name="text_view_nick_name">Nome giocatore</string>
 
     <!-- Application Settings Activity -->
     <string name="title_activity_application_settings">Impostazioni applicazione</string>
