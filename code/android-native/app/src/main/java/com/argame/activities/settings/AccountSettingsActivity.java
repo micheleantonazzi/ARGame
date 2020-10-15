@@ -8,6 +8,8 @@ import com.argame.activities.MainActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -26,6 +28,11 @@ import android.widget.Toast;
 import com.argame.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 public class AccountSettingsActivity extends AppCompatActivity {
 
@@ -44,7 +51,8 @@ public class AccountSettingsActivity extends AppCompatActivity {
         ImageView imageViewProfilePhoto = findViewById(R.id.image_view_profile_photo);
         TextView textViewUserName = findViewById(R.id.textViewUserName);
         TextView textViewUserEmail = findViewById(R.id.textViewUserEmail);
-        EditText editTextName = findViewById(R.id.edit_text_complete_name);
+        EditText editTextName = findViewById(R.id.edit_text_name);
+        EditText editTextSurname = findViewById(R.id.edit_text_surname);
         EditText editTextNickName = findViewById(R.id.edit_text_nickname);
         Button buttonLogout = findViewById(R.id.button_logout);
 

@@ -16,7 +16,8 @@
     <string name="menu_item_confirm_title">Confirm</string>
     <string name="profile_data_changed">Dati di profilo modificati</string>
     <string name="image_view_profile_photo_description">Foto di profilo</string>
-    <string name="text_view_complete_name">Nome completo</string>
+    <string name="text_view_name">Nome</string>
+    <string name="text_view_surname">Cognome</string>
     <string name="text_view_nick_name">Nome giocatore</string>
     <string name="button_logout_text">Esci</string>
 
