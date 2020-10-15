@@ -2,7 +2,7 @@ rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
     match /users/{user_id} {
-      allow read, write: if request.auth.uid == user_id;
+      allow read, write: if request.auth != null && request.auth.uid == user_id;
       match /images/{profile_photo} {
       	allow read: if request.auth != null && profile_photo == "profile_photo.png";
       }
