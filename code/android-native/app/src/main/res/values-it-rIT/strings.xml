@@ -18,6 +18,7 @@
     <string name="image_view_profile_photo_description">Foto di profilo</string>
     <string name="text_view_complete_name">Nome completo</string>
     <string name="text_view_nick_name">Nome giocatore</string>
+    <string name="button_logout_text">Esci</string>
 
     <!-- Application Settings Activity -->
     <string name="title_activity_application_settings">Impostazioni applicazione</string>

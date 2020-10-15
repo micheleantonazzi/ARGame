@@ -22,6 +22,7 @@
     <string name="image_view_profile_photo_description">Profile image</string>
     <string name="text_view_complete_name">Complete name</string>
     <string name="text_view_nick_name">Nickname</string>
+    <string name="button_logout_text">Logout</string>
 
     <!-- Application Settings Activity -->
     <string name="title_activity_application_settings">Application settings</string>

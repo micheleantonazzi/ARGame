@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.argame.activities.MainActivity;
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import androidx.appcompat.app.ActionBar;
@@ -15,6 +16,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -43,6 +46,13 @@ public class AccountSettingsActivity extends AppCompatActivity {
         TextView textViewUserEmail = findViewById(R.id.textViewUserEmail);
         EditText editTextName = findViewById(R.id.edit_text_complete_name);
         EditText editTextNickName = findViewById(R.id.edit_text_nickname);
+        Button buttonLogout = findViewById(R.id.button_logout);
+
+        buttonLogout.setOnClickListener(view -> {
+            AuthUI.getInstance().signOut(getApplicationContext()).addOnCompleteListener(task -> {
+                finish();
+            });
+        });
 
         // Add back button
         setSupportActionBar(toolbar);
@@ -77,6 +87,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
             if (profilePhotoUrl != null) {
                 Log.d("debugg", profilePhotoUrl.toString());
             }
+            Log.d("debugg",currentUser.getUid());
         }
     }
 
