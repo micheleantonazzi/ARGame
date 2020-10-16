@@ -2,19 +2,21 @@ package com.argame.utilities;
 
 import android.util.Log;
 
-import com.argame.utilities.data_structures.User;
-import com.argame.utilities.data_structures.UserInterface;
+import com.argame.utilities.data_structures.user_data.User;
+import com.argame.utilities.data_structures.user_data.UserInterface;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Database {
 
     static private Database INSTANCE;
 
-    // Reference
+    // Firestore locations
     private static String COLLECTION_USER_DATA = "users_data";
 
     // Application data
@@ -37,7 +39,6 @@ public class Database {
         if(firebaseUser == null) {
             return;
         }
-        Log.d("debugg", firebaseUser.getUid());
 
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
@@ -48,16 +49,15 @@ public class Database {
         firestore.setFirestoreSettings(settings);
 
         // Get user profile data
-        final DocumentReference userDataRef = firestore.collection(COLLECTION_USER_DATA).document(firebaseUser.getUid());
-        userDataRef.addSnapshotListener((snapshot, exception) -> {
+        firestore.collection(COLLECTION_USER_DATA).document(firebaseUser.getUid()).addSnapshotListener((snapshot, exception) -> {
             if (exception != null) {
-                Log.d("debugg", "Read data user failed", exception);
+                Log.w("debugg", "Read data user failed", exception);
                 return;
             }
 
             if (snapshot != null && snapshot.exists()) {
                 synchronized (this){
-                    this.userData = snapshot.toObject(User.class);
+                    this.userData.updateData(snapshot.getData());
                 }
             } else {
                 Log.d("debugg", "Current data: null");
@@ -65,7 +65,24 @@ public class Database {
         });
     }
 
+    synchronized public void updateUserData(String name, String surname, String nickname) {
+        Map<String, Object> fields = new HashMap<>(3);
+        fields.put(User.NAME_FIELD, name);
+        fields.put(User.SURNAME_FIELD, surname);
+        fields.put(User.NICKNAME_FIELD, nickname);
+
+        FirebaseFirestore.getInstance().collection(COLLECTION_USER_DATA).document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .update(fields)
+                .addOnCompleteListener(task -> {
+                })
+                .addOnFailureListener(exception -> {
+                    Log.w("debugg", "Update user data filed", exception);
+                });
+    }
+
     synchronized public UserInterface getUserData(){
         return this.userData;
     }
+
+
 }

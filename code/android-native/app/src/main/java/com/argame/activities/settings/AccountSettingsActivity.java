@@ -1,10 +1,11 @@
 package com.argame.activities.settings;
 
-import android.net.Uri;
+import android.app.Activity;
 import android.os.Bundle;
 
 import com.argame.utilities.Database;
-import com.argame.utilities.data_structures.UserInterface;
+import com.argame.utilities.data_structures.user_data.ListenerUserUpdate;
+import com.argame.utilities.data_structures.user_data.UserInterface;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -13,10 +14,15 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,13 +30,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.argame.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class AccountSettingsActivity extends AppCompatActivity {
 
-    private String userNameOldValue;
-    private String userNicknameOldValue;
+    private ListenerUserUpdate listenerUserUpdate;
+    private String nameOldValue;
+    private String surnameOldValue;
+    private String nicknameOldValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +45,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
         // Acquire graphic components
         Toolbar toolbar = findViewById(R.id.toolbar);
+        MenuItem menuItemConfirm = findViewById(R.id.menu_item_confirm_profile_data);
         CollapsingToolbarLayout toolBarLayout = findViewById(R.id.collapsing_layout_app_bar_account_activity);
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout_account_activity);
         ImageView imageViewProfilePhoto = findViewById(R.id.image_view_profile_photo);
@@ -81,6 +88,31 @@ public class AccountSettingsActivity extends AppCompatActivity {
         editTextName.setText(userData.getName());
         editTextSurname.setText(userData.getSurname());
         editTextNickName.setText(userData.getNickname());
+
+        // Add listener when user data update
+        this.listenerUserUpdate = newUserData -> {
+            Toast.makeText(getApplicationContext(), R.string.profile_data_changed, Toast.LENGTH_LONG).show();
+
+            // Set edit texts old value
+            this.nameOldValue = newUserData.getName();
+            this.surnameOldValue = newUserData.getSurname();
+            this.nicknameOldValue = newUserData.getNickname();
+
+            textViewUserName.setText(userData.getName() + " " + userData.getSurname());
+            textViewUserEmail.setText(userData.getEmail());
+            editTextName.setText(userData.getName());
+            editTextSurname.setText(userData.getSurname());
+            editTextNickName.setText(userData.getNickname());
+
+        };
+        userData.addOnUpdateListener(this.listenerUserUpdate);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        Database.getInstance().getUserData().removeUpdateListener(this.listenerUserUpdate);
     }
 
     @Override
@@ -92,7 +124,53 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu (Menu menu) {
-        menu.findItem(R.id.menu_item_confirm).setVisible(false);
+        MenuItem menuItemConfirm = menu.findItem(R.id.menu_item_confirm_profile_data);
+        menuItemConfirm.setVisible(false);
+
+        // Add listener to edit texts in order to control the confirm button
+        EditText editTextName = findViewById(R.id.edit_text_name);
+        EditText editTextSurname = findViewById(R.id.edit_text_surname);
+        EditText editTextNickName = findViewById(R.id.edit_text_nickname);
+
+        TextWatcher textWatcherChange = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!editTextName.getText().toString().equals(nameOldValue) ||
+                        !editTextSurname.getText().toString().equals(surnameOldValue) ||
+                        !editTextNickName.getText().toString().equals(nicknameOldValue))
+                    menuItemConfirm.setVisible(true);
+                else
+                    menuItemConfirm.setVisible(false);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        };
+        editTextName.addTextChangedListener(textWatcherChange);
+        editTextSurname.addTextChangedListener(textWatcherChange);
+        editTextNickName.addTextChangedListener(textWatcherChange);
+
+        // Set edit texts old value
+        UserInterface userData = Database.getInstance().getUserData();
+        this.nameOldValue = userData.getName();
+        this.surnameOldValue = userData.getSurname();
+        this.nicknameOldValue = userData.getNickname();
+
+        menuItemConfirm.setOnMenuItemClickListener(item -> {
+            Database.getInstance().updateUserData(editTextName.getText().toString(), editTextSurname.getText().toString(),
+                    editTextNickName.getText().toString());
+            menuItemConfirm.setVisible(false);
+            return true;
+        });
+
         return true;
     }
 
@@ -101,7 +179,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.menu_item_confirm:
+            case R.id.menu_item_confirm_profile_data:
                 Toast.makeText(getApplicationContext(), R.string.profile_data_changed, Toast.LENGTH_SHORT).show();
                 return true;
             default:

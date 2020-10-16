@@ -30,7 +30,10 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:layout_marginTop="?attr/actionBarSize"
-                android:paddingTop="30dp">
+                android:paddingTop="30dp"
+                android:clickable="true"
+                android:focusableInTouchMode="true"
+                android:focusable="true">
 
                 <ImageView
                     android:id="@+id/image_view_profile_photo"
