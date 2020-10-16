@@ -1,4 +1,4 @@
-package com.argame.activities.fragments;
+package com.argame.activities.main.fragments;
 
 import android.os.Bundle;
 
@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.argame.R;
-import com.argame.activities.fragments.viewmodels.FragmentGamesViewModel;
+import com.argame.activities.main.fragments.viewmodels.FragmentGamesViewModel;
 
 public class FragmentGames extends Fragment {
 

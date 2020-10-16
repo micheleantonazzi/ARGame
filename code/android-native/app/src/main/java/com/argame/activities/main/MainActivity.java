@@ -1,4 +1,4 @@
-package com.argame.activities;
+package com.argame.activities.main;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,10 +16,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.argame.R;
-import com.argame.activities.fragments.FragmentFriendsDirections;
-import com.argame.activities.fragments.FragmentGamesDirections;
+import com.argame.activities.main.fragments.FragmentFriendsDirections;
+import com.argame.activities.main.fragments.FragmentGamesDirections;
 import com.argame.activities.settings.AccountSettingsActivity;
 import com.argame.activities.settings.ApplicationSettingsActivity;
+import com.argame.utilities.Database;
 import com.argame.utilities.ThemeSelector;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
@@ -94,6 +95,10 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = this.authService.getCurrentUser();
         if (currentUser == null)
             createSignInIntent();
+        else{
+            // Load user data
+            Database.getInstance().retrieveUserData();
+        }
     }
 
     @Override

@@ -1,15 +1,14 @@
 package com.argame.activities.settings;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.argame.activities.MainActivity;
+import com.argame.utilities.Database;
+import com.argame.utilities.data_structures.UserInterface;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -18,7 +17,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,11 +26,6 @@ import android.widget.Toast;
 import com.argame.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
 public class AccountSettingsActivity extends AppCompatActivity {
 
@@ -73,7 +66,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        // Modify alpha while scrolling
+        // Modify toolbar's alpha while scrolling
         appBarLayout.addOnOffsetChangedListener((layout, verticalOffset) -> {
             float offsetAlpha = 1.0f + (layout.getY() / layout.getTotalScrollRange()) * 1.5f;
             imageViewProfilePhoto.setAlpha(offsetAlpha);
@@ -81,22 +74,13 @@ public class AccountSettingsActivity extends AppCompatActivity {
             textViewUserEmail.setAlpha(offsetAlpha);
         });
 
-        // Retrieve the profile data: name, surname, and the profile image
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-
-            // User's name and email
-            String userName = currentUser.getDisplayName();
-            String userEmail = currentUser.getEmail();
-            textViewUserName.setText(userName);
-            textViewUserEmail.setText(userEmail);
-            // User is signed in
-            Uri profilePhotoUrl = currentUser.getPhotoUrl();
-            if (profilePhotoUrl != null) {
-                Log.d("debugg", profilePhotoUrl.toString());
-            }
-            Log.d("debugg",currentUser.getUid());
-        }
+        // Retrieve and visualize the profile data: name, surname, and the profile image
+        UserInterface userData = Database.getInstance().getUserData();
+        textViewUserName.setText(userData.getName() + " " + userData.getSurname());
+        textViewUserEmail.setText(userData.getEmail());
+        editTextName.setText(userData.getName());
+        editTextSurname.setText(userData.getSurname());
+        editTextNickName.setText(userData.getNickname());
     }
 
     @Override

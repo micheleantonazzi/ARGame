@@ -1,4 +1,4 @@
-package com.argame.activities.fragments;
+package com.argame.activities.main.fragments;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.argame.R;
-import com.argame.activities.fragments.viewmodels.FragementFriendsViewModel;
+import com.argame.activities.main.fragments.viewmodels.FragementFriendsViewModel;
 
 public class FragmentFriends extends Fragment {
 
