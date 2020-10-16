@@ -30,13 +30,13 @@ exports.onCreateNewUser = functions.auth.user().onCreate(async (user) => {
     }
 
     // Add new user to the database
-    const userRef = admin.firestore().collection('users').doc(user.uid);
+    const userRef = admin.firestore().collection('users_data').doc(user.uid);
     return userRef.set({
         name: user.displayName === null ? "" : user.displayName.split(' ')[0],
         surname: user.displayName === null ? "" : user.displayName.split(' ')[1],
         email: user.email,
         nickname: "",
-        profile_image: user.photoURL === null ? -1 : 0
+        profileImageCount: user.photoURL === null ? -1 : 0
     }).then(() => console.log('New user created'))
         .catch(e => 'Creation failed: ' + e);
 });
