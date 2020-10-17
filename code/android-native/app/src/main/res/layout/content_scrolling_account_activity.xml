@@ -26,7 +26,7 @@
             android:autofillHints="@string/text_view_name"
             android:ems="10"
             android:hint="@string/text_view_name"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName|textCapSentences" />
 
         <TextView
             android:layout_width="match_parent"
@@ -40,7 +40,7 @@
             android:autofillHints="@string/text_view_surname"
             android:ems="10"
             android:hint="@string/text_view_surname"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName|textCapSentences"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -55,7 +55,7 @@
             android:autofillHints="@string/text_view_nick_name"
             android:ems="10"
             android:hint="@string/text_view_nick_name"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName|textCapSentences" />
 
         <Button
             android:id="@+id/button_logout"
