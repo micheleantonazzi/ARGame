@@ -16,6 +16,8 @@ public class Database {
 
     static private Database INSTANCE;
 
+    private boolean hasBeenInitialized = false;
+
     // Firestore locations
     private static String COLLECTION_USER_DATA = "users_data";
 
@@ -32,7 +34,11 @@ public class Database {
         return INSTANCE;
     }
 
-    public void retrieveUserData() {
+    synchronized public void retrieveUserData() {
+
+        // Control if database has been already initialized
+        if(this.hasBeenInitialized)
+            return;
 
         // Retrieve data only if user is logged
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -56,16 +62,17 @@ public class Database {
             }
 
             if (snapshot != null && snapshot.exists()) {
-                synchronized (this){
-                    this.userData.updateData(snapshot.getData());
-                }
+                Log.d("debugg", "chiamo snapshot");
+                this.userData.updateData(snapshot.getData());
             } else {
                 Log.d("debugg", "Current data: null");
             }
         });
+
+        this.hasBeenInitialized = true;
     }
 
-    synchronized public void updateUserData(String name, String surname, String nickname) {
+    public void updateUserData(String name, String surname, String nickname) {
         Map<String, Object> fields = new HashMap<>(3);
         fields.put(User.NAME_FIELD, name);
         fields.put(User.SURNAME_FIELD, surname);
@@ -80,7 +87,7 @@ public class Database {
                 });
     }
 
-    synchronized public UserInterface getUserData(){
+    public UserInterface getUserData(){
         return this.userData;
     }
 

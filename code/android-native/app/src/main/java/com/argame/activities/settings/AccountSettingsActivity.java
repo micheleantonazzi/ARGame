@@ -1,6 +1,5 @@
 package com.argame.activities.settings;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import com.argame.utilities.Database;
@@ -20,9 +19,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -57,9 +53,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         Button buttonLogout = findViewById(R.id.button_logout);
 
         buttonLogout.setOnClickListener(view -> {
-            AuthUI.getInstance().signOut(getApplicationContext()).addOnCompleteListener(task -> {
-                finish();
-            });
+            AuthUI.getInstance().signOut(getApplicationContext()).addOnCompleteListener(task -> finish());
         });
 
         // Add back button
