@@ -35,7 +35,7 @@ exports.onCreateNewUser = functions.auth.user().onCreate(async (user) => {
         name: user.displayName === null ? "" : user.displayName.split(' ')[0],
         surname: user.displayName === null ? "" : user.displayName.split(' ')[1],
         email: user.email,
-        nickname: "",
+        nickname: user.email,
         profileImageCount: user.photoURL === null ? -1 : 0
     }).then(() => console.log('New user created'))
         .catch(e => 'Creation failed: ' + e);
