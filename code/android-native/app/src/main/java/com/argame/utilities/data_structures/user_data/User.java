@@ -11,12 +11,14 @@ import java.util.Map;
 public class User implements UserInterface, SubjectUpdate {
 
     // Fields' name
+    public static String UID_FIELD = "uid";
     public static String NAME_FIELD = "name";
     public static String SURNAME_FIELD = "surname";
     public static String NICKNAME_FIELD = "nickname";
     public static String EMAIL_FIELD = "email";
     public static String PROFILE_IMAGE_COUNT_FIELD = "profileImageCount";
 
+    private String uid = "";
     private String name = "";
     private String surname = "";
     private String email = "";
@@ -46,12 +48,22 @@ public class User implements UserInterface, SubjectUpdate {
 
     // Getters and setters
     synchronized public void updateData(Map<String, Object> data) {
+        this.uid = String.valueOf(data.get(UID_FIELD));
         this.name = String.valueOf(data.get(NAME_FIELD));
         this.surname = String.valueOf(data.get(SURNAME_FIELD));
         this.nickname = String.valueOf(data.get(NICKNAME_FIELD));
         this.email = String.valueOf(data.get(EMAIL_FIELD));
-        this.profileImageCount = Integer.valueOf(String.valueOf(data.get(PROFILE_IMAGE_COUNT_FIELD)));
+        this.profileImageCount = Integer.parseInt(String.valueOf(data.get(PROFILE_IMAGE_COUNT_FIELD)));
         this.notifyListeners();
+    }
+
+    @Override
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     @Override

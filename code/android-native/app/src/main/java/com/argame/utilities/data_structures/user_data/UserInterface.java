@@ -6,6 +6,8 @@ public interface UserInterface {
 
     void removeUpdateListener(ListenerUserUpdate listener);
 
+    String getUid();
+
     String getName();
 
     String getSurname();

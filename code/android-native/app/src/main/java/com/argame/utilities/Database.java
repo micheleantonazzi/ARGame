@@ -2,6 +2,7 @@ package com.argame.utilities;
 
 import android.util.Log;
 
+import com.argame.utilities.data_structures.friends_data.Friends;
 import com.argame.utilities.data_structures.user_data.User;
 import com.argame.utilities.data_structures.user_data.UserInterface;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,9 +21,11 @@ public class Database {
 
     // Firestore locations
     private static String COLLECTION_USER_DATA = "users_data";
+    private static String COLLECTION_USER_FRIENDS = "users_friends";
 
     // Application data
-    User userData = new User();
+    private User userData = new User();
+    private Friends userFriends = new Friends();
 
     private Database(){}
 
@@ -61,9 +64,25 @@ public class Database {
                 return;
             }
 
-            if (snapshot != null && snapshot.exists()) {
-                Log.d("debugg", "chiamo snapshot");
+            if (snapshot != null && snapshot.exists() && snapshot.getData() != null) {
                 this.userData.updateData(snapshot.getData());
+            } else {
+                Log.d("debugg", "Current data: null");
+            }
+        });
+
+        // Get user friends
+        firestore.collection(COLLECTION_USER_FRIENDS).document(firebaseUser.getUid()).addSnapshotListener((snapshot, exception) -> {
+            if (exception != null) {
+                Log.w("debugg", "Read user's friends failed", exception);
+                return;
+            }
+
+            if (snapshot != null && snapshot.exists() && snapshot.getData() != null) {
+                synchronized (this.userFriends) {
+                    //this.userFriends.updateFriends(snapshot.getData());
+                }
+
             } else {
                 Log.d("debugg", "Current data: null");
             }
