@@ -32,6 +32,7 @@ exports.onCreateNewUser = functions.auth.user().onCreate(async (user) => {
     // Add new user to the database
     const userRef = admin.firestore().collection('users_data').doc(user.uid);
     return userRef.set({
+        uid: user.uid,
         name: user.displayName === null ? "" : user.displayName.split(' ')[0],
         surname: user.displayName === null ? "" : user.displayName.split(' ')[1],
         email: user.email,
