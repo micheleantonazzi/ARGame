@@ -5,9 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".activities.main.fragments.FragmentFriends">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_view_friends"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="friends" />
+        android:layout_height="match_parent" />
 
 </FrameLayout>
