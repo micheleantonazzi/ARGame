@@ -84,14 +84,14 @@ public class Database {
         });
 
         // Get user friends
-        firestore.collection(COLLECTION_USER_FRIENDS).document(firebaseUser.getUid()).addSnapshotListener((snapshot, exception) -> {
+        firestore.collection(COLLECTION_USER_FRIENDS).document(firebaseUser.getUid()).addSnapshotListener((snapshotFriends, exception) -> {
             if (exception != null) {
                 Log.w("debugg", "Read user's friends failed", exception);
                 return;
             }
 
-            if (snapshot != null && snapshot.exists() && snapshot.getData() != null) {
-                Set<String> updatedFriendsIDs = new HashSet<>((List<String>) snapshot.getData().get(Friends.FRIENDS_FIELD));
+            if (snapshotFriends != null && snapshotFriends.exists() && snapshotFriends.getData() != null) {
+                Set<String> updatedFriendsIDs = new HashSet<>((List<String>) snapshotFriends.getData().get(Friends.FRIENDS_FIELD));
                 synchronized (this.userFriends) {
 
                     // REMOVE DELETED FRIENDS
@@ -114,7 +114,6 @@ public class Database {
                                     }
 
                                     if (snapshotFriend != null && snapshotFriend.exists() && snapshotFriend.getData() != null) {
-                                        Log.d("debugg", "friend aggiornato");
                                         newFriend.updateData(snapshotFriend.getData()).notifyListeners();
                                     } else {
                                         Log.d("debugg", "Current data: null");
