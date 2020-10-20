@@ -2,9 +2,8 @@ package com.argame.activities.settings;
 
 import android.os.Bundle;
 
+import com.argame.activities.settings.view_models.AccountSettingsActivityViewModel;
 import com.argame.utilities.Database;
-import com.argame.utilities.data_structures.user_data.ListenerUserUpdate;
-import com.argame.utilities.data_structures.user_data.UserInterface;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -12,10 +11,10 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,7 +28,6 @@ import com.argame.R;
 
 public class AccountSettingsActivity extends AppCompatActivity {
 
-    private ListenerUserUpdate listenerUserUpdate;
     private String nameOldValue;
     private String surnameOldValue;
     private String nicknameOldValue;
@@ -41,7 +39,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
         // Acquire graphic components
         Toolbar toolbar = findViewById(R.id.toolbar);
-        MenuItem menuItemConfirm = findViewById(R.id.menu_item_confirm_profile_data);
         CollapsingToolbarLayout toolBarLayout = findViewById(R.id.collapsing_layout_app_bar_account_activity);
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout_account_activity);
         ImageView imageViewProfilePhoto = findViewById(R.id.image_view_profile_photo);
@@ -75,38 +72,31 @@ public class AccountSettingsActivity extends AppCompatActivity {
             textViewUserEmail.setAlpha(offsetAlpha);
         });
 
-        // Retrieve and visualize the profile data: name, surname, and the profile image
-        UserInterface userData = Database.getInstance().getUserData();
-        textViewUserName.setText(userData.getName() + " " + userData.getSurname());
-        textViewUserEmail.setText(userData.getEmail());
-        editTextName.setText(userData.getName());
-        editTextSurname.setText(userData.getSurname());
-        editTextNickName.setText(userData.getNickname());
-
-        // Add listener when user data update
-        this.listenerUserUpdate = newUserData -> {
-            Toast.makeText(getApplicationContext(), R.string.profile_data_changed, Toast.LENGTH_LONG).show();
+        // Setting user listener updated and view model
+        AccountSettingsActivityViewModel viewModel = new ViewModelProvider(this).get(AccountSettingsActivityViewModel.class);
+        viewModel.getUserData().observe(this, user -> {
+            if (!textViewUserEmail.getText().toString().equals("")) {
+                Toast.makeText(getApplicationContext(), R.string.profile_data_changed, Toast.LENGTH_LONG).show();
+            }
 
             // Set edit texts old value
-            this.nameOldValue = newUserData.getName();
-            this.surnameOldValue = newUserData.getSurname();
-            this.nicknameOldValue = newUserData.getNickname();
+            this.nameOldValue = user.getName();
+            this.surnameOldValue = user.getSurname();
+            this.nicknameOldValue = user.getNickname();
 
-            textViewUserName.setText(userData.getName() + " " + userData.getSurname());
-            textViewUserEmail.setText(userData.getEmail());
-            editTextName.setText(userData.getName());
-            editTextSurname.setText(userData.getSurname());
-            editTextNickName.setText(userData.getNickname());
+            textViewUserName.setText(user.getName() + " " + user.getSurname());
+            textViewUserEmail.setText(user.getEmail());
+            editTextName.setText(user.getName());
+            editTextSurname.setText(user.getSurname());
+            editTextNickName.setText(user.getNickname());
+        });
 
-        };
-        userData.addOnUpdateListener(this.listenerUserUpdate);
+        Database.getInstance().getUserData().addOnUpdateListener(user -> viewModel.setUserData(user));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        Database.getInstance().getUserData().removeUpdateListener(this.listenerUserUpdate);
     }
 
     @Override
@@ -151,12 +141,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
         editTextName.addTextChangedListener(textWatcherChange);
         editTextSurname.addTextChangedListener(textWatcherChange);
         editTextNickName.addTextChangedListener(textWatcherChange);
-
-        // Set edit texts old value
-        UserInterface userData = Database.getInstance().getUserData();
-        this.nameOldValue = userData.getName();
-        this.surnameOldValue = userData.getSurname();
-        this.nicknameOldValue = userData.getNickname();
 
         menuItemConfirm.setOnMenuItemClickListener(item -> {
             Database.getInstance().updateUserData(editTextName.getText().toString(), editTextSurname.getText().toString(),
