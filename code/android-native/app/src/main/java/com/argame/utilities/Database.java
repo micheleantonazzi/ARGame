@@ -3,6 +3,7 @@ package com.argame.utilities;
 import android.util.Log;
 
 import com.argame.utilities.data_structures.friends_data.Friends;
+import com.argame.utilities.data_structures.friends_data.FriendsInterface;
 import com.argame.utilities.data_structures.user_data.User;
 import com.argame.utilities.data_structures.user_data.UserInterface;
 import com.google.firebase.auth.FirebaseAuth;
@@ -103,7 +104,8 @@ public class Database {
                     // Add new friends
                     Set<String> newFriendsIDs = this.userFriends.getNewFriends(updatedFriendsIDs);
                     for(String newFriendID: newFriendsIDs) {
-                        User newFriend = new User();
+                        User newFriend = new User().setUid(newFriendID);
+
                         ListenerRegistration listener = firestore.collection(COLLECTION_USER_DATA).document(newFriendID)
                                 .addSnapshotListener((snapshotFriend, exceptionFriend) -> {
                                     if (exceptionFriend != null) {
@@ -112,7 +114,7 @@ public class Database {
                                     }
 
                                     if (snapshotFriend != null && snapshotFriend.exists() && snapshotFriend.getData() != null) {
-                                        newFriend.updateData(snapshotFriend.getData());
+                                        newFriend.updateData(snapshotFriend.getData()).notifyListeners();
                                     } else {
                                         Log.d("debugg", "Current data: null");
                                     }

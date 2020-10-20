@@ -47,14 +47,14 @@ public class User implements UserInterface, SubjectUpdate {
     }
 
     // Getters and setters
-    synchronized public void updateData(Map<String, Object> data) {
+    synchronized public User updateData(Map<String, Object> data) {
         this.uid = String.valueOf(data.get(UID_FIELD));
         this.name = String.valueOf(data.get(NAME_FIELD));
         this.surname = String.valueOf(data.get(SURNAME_FIELD));
         this.nickname = String.valueOf(data.get(NICKNAME_FIELD));
         this.email = String.valueOf(data.get(EMAIL_FIELD));
         this.profileImageCount = Integer.parseInt(String.valueOf(data.get(PROFILE_IMAGE_COUNT_FIELD)));
-        this.notifyListeners();
+        return this;
     }
 
     @Override
@@ -62,8 +62,9 @@ public class User implements UserInterface, SubjectUpdate {
         return uid;
     }
 
-    public void setUid(String uid) {
+    public User setUid(String uid) {
         this.uid = uid;
+        return this;
     }
 
     @Override
@@ -71,8 +72,9 @@ public class User implements UserInterface, SubjectUpdate {
         return name;
     }
 
-    public void setName(String name) {
+    public User setName(String name) {
         this.name = name;
+        return this;
     }
 
     @Override
@@ -80,8 +82,9 @@ public class User implements UserInterface, SubjectUpdate {
         return surname;
     }
 
-    public void setSurname(String surname) {
+    public User setSurname(String surname) {
         this.surname = surname;
+        return this;
     }
 
     @Override
@@ -89,8 +92,9 @@ public class User implements UserInterface, SubjectUpdate {
         return email;
     }
 
-    public void setEmail(String email) {
+    public User setEmail(String email) {
         this.email = email;
+        return this;
     }
 
     @Override
@@ -98,8 +102,9 @@ public class User implements UserInterface, SubjectUpdate {
         return nickname;
     }
 
-    public void setNickname(String nickname) {
+    public User setNickname(String nickname) {
         this.nickname = nickname;
+        return this;
     }
 
     @Override
@@ -107,7 +112,8 @@ public class User implements UserInterface, SubjectUpdate {
         return profileImageCount;
     }
 
-    public void setProfileImageCount(int profileImageCount) {
+    public User setProfileImageCount(int profileImageCount) {
         this.profileImageCount = profileImageCount;
+        return this;
     }
 }
