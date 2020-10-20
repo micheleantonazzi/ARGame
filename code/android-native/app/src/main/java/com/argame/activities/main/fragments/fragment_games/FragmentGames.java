@@ -1,4 +1,4 @@
-package com.argame.activities.main.fragments;
+package com.argame.activities.main.fragments.fragment_games;
 
 import android.os.Bundle;
 

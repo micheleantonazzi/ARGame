@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_fragment_games"
-        android:name="com.argame.activities.main.fragments.FragmentGames"
+        android:name="com.argame.activities.main.fragments.fragment_games.FragmentGames"
         android:label="@string/title_fragment_games"
         tools:layout="@layout/fragment_games">
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_fragment_friends"
-        android:name="com.argame.activities.main.fragments.FragmentFriends"
+        android:name="com.argame.activities.main.fragments.fragment_friends.FragmentFriends"
         android:label="@string/title_fragment_friends"
         tools:layout="@layout/fragment_friends">
         <action

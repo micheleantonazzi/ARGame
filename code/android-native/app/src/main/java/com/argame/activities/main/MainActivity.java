@@ -16,8 +16,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.argame.R;
-import com.argame.activities.main.fragments.FragmentFriendsDirections;
-import com.argame.activities.main.fragments.FragmentGamesDirections;
+import com.argame.activities.main.fragments.fragment_friends.FragmentFriendsDirections;
+import com.argame.activities.main.fragments.fragment_games.FragmentGamesDirections;
 import com.argame.activities.settings.AccountSettingsActivity;
 import com.argame.activities.settings.ApplicationSettingsActivity;
 import com.argame.utilities.Database;

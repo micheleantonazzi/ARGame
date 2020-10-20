@@ -1,4 +1,4 @@
-package com.argame.activities.main.fragments;
+package com.argame.activities.main.fragments.fragment_friends;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import com.argame.R;
 import com.argame.activities.main.fragments.viewmodels.FragmentFriendsViewModel;
+import com.argame.utilities.FriendsListAdapter;
 
 public class FragmentFriends extends Fragment {
 
@@ -33,6 +34,9 @@ public class FragmentFriends extends Fragment {
         RecyclerView recyclerViewFriends = view.findViewById(R.id.recycle_view_friends);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerViewFriends.setLayoutManager(layoutManager);
+
+        FriendsListAdapter friendsListAdapter = new FriendsListAdapter(new String[]{"ci","dsfsf", "dsfsdf"});
+        recyclerViewFriends.setAdapter(friendsListAdapter);
 
         return view;
     }

@@ -6,8 +6,12 @@
     <string name="title_fragment_friends">Amici</string>
         <!-- Bottom menu -->
         <string name="item_bottom_menu_games">Giochi</string>
-        <string name="item_bottom_menu_friends">Amici</string>
-        <!-- Main menu -->
+
+            <!-- Fragment friends -->
+            <string name="item_bottom_menu_friends">Amici</string>
+            <string name="image_view_friend_profile_image_description">Immagine profilo amico</string>
+
+    <!-- Main menu -->
         <string name="item_menu_main_activity_account">Impostazioni account</string>
         <string name="item_menu_main_activity_application">Impostazioni applicazione</string>
 

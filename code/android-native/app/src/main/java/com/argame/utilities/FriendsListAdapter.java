@@ -1,25 +1,26 @@
 package com.argame.utilities;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.argame.R;
 
-public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.MyViewHolder> {
+public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.ViewFriendItem> {
     private String[] mDataset;
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        public TextView textView;
-        public MyViewHolder(TextView v) {
-            super(v);
-            textView = v;
+    public static class ViewFriendItem extends RecyclerView.ViewHolder {
+        public TextView textViewNickName;
+        public TextView textViewCompleteName;
+
+        public ViewFriendItem(View view) {
+            super(view);
+            textViewNickName = view.findViewById(R.id.text_view_friend_nickname);
+            textViewCompleteName = view.findViewById(R.id.text_view_friend_complete_name);
         }
     }
 
@@ -30,22 +31,21 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 
     // Create new views (invoked by the layout manager)
     @Override
-    public FriendsListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
+    public FriendsListAdapter.ViewFriendItem onCreateViewHolder(ViewGroup parent,
                                                               int viewType) {
         // create a new view
-        TextView v = (TextView) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.activity_account_settings, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.layout_list_item_friend, parent, false);
 
-        MyViewHolder vh = new MyViewHolder(v);
+        ViewFriendItem vh = new ViewFriendItem(view);
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(ViewFriendItem holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.textView.setText(mDataset[position]);
+        holder.textViewNickName.setText(mDataset[position]);
 
     }
 
