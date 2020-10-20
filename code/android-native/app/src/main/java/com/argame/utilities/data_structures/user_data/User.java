@@ -2,6 +2,14 @@ package com.argame.utilities.data_structures.user_data;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleEventObserver;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.recyclerview.widget.DiffUtil;
+
 import com.argame.utilities.SubjectUpdate;
 
 import java.util.ArrayList;
@@ -9,6 +17,24 @@ import java.util.List;
 import java.util.Map;
 
 public class User implements UserInterface, SubjectUpdate {
+
+    // Callback for diffutil
+    public static final DiffUtil.ItemCallback<UserInterface> DIFF_CALLBACK = new DiffUtil.ItemCallback<UserInterface>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull UserInterface oldItem, @NonNull UserInterface newItem) {
+            return oldItem.equals(newItem);
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull UserInterface oldItem, @NonNull UserInterface newItem) {
+            return oldItem.getUid().equals(newItem.getUid()) &&
+                    oldItem.getName().equals(newItem.getName()) &&
+                    oldItem.getSurname().equals(newItem.getSurname()) &&
+                    oldItem.getEmail().equals(newItem.getEmail()) &&
+                    oldItem.getNickname().equals(newItem.getNickname()) &&
+                    oldItem.getProfileImageCount() == newItem.getProfileImageCount();
+        }
+    };
 
     // Fields' name
     public static String UID_FIELD = "uid";
@@ -32,6 +58,18 @@ public class User implements UserInterface, SubjectUpdate {
     synchronized public void addOnUpdateListener(ListenerUserUpdate listener) {
         if(!this.listeners.contains(listener))
             this.listeners.add(listener);
+    }
+
+    @Override
+    synchronized public void addOnUpdateListenerLifecycle(LifecycleOwner owner, Lifecycle.Event event, ListenerUserUpdate listener) {
+        owner.getLifecycle().addObserver((LifecycleEventObserver) (source, e) -> {
+            synchronized (this) {
+                if (event == e)
+                    this.removeUpdateListener(listener);
+
+            }
+        });
+        this.listeners.add(listener);
     }
 
     @Override
@@ -115,5 +153,13 @@ public class User implements UserInterface, SubjectUpdate {
     public User setProfileImageCount(int profileImageCount) {
         this.profileImageCount = profileImageCount;
         return this;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if(obj instanceof User) {
+            return this.uid.equals(((User) obj).uid);
+        }
+        return false;
     }
 }

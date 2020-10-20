@@ -1,4 +1,4 @@
-package com.argame.activities.main.fragments.viewmodels;
+package com.argame.activities.main.fragments.fragment_games;
 
 import androidx.lifecycle.ViewModel;
 

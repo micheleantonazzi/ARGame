@@ -77,7 +77,7 @@ public class Database {
             }
 
             if (snapshotUserData != null && snapshotUserData.exists() && snapshotUserData.getData() != null) {
-                this.userData.updateData(snapshotUserData.getData());
+                this.userData.updateData(snapshotUserData.getData()).notifyListeners();
             } else {
                 Log.d("debugg", "Current data: null");
             }
@@ -114,6 +114,7 @@ public class Database {
                                     }
 
                                     if (snapshotFriend != null && snapshotFriend.exists() && snapshotFriend.getData() != null) {
+                                        Log.d("debugg", "friend aggiornato");
                                         newFriend.updateData(snapshotFriend.getData()).notifyListeners();
                                     } else {
                                         Log.d("debugg", "Current data: null");
@@ -122,7 +123,7 @@ public class Database {
                         this.friendsUpdateListeners.put(newFriendID, listener);
                         this.userFriends.addNewFriend(newFriendID, newFriend);
                     }
-
+                    this.userFriends.notifyListeners();
                 }
             } else {
                 Log.d("debugg", "Current data: null");
@@ -149,6 +150,10 @@ public class Database {
 
     public UserInterface getUserData(){
         return this.userData;
+    }
+
+    public FriendsInterface getUserFriends() {
+        return this.userFriends;
     }
 
 

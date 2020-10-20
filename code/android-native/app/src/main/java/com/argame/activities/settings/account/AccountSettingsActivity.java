@@ -1,9 +1,9 @@
-package com.argame.activities.settings;
+package com.argame.activities.settings.account;
 
 import android.os.Bundle;
 
-import com.argame.activities.settings.view_models.AccountSettingsActivityViewModel;
 import com.argame.utilities.Database;
+import com.argame.utilities.data_structures.user_data.ListenerUserUpdate;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -11,10 +11,12 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -72,9 +74,9 @@ public class AccountSettingsActivity extends AppCompatActivity {
             textViewUserEmail.setAlpha(offsetAlpha);
         });
 
-        // Setting user listener updated and view model
-        AccountSettingsActivityViewModel viewModel = new ViewModelProvider(this).get(AccountSettingsActivityViewModel.class);
-        viewModel.getUserData().observe(this, user -> {
+        // Create onUpdate listener
+        ListenerUserUpdate listenerUserUpdate = user -> {
+            Log.d("debugg", "aggiorno dati utente");
             if (!textViewUserEmail.getText().toString().equals("")) {
                 Toast.makeText(getApplicationContext(), R.string.profile_data_changed, Toast.LENGTH_LONG).show();
             }
@@ -89,9 +91,13 @@ public class AccountSettingsActivity extends AppCompatActivity {
             editTextName.setText(user.getName());
             editTextSurname.setText(user.getSurname());
             editTextNickName.setText(user.getNickname());
-        });
+        };
 
-        Database.getInstance().getUserData().addOnUpdateListener(user -> viewModel.setUserData(user));
+        // Fill activity fields
+        listenerUserUpdate.update(Database.getInstance().getUserData());
+
+        // Pass the listener to the userData
+        Database.getInstance().getUserData().addOnUpdateListenerLifecycle(this, Lifecycle.Event.ON_DESTROY, listenerUserUpdate);
     }
 
     @Override

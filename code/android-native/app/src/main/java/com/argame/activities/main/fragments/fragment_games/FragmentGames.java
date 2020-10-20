@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.argame.R;
-import com.argame.activities.main.fragments.viewmodels.FragmentGamesViewModel;
 
 public class FragmentGames extends Fragment {
 
