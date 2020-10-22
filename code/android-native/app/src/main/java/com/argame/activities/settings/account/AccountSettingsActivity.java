@@ -2,8 +2,8 @@ package com.argame.activities.settings.account;
 
 import android.os.Bundle;
 
-import com.argame.utilities.Database;
-import com.argame.utilities.data_structures.user_data.ListenerUserUpdate;
+import com.argame.model.Database;
+import com.argame.model.data_structures.user_data.ListenerUserUpdate;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -12,7 +12,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.text.Editable;
 import android.text.TextWatcher;

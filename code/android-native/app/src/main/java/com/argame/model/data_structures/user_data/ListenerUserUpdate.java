@@ -1,4 +1,4 @@
-package com.argame.utilities.data_structures.user_data;
+package com.argame.model.data_structures.user_data;
 
 public interface ListenerUserUpdate {
 

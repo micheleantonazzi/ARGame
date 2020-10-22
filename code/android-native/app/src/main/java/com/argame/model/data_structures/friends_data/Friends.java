@@ -1,15 +1,13 @@
-package com.argame.utilities.data_structures.friends_data;
+package com.argame.model.data_structures.friends_data;
 
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
-import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 
-import com.argame.utilities.SubjectUpdate;
+import com.argame.model.SubjectUpdate;
 
-import com.argame.utilities.data_structures.user_data.ListenerUserUpdate;
-import com.argame.utilities.data_structures.user_data.User;
-import com.argame.utilities.data_structures.user_data.UserInterface;
+import com.argame.model.data_structures.user_data.User;
+import com.argame.model.data_structures.user_data.UserInterface;
 
 
 import java.util.ArrayList;

@@ -1,16 +1,13 @@
-package com.argame.utilities.data_structures.user_data;
-
-import android.util.Log;
+package com.argame.model.data_structures.user_data;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
-import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.argame.utilities.SubjectUpdate;
+import com.argame.model.SubjectUpdate;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,21 +1,17 @@
-package com.argame.utilities;
+package com.argame.model;
 
 import android.util.Log;
 
-import com.argame.utilities.data_structures.friends_data.Friends;
-import com.argame.utilities.data_structures.friends_data.FriendsInterface;
-import com.argame.utilities.data_structures.user_data.User;
-import com.argame.utilities.data_structures.user_data.UserInterface;
+import com.argame.model.data_structures.friends_data.Friends;
+import com.argame.model.data_structures.friends_data.FriendsInterface;
+import com.argame.model.data_structures.user_data.User;
+import com.argame.model.data_structures.user_data.UserInterface;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.ListenerRegistration;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;

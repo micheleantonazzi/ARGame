@@ -1,5 +1,6 @@
 package com.argame.activities.main.fragments.fragment_games;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,8 +11,10 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.argame.R;
+import com.argame.activities.call.CallActivity;
 
 public class FragmentGames extends Fragment {
 
@@ -24,7 +27,15 @@ public class FragmentGames extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_games, container, false);
+        View view = inflater.inflate(R.layout.fragment_games, container, false);
+
+        // Open call activity
+        Button buttonTest = view.findViewById(R.id.button_test);
+        buttonTest.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), CallActivity.class));
+        });
+
+        return view;
     }
 
     @Override

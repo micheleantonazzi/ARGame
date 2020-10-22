@@ -1,9 +1,7 @@
 package com.argame.activities.main.fragments.fragment_friends;
 
 import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,17 +10,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.argame.R;
-import com.argame.utilities.Database;
-import com.argame.utilities.data_structures.friends_data.ListenerFriendsUpdate;
-import com.argame.utilities.data_structures.user_data.ListenerUserUpdate;
-import com.argame.utilities.data_structures.user_data.UserInterface;
+import com.argame.model.Database;
+import com.argame.model.data_structures.user_data.ListenerUserUpdate;
+import com.argame.model.data_structures.user_data.UserInterface;
 
 import java.util.ArrayList;
 import java.util.List;
