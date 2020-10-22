@@ -13,6 +13,12 @@ public class PeerConnectionParameters {
     private boolean hardwareEchoCancellerEnable = true;
     private boolean noiseSuppressorEnable = true;
 
+    // AUDIO CONSTRAINTS
+    private boolean audioEchoCancellationConstraintEnable = false;
+    private boolean audioGainControlConstraintEnable = false;
+    private boolean audioHighPassFilterConstraintEnable = false;
+    private boolean audioNoiseSuppressionConstraint = false;
+
     public PeerConnectionParametersFactory getFactory() {
         return new PeerConnectionParametersFactoryImpl(this);   
     }
@@ -64,5 +70,37 @@ public class PeerConnectionParameters {
 
     public void setH264HighProfileEnable(boolean h264HighProfileEnable) {
         H264HighProfileEnable = h264HighProfileEnable;
+    }
+
+    public boolean isAudioEchoCancellationConstraintEnable() {
+        return audioEchoCancellationConstraintEnable;
+    }
+
+    public void setAudioEchoCancellationConstraintEnable(boolean audioEchoCancellationConstraintEnable) {
+        this.audioEchoCancellationConstraintEnable = audioEchoCancellationConstraintEnable;
+    }
+
+    public boolean isAudioGainControlConstraintEnable() {
+        return audioGainControlConstraintEnable;
+    }
+
+    public void setAudioGainControlConstraintEnable(boolean audioGainControlConstraintEnable) {
+        this.audioGainControlConstraintEnable = audioGainControlConstraintEnable;
+    }
+
+    public boolean isAudioHighPassFilterConstraintEnable() {
+        return audioHighPassFilterConstraintEnable;
+    }
+
+    public void setAudioHighPassFilterConstraintEnable(boolean audioHighPassFilterConstraintEnable) {
+        this.audioHighPassFilterConstraintEnable = audioHighPassFilterConstraintEnable;
+    }
+
+    public boolean isAudioNoiseSuppressionConstraint() {
+        return audioNoiseSuppressionConstraint;
+    }
+
+    public void setAudioNoiseSuppressionConstraint(boolean audioNoiseSuppressionConstraint) {
+        this.audioNoiseSuppressionConstraint = audioNoiseSuppressionConstraint;
     }
 }

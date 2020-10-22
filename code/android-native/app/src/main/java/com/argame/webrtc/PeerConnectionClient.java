@@ -122,7 +122,7 @@ public class PeerConnectionClient {
                 .createAudioDeviceModule();
     }
     
-    public void createPeerConnectionFactory(PeerConnectionFactory.Options options) {
+    public PeerConnectionFactory createPeerConnectionFactory(PeerConnectionFactory.Options options) {
 
         // Create audio module
         JavaAudioDeviceModule audioDeviceModule = this.generateAudioDeviceModule();
@@ -146,6 +146,8 @@ public class PeerConnectionClient {
                 .setVideoEncoderFactory(encoderFactory)
                 .setVideoDecoderFactory(decoderFactory)
                 .createPeerConnectionFactory();
+
+        return factory;
     }
     
     // This method is called when a user calls another one
