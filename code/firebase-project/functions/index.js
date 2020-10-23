@@ -41,3 +41,28 @@ exports.onCreateNewUser = functions.auth.user().onCreate(async (user) => {
     }).then(() => console.log('New user created'))
         .catch(e => 'Creation failed: ' + e);
 });
+
+
+
+const {RtcTokenBuilder, RtmTokenBuilder, RtcRole, RtmRole} = require('agora-access-token')
+
+const appID = '29740b29ac4d480e9ff663b48521191b';
+const appCertificate = '265338c4f1b345f2b7df6bf792d1969c';
+const role = RtcRole.PUBLISHER;
+
+exports.createAgoraToken = functions.https.onCall((data, context) => {
+
+    // Check user authentication
+    if (!context.auth) {
+        throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+            'while authenticated.');
+    }
+
+    const expirationTimeInSeconds = 3600;
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
+
+    const token = RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, data.channel_name, data.uid, role, privilegeExpiredTs);
+    return {token: token}
+});
+
