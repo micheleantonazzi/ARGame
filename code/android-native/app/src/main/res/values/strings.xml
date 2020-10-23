@@ -7,9 +7,9 @@
     <string name="app_name">ARGame</string>
     <string name="title_fragment_games">Games</string>
 
-        <!-- Fragment friends -->
-        <string name="title_fragment_friends">Friends</string>
-        <string name="image_view_friend_profile_image_description">Friend\'s profile image</string>
+    <!-- Fragment friends -->
+    <string name="title_fragment_friends">Friends</string>
+    <string name="image_view_friend_profile_image_description">Friend\'s profile image</string>
 
 
     <!-- Bottom menu -->

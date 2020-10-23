@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Button;
 
 import com.argame.R;
 import com.argame.activities.main.fragments.fragment_friends.FragmentFriendsDirections;
@@ -80,11 +81,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
         // Set theme according to the user preference
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         new ThemeSelector().selectTheme(preferences.getString("list_preference_theme", "0"));
+
+
     }
 
     // Check if the user is logged, otherwise load the login intent
