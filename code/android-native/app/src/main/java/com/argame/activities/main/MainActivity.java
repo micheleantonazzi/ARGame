@@ -14,14 +14,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
 
 import com.argame.R;
 import com.argame.activities.main.fragments.fragment_friends.FragmentFriendsDirections;
 import com.argame.activities.main.fragments.fragment_games.FragmentGamesDirections;
 import com.argame.activities.settings.account.AccountSettingsActivity;
 import com.argame.activities.settings.application.ApplicationSettingsActivity;
-import com.argame.utilities.Database;
+import com.argame.model.Database;
 import com.argame.utilities.ThemeSelector;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;

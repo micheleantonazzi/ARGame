@@ -1,19 +1,15 @@
 package com.argame.activities.main.fragments.fragment_friends;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.argame.R;
-import com.argame.utilities.data_structures.user_data.UserInterface;
-
-import java.util.List;
+import com.argame.model.data_structures.user_data.UserInterface;
 
 public class FriendsListAdapter extends ListAdapter<UserInterface, FriendsListAdapter.ViewFriendItem> {
     public static class ViewFriendItem extends RecyclerView.ViewHolder {

@@ -7,11 +7,15 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 
 import com.argame.R;
+import com.argame.rtc_engine.RTCEngineEventHandler;
+
+import io.agora.rtc.RtcEngine;
 
 public class TicTacToeActivity extends AppCompatActivity {
 
@@ -19,6 +23,8 @@ public class TicTacToeActivity extends AppCompatActivity {
 
     private boolean permission_camera = false;
     private boolean permission_microphone = false;
+
+    private RtcEngine rtcEngine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +52,14 @@ public class TicTacToeActivity extends AppCompatActivity {
         else
             this.permission_microphone = true;
 
-
         ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST);
+
+        // Initialize RTCEngine
+        try {
+            this.rtcEngine = RtcEngine.create(this.getBaseContext(), getString(R.string.agora_app_id), new RTCEngineEventHandler());
+        } catch (Exception e) {
+            Log.e("debugg", Log.getStackTraceString(e));
+        }
     }
 
     @Override
