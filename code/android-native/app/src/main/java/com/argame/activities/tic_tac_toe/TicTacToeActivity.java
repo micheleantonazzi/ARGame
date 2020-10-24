@@ -1,5 +1,6 @@
 package com.argame.activities.tic_tac_toe;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -13,10 +14,18 @@ import android.view.SurfaceView;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
+import android.widget.Button;
 
 import com.argame.R;
 import com.argame.rtc_engine.RTCEngineEventHandler;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.HttpsCallableResult;
 
+import java.util.HashMap;
+import java.util.Map;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoCanvas;
@@ -116,6 +125,33 @@ public class TicTacToeActivity extends AppCompatActivity {
 
         // Join in a channel
         this.rtcEngine.joinChannel("00629740b29ac4d480e9ff663b48521191bIABCm9EIr7cWzLwaib4EodAkiEKDX/UhoLCqQkod9apzQAOv7D8AAAAAEAAKvMYLVCiUXwEAAQBUKJRf", "channelprova", "Extra Optional Data", 0);
+
+        // Test token generation with cloud functions
+        Button buttonTestToken = findViewById(R.id.button_generate_token);
+
+        buttonTestToken.setOnClickListener(v -> {
+            Map<String, Object> data = new HashMap<>();
+            data.put("uid", FirebaseAuth.getInstance().getCurrentUser().getUid().hashCode());
+            data.put("channel_name", "ctest");
+
+            FirebaseFunctions.getInstance()
+                    .getHttpsCallable("createAgoraToken")
+                    .call(data)
+                    .continueWith((Continuation<HttpsCallableResult, HashMap<String, Object>>) task -> {
+                        // This continuation runs on either success or failure, but if the task
+                        // has failed then getResult() will throw an Exception which will be
+                        // propagated down.
+
+                        if(!(task.getResult().getData() instanceof HashMap)) {
+                            HashMap<String, Object> result = (HashMap<String, Object>) task.getResult().getData();
+                            Log.d("debugg", result.getClass().getName());
+                            return result;
+                        }
+                        else
+                            return new HashMap<String, Object>();
+
+                    });
+        });
     }
 
     @Override

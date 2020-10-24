@@ -4,14 +4,18 @@
     <string name="app_name">ARGame</string>
     <string name="title_fragment_games">Giochi</string>
     <string name="title_fragment_friends">Amici</string>
+
         <!-- Bottom menu -->
         <string name="item_bottom_menu_games">Giochi</string>
 
-            <!-- Fragment friends -->
-            <string name="item_bottom_menu_friends">Amici</string>
-            <string name="image_view_friend_profile_image_description">Immagine profilo amico</string>
+        <!-- Fragment play -->
+        <string name="button_play_text">Gioca</string>
 
-    <!-- Main menu -->
+        <!-- Fragment friends -->
+        <string name="item_bottom_menu_friends">Amici</string>
+        <string name="image_view_friend_profile_image_description">Immagine profilo amico</string>
+
+        <!-- Main menu -->
         <string name="item_menu_main_activity_account">Impostazioni account</string>
         <string name="item_menu_main_activity_application">Impostazioni applicazione</string>
 
