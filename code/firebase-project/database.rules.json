@@ -1,0 +1,10 @@
+{
+  "rules": {
+    "users_connection_status": {
+      "$uid": {
+        ".write": "$uid === auth.uid",
+        ".read": "$uid === auth.uid"
+      }
+    }
+  }
+}
