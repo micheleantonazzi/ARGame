@@ -53,10 +53,18 @@ const role = RtcRole.PUBLISHER;
 exports.createAgoraToken = functions.https.onCall((data, context) => {
 
     // Check user authentication
-    if (!context.auth) {
+    if (!context.auth)
         throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
             'while authenticated.');
-    }
+
+    // Check data input
+    if(data.channel_name === null || typeof data.channel_name !== "string" || data.channel_name.length === 0)
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one arguments "channel_name" containing the agora\'s channel identifier.');
+
+    if(data.uid === null || typeof data.uid !== "number" || data.uid === 0)
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one arguments "uid" containing the agora user ID: it is the hashcode of the Google Authentication ID.');
 
     const expirationTimeInSeconds = 3600;
     const currentTimestamp = Math.floor(Date.now() / 1000);
