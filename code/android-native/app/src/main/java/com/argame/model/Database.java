@@ -73,6 +73,22 @@ public class Database {
         onlineStatusReference.setValue(1);
         onlineStatusReference.onDisconnect().setValue(0);
 
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w("debugg", "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        };
+        onlineStatusReference.addValueEventListener(postListener);
+
         // Detect when user connection status changed
         DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
         connectedRef.addValueEventListener(new ValueEventListener() {
