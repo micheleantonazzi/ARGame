@@ -1,5 +1,7 @@
 package com.argame.model.data_structures.user_data;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
@@ -65,7 +67,6 @@ public class User implements UserInterface, SubjectUpdate {
             synchronized (this) {
                 if (event == e)
                     this.removeUpdateListener(listener);
-
             }
         });
         this.listeners.add(listener);

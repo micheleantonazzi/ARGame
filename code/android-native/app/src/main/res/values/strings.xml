@@ -4,12 +4,18 @@
     <string name="facebook_login_protocol_scheme" translatable="false">fb_ARGame</string>
     <string name="agora_app_id" translatable="false">29740b29ac4d480e9ff663b48521191b</string>
 
+    <string name="button_confirm_text">Confirm</string>
+    <string name="button_cancel_text">Cancel</string>
+
     <!-- Main Activity -->
     <string name="app_name">ARGame</string>
     <string name="title_fragment_games">Games</string>
 
-        <!-- Fragment play -->
+        <!-- Fragment games -->
         <string name="button_play_text">Play</string>
+        
+            <!-- Alert dialog opponent -->
+            <string name="text_view_title">Choose your opponent</string>
 
         <!-- Fragment friends -->
         <string name="title_fragment_friends">Friends</string>

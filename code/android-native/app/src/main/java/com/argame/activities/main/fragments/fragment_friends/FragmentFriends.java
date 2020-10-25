@@ -47,7 +47,8 @@ public class FragmentFriends extends Fragment {
         friendsListAdapter.submitList(Database.getInstance().getUserFriends().getFriendsList());
 
         // Add update listener to friends
-        ListenerUserUpdate listenerUserUpdate = newFriend -> friendsListAdapter.notifyItemChanged(Database.getInstance().getUserFriends().getFriendOrderedNumber(newFriend));
+        ListenerUserUpdate listenerUserUpdate =
+                newFriend -> friendsListAdapter.notifyItemChanged(Database.getInstance().getUserFriends().getFriendOrderedNumber(newFriend));
         for(UserInterface friend: Database.getInstance().getUserFriends().getFriendsList())
             friend.addOnUpdateListenerLifecycle(this, Lifecycle.Event.ON_STOP, listenerUserUpdate);
 

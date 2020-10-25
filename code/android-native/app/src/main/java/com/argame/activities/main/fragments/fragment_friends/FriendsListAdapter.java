@@ -33,7 +33,7 @@ public class FriendsListAdapter extends ListAdapter<UserInterface, FriendsListAd
                                                               int viewType) {
         // create a new view
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.layout_list_item_friend, parent, false);
+                .inflate(R.layout.list_item_friend_layout, parent, false);
 
         ViewFriendItem vh = new ViewFriendItem(view);
         return vh;

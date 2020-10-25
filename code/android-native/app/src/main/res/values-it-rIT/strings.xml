@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <string name="button_confirm_text">Conferma</string>
+    <string name="button_cancel_text">Annulla</string>
+
     <!-- Main Activity -->
     <string name="app_name">ARGame</string>
     <string name="title_fragment_games">Giochi</string>
@@ -8,8 +12,11 @@
         <!-- Bottom menu -->
         <string name="item_bottom_menu_games">Giochi</string>
 
-        <!-- Fragment play -->
+        <!-- Fragment games -->
         <string name="button_play_text">Gioca</string>
+
+            <!-- Alert dialog opponent -->
+            <string name="text_view_title">Scegli il tuo avversario</string>
 
         <!-- Fragment friends -->
         <string name="item_bottom_menu_friends">Amici</string>
