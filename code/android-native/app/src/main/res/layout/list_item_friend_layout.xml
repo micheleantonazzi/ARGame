@@ -9,17 +9,17 @@
 
     <ImageView
         android:id="@+id/image_view_friend_list"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="12"
+        android:layout_weight="30"
         android:contentDescription="@string/image_view_friend_profile_image_description"
         app:srcCompat="@drawable/icon_account_circle_24" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_margin="20dp"
-        android:layout_weight="3"
+        android:layout_weight="65"
         android:orientation="vertical">
 
         <TextView
@@ -31,5 +31,13 @@
             android:id="@+id/text_view_friend_complete_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/image_view_selected"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:srcCompat="@drawable/icon_check_circle_24"
+        android:layout_weight="3" />
 </LinearLayout>

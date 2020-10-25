@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import com.argame.R;
 import com.argame.model.Database;
+import com.argame.model.FriendsListAdapter;
 import com.argame.model.data_structures.user_data.ListenerUserUpdate;
 import com.argame.model.data_structures.user_data.UserInterface;
 

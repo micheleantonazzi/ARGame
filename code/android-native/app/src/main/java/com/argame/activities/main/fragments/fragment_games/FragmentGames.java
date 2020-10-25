@@ -1,7 +1,5 @@
 package com.argame.activities.main.fragments.fragment_games;
 
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,10 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.argame.R;
-import com.argame.activities.main.MainActivity;
-import com.argame.activities.main.fragments.fragment_friends.FriendsListAdapter;
-import com.argame.activities.settings.account.AccountSettingsActivity;
-import com.argame.activities.tic_tac_toe.TicTacToeActivity;
+import com.argame.model.FriendsListAdapter;
 import com.argame.model.Database;
 
 public class FragmentGames extends Fragment {

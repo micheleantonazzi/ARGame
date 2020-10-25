@@ -1,8 +1,10 @@
-package com.argame.activities.main.fragments.fragment_friends;
+package com.argame.model;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.ListAdapter;
@@ -12,16 +14,33 @@ import com.argame.R;
 import com.argame.model.data_structures.user_data.UserInterface;
 
 public class FriendsListAdapter extends ListAdapter<UserInterface, FriendsListAdapter.ViewFriendItem> {
-    public static class ViewFriendItem extends RecyclerView.ViewHolder {
+    public class ViewFriendItem extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView textViewNickName;
         public TextView textViewCompleteName;
+        public ImageView imageViewSelected;
 
         public ViewFriendItem(View view) {
             super(view);
             textViewNickName = view.findViewById(R.id.text_view_friend_nickname);
             textViewCompleteName = view.findViewById(R.id.text_view_friend_complete_name);
+            imageViewSelected = view.findViewById(R.id.image_view_selected);
+            imageViewSelected.setVisibility(View.INVISIBLE);
+            view.setOnClickListener(this);
+        }
+
+
+        @Override
+        public void onClick(View v) {
+            if (getAdapterPosition() == RecyclerView.NO_POSITION)
+                return;
+
+            notifyItemChanged(selected_position);
+            selected_position = getAdapterPosition();
+            notifyItemChanged(selected_position);
         }
     }
+
+    private int selected_position = -1;
 
     public FriendsListAdapter() {
         super(UserInterface.DIFF_CALLBACK);
@@ -44,6 +63,10 @@ public class FriendsListAdapter extends ListAdapter<UserInterface, FriendsListAd
         UserInterface friend = this.getItem(position);
         holder.textViewNickName.setText(friend.getNickname());
         holder.textViewCompleteName.setText(friend.getName() + " " + friend.getSurname());
+
+        if(selected_position == position)
+            holder.imageViewSelected.setVisibility(View.VISIBLE);
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -51,4 +74,8 @@ public class FriendsListAdapter extends ListAdapter<UserInterface, FriendsListAd
     public int getItemCount() {
         return this.getCurrentList().size();
     }
+
+
+
+
 }
