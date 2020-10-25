@@ -40,6 +40,7 @@ public class User implements UserInterface, SubjectUpdate {
     public static String NICKNAME_FIELD = "nickname";
     public static String EMAIL_FIELD = "email";
     public static String PROFILE_IMAGE_COUNT_FIELD = "profileImageCount";
+    public static String ONLINE_STATUS = "onlineStatus";
 
     private String uid = "";
     private String name = "";
@@ -47,6 +48,7 @@ public class User implements UserInterface, SubjectUpdate {
     private String email = "";
     private String nickname = "";
     private int profileImageCount = -1;
+    private int onlineStatus = 0;
 
     private List<ListenerUserUpdate> listeners = new ArrayList<>(0);
 
@@ -89,6 +91,7 @@ public class User implements UserInterface, SubjectUpdate {
         this.nickname = String.valueOf(data.get(NICKNAME_FIELD));
         this.email = String.valueOf(data.get(EMAIL_FIELD));
         this.profileImageCount = Integer.parseInt(String.valueOf(data.get(PROFILE_IMAGE_COUNT_FIELD)));
+        this.onlineStatus = Integer.parseInt(String.valueOf(data.get(ONLINE_STATUS)));
         return this;
     }
 
@@ -158,5 +161,13 @@ public class User implements UserInterface, SubjectUpdate {
             return this.uid.equals(((User) obj).uid);
         }
         return false;
+    }
+
+    public int getOnlineStatus() {
+        return onlineStatus;
+    }
+
+    public void setOnlineStatus(int onlineStatus) {
+        this.onlineStatus = onlineStatus;
     }
 }

@@ -73,22 +73,6 @@ public class Database {
         onlineStatusReference.setValue(1);
         onlineStatusReference.onDisconnect().setValue(0);
 
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w("debugg", "loadPost:onCancelled", databaseError.toException());
-                // ...
-            }
-        };
-        onlineStatusReference.addValueEventListener(postListener);
-
         // Detect when user connection status changed
         DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
         connectedRef.addValueEventListener(new ValueEventListener() {
@@ -104,7 +88,6 @@ public class Database {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
-
 
         // Set up firestore
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -142,6 +125,8 @@ public class Database {
 
                     // REMOVE DELETED FRIENDS
                     Set<String> deletedFriendsIDs = this.userFriends.getDeletedFriendsIDs(updatedFriendsIDs);
+
+                    // Remove listeners that notify deleted friends changes
                     for(String deletedFriendID: deletedFriendsIDs)
                         this.friendsUpdateListeners.get(deletedFriendID).remove();
                     this.friendsUpdateListeners.keySet().removeAll(deletedFriendsIDs);
@@ -150,8 +135,11 @@ public class Database {
                     // Add new friends
                     Set<String> newFriendsIDs = this.userFriends.getNewFriends(updatedFriendsIDs);
                     for(String newFriendID: newFriendsIDs) {
+
+                        // Create new friend instance
                         User newFriend = new User().setUid(newFriendID);
 
+                        // Create new friend listeners which notifies changes
                         ListenerRegistration listener = firestore.collection(COLLECTION_USER_DATA).document(newFriendID)
                                 .addSnapshotListener((snapshotFriend, exceptionFriend) -> {
                                     if (exceptionFriend != null) {
@@ -168,6 +156,7 @@ public class Database {
                         this.friendsUpdateListeners.put(newFriendID, listener);
                         this.userFriends.addNewFriend(newFriendID, newFriend);
                     }
+                    // Notify listeners that friends list is changed
                     this.userFriends.notifyListeners();
                 }
             } else {

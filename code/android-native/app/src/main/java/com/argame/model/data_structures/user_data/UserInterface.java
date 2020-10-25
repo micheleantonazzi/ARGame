@@ -24,5 +24,7 @@ public interface UserInterface {
 
     String getNickname();
 
+    int getOnlineStatus();
+
     int getProfileImageCount();
 }
