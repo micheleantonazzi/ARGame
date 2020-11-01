@@ -34,14 +34,18 @@ public class FriendsListAdapter extends ListAdapter<UserInterface, FriendsListAd
             if (getAdapterPosition() == RecyclerView.NO_POSITION)
                 return;
 
-            notifyItemChanged(selected_position);
-            selected_position = getAdapterPosition();
-            notifyItemChanged(selected_position);
-            onItemClick.run();
+            synchronized (selectedPositionMonitor) {
+                notifyItemChanged(selectedPosition);
+                selectedPosition = getAdapterPosition();
+                notifyItemChanged(selectedPosition);
+                if (onItemClick != null)
+                    onItemClick.run();
+            }
         }
     }
 
-    private int selected_position = -1;
+    private final Object selectedPositionMonitor = new Object();
+    private Integer selectedPosition = -1;
     private boolean itemsSelectable;
     private Runnable onItemClick;
 
@@ -74,7 +78,7 @@ public class FriendsListAdapter extends ListAdapter<UserInterface, FriendsListAd
         holder.textViewNickName.setText(friend.getNickname());
         holder.textViewCompleteName.setText(friend.getName() + " " + friend.getSurname());
 
-        if(selected_position == position)
+        if(selectedPosition == position)
             holder.imageViewSelected.setVisibility(View.VISIBLE);
 
     }
@@ -83,5 +87,18 @@ public class FriendsListAdapter extends ListAdapter<UserInterface, FriendsListAd
     @Override
     public int getItemCount() {
         return this.getCurrentList().size();
+    }
+
+    public void setOnItemClick(Runnable onItemClick) {
+        this.onItemClick = onItemClick;
+    }
+
+    public UserInterface getSelectedItem() {
+        if(!this.itemsSelectable || this.selectedPosition == -1)
+            return null;
+
+        synchronized (this.selectedPositionMonitor) {
+            return this.getItem(this.selectedPosition);
+        }
     }
 }

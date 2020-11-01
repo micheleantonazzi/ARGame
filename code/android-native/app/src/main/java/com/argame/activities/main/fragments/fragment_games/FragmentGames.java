@@ -19,6 +19,7 @@ import android.widget.Button;
 import com.argame.R;
 import com.argame.model.FriendsListAdapter;
 import com.argame.model.Database;
+import com.argame.model.data_structures.user_data.UserInterface;
 
 public class FragmentGames extends Fragment {
 
@@ -48,8 +49,17 @@ public class FragmentGames extends Fragment {
             recyclerViewFriends.setLayoutManager(layoutManager);
             recyclerViewFriends.setHasFixedSize(true);
 
+            // Set view model
+            FriendsListAdapter friendsListAdapter = new FriendsListAdapter(true,
+                    null);
+            recyclerViewFriends.setAdapter(friendsListAdapter);
+
+            // Submit friend list to adapter
+            friendsListAdapter.submitList(Database.getInstance().getUserFriends().getFriendsList());
+
             AlertDialog alertDialogOpponent = alertDialogOpponentBuilder.setView(viewAlertDialogOpponent)
             .setPositiveButton(R.string.button_confirm_text, (dialog, which) -> {
+                UserInterface opponent = friendsListAdapter.getSelectedItem();
                 Log.d("debugg", "confirm");
             })
             .setNegativeButton(R.string.button_cancel_text, (dialog, which) -> {
@@ -58,13 +68,9 @@ public class FragmentGames extends Fragment {
 
             alertDialogOpponent.show();
 
-            // Set view model
-            FriendsListAdapter friendsListAdapter = new FriendsListAdapter(true,
+            // Set the runnable to enable positive button
+            friendsListAdapter.setOnItemClick(
                     () -> alertDialogOpponent.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true));
-            recyclerViewFriends.setAdapter(friendsListAdapter);
-
-            // Submit friend list to adapter
-            friendsListAdapter.submitList(Database.getInstance().getUserFriends().getFriendsList());
 
             alertDialogOpponent.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
         });
