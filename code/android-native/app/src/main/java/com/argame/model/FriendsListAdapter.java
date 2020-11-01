@@ -17,12 +17,14 @@ public class FriendsListAdapter extends ListAdapter<UserInterface, FriendsListAd
         public TextView textViewNickName;
         public TextView textViewCompleteName;
         public ImageView imageViewSelected;
+        public ImageView imageViewConnectionStatus;
 
         public ViewFriendItem(View view) {
             super(view);
             textViewNickName = view.findViewById(R.id.text_view_friend_nickname);
             textViewCompleteName = view.findViewById(R.id.text_view_friend_complete_name);
             imageViewSelected = view.findViewById(R.id.image_view_selected);
+            imageViewConnectionStatus = view.findViewById(R.id.image_view_connection_status);
             imageViewSelected.setVisibility(View.INVISIBLE);
             if(itemsSelectable)
                 view.setOnClickListener(this);
@@ -77,6 +79,7 @@ public class FriendsListAdapter extends ListAdapter<UserInterface, FriendsListAd
         UserInterface friend = this.getItem(position);
         holder.textViewNickName.setText(friend.getNickname());
         holder.textViewCompleteName.setText(friend.getName() + " " + friend.getSurname());
+        holder.imageViewConnectionStatus.setBackgroundResource(friend.getOnlineStatus() == 0 ? R.drawable.circle_offline : R.drawable.circle_online);
 
         if(selectedPosition == position)
             holder.imageViewSelected.setVisibility(View.VISIBLE);

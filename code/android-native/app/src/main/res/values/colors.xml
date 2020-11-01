@@ -8,4 +8,7 @@
     <color name="colorPrimaryDarkNight">#1d3557</color>
     <color name="colorAccentNight">#e63946</color>
 
+    <color name="colorFriendOffline">#ff0000</color>
+    <color name="colorFriendOnline">#7fff00</color>
+
 </resources>
