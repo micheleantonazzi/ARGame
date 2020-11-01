@@ -1,6 +1,5 @@
 package com.argame.model;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,8 @@ public class FriendsListAdapter extends ListAdapter<UserInterface, FriendsListAd
             textViewCompleteName = view.findViewById(R.id.text_view_friend_complete_name);
             imageViewSelected = view.findViewById(R.id.image_view_selected);
             imageViewSelected.setVisibility(View.INVISIBLE);
-            view.setOnClickListener(this);
+            if(itemsSelectable)
+                view.setOnClickListener(this);
         }
 
 
@@ -37,13 +37,23 @@ public class FriendsListAdapter extends ListAdapter<UserInterface, FriendsListAd
             notifyItemChanged(selected_position);
             selected_position = getAdapterPosition();
             notifyItemChanged(selected_position);
+            onItemClick.run();
         }
     }
 
     private int selected_position = -1;
+    private boolean itemsSelectable;
+    private Runnable onItemClick;
 
     public FriendsListAdapter() {
+        this(false, null);
+    }
+
+    public FriendsListAdapter(boolean itemsSelectable, Runnable onItemClick) {
         super(UserInterface.DIFF_CALLBACK);
+        this.itemsSelectable = itemsSelectable;
+        this.onItemClick = onItemClick;
+
     }
 
     // Create new views (invoked by the layout manager)
@@ -74,8 +84,4 @@ public class FriendsListAdapter extends ListAdapter<UserInterface, FriendsListAd
     public int getItemCount() {
         return this.getCurrentList().size();
     }
-
-
-
-
 }

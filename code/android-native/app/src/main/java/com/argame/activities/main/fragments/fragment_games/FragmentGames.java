@@ -37,7 +37,6 @@ public class FragmentGames extends Fragment {
 
         Button buttonStartGame = view.findViewById(R.id.button_start_game);
         buttonStartGame.setOnClickListener(v -> {
-            //startActivity(new Intent(this.getActivity(), TicTacToeActivity.class));
 
             // Build alert dialog opponent
             alertDialogOpponentBuilder = new AlertDialog.Builder(this.getContext());
@@ -49,13 +48,6 @@ public class FragmentGames extends Fragment {
             recyclerViewFriends.setLayoutManager(layoutManager);
             recyclerViewFriends.setHasFixedSize(true);
 
-            // Set view model
-            FriendsListAdapter friendsListAdapter = new FriendsListAdapter();
-            recyclerViewFriends.setAdapter(friendsListAdapter);
-
-            // Submit friend list to adapter
-            friendsListAdapter.submitList(Database.getInstance().getUserFriends().getFriendsList());
-
             AlertDialog alertDialogOpponent = alertDialogOpponentBuilder.setView(viewAlertDialogOpponent)
             .setPositiveButton(R.string.button_confirm_text, (dialog, which) -> {
                 Log.d("debugg", "confirm");
@@ -65,6 +57,14 @@ public class FragmentGames extends Fragment {
             }).create();
 
             alertDialogOpponent.show();
+
+            // Set view model
+            FriendsListAdapter friendsListAdapter = new FriendsListAdapter(true,
+                    () -> alertDialogOpponent.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true));
+            recyclerViewFriends.setAdapter(friendsListAdapter);
+
+            // Submit friend list to adapter
+            friendsListAdapter.submitList(Database.getInstance().getUserFriends().getFriendsList());
 
             alertDialogOpponent.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
         });
