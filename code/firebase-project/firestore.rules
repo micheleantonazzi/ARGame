@@ -2,11 +2,23 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users_data/{user_id} {
-      allow read: if request.auth != null;
+      allow read: if request.auth != null && (
+                              request.auth.uid in get(/databases/$(database)/documents/users_friends/$(user_id)).data.friends ||
+                              request.auth.uid == user_id
+                          );
       allow write: if request.auth != null && request.auth.uid == user_id;
     }
     match /users_friends/{user_id} {
       allow read, write: if request.auth != null && request.auth.uid == user_id;
+    }
+    match /users_current_game/{user_id} {
+        allow write, read: if request.auth != null && (
+                                request.auth.uid in get(/databases/$(database)/documents/users_friends/$(user_id)).data.friends ||
+                                request.auth.uid == user_id
+                            );
+    }
+    match /tic_tac_toe_games/{game_id} {
+        allow read, write: if true;
     }
   }
 }
