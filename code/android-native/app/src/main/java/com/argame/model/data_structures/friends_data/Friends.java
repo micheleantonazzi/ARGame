@@ -7,7 +7,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.argame.model.SubjectUpdate;
 
 import com.argame.model.data_structures.user_data.User;
-import com.argame.model.data_structures.user_data.UserInterface;
+import com.argame.model.data_structures.user_data.IUser;
 
 
 import java.util.ArrayList;
@@ -18,14 +18,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Friends implements FriendsInterface, SubjectUpdate {
+public class Friends implements IFriends, SubjectUpdate {
 
     // Fields' name
     public static final String FRIENDS_FIELD = "friends";
 
     private List<ListenerFriendsUpdate> listeners = new ArrayList<>();
     private Map<String, User> friends = new HashMap<>();
-    private List<UserInterface> orderedUsers = new ArrayList<>();
+    private List<IUser> orderedUsers = new ArrayList<>();
 
     synchronized public Set<String> getDeletedFriendsIDs(Set<String> updatedFriendsIDs) {
         Set<String> deletedFriendsIDs = new HashSet<>(this.friends.keySet());
@@ -86,13 +86,13 @@ public class Friends implements FriendsInterface, SubjectUpdate {
     }
 
     @Override
-    synchronized public List<UserInterface> getFriendsList() {
+    synchronized public List<IUser> getFriendsList() {
         return this.orderedUsers;
 
     }
 
     @Override
-    public int getFriendOrderedNumber(UserInterface friend) {
+    public int getFriendOrderedNumber(IUser friend) {
         return this.orderedUsers.indexOf(friend);
     }
 }

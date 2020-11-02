@@ -1,7 +1,5 @@
 package com.argame.model.data_structures.user_data;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
@@ -15,17 +13,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class User implements UserInterface, SubjectUpdate {
+public class User implements IUser, SubjectUpdate {
 
     // Callback for diffutil
-    public static final DiffUtil.ItemCallback<UserInterface> DIFF_CALLBACK = new DiffUtil.ItemCallback<UserInterface>() {
+    public static final DiffUtil.ItemCallback<IUser> DIFF_CALLBACK = new DiffUtil.ItemCallback<IUser>() {
         @Override
-        public boolean areItemsTheSame(@NonNull UserInterface oldItem, @NonNull UserInterface newItem) {
+        public boolean areItemsTheSame(@NonNull IUser oldItem, @NonNull IUser newItem) {
             return oldItem.equals(newItem);
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull UserInterface oldItem, @NonNull UserInterface newItem) {
+        public boolean areContentsTheSame(@NonNull IUser oldItem, @NonNull IUser newItem) {
             return oldItem.getUid().equals(newItem.getUid()) &&
                     oldItem.getName().equals(newItem.getName()) &&
                     oldItem.getSurname().equals(newItem.getSurname()) &&

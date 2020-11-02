@@ -18,7 +18,7 @@ import com.argame.R;
 import com.argame.model.Database;
 import com.argame.model.FriendsListAdapter;
 import com.argame.model.data_structures.user_data.ListenerUserUpdate;
-import com.argame.model.data_structures.user_data.UserInterface;
+import com.argame.model.data_structures.user_data.IUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,16 +50,16 @@ public class FragmentFriends extends Fragment {
         // Add update listener to friends
         ListenerUserUpdate listenerUserUpdate =
                 newFriend -> friendsListAdapter.notifyItemChanged(Database.getInstance().getUserFriends().getFriendOrderedNumber(newFriend));
-        for(UserInterface friend: Database.getInstance().getUserFriends().getFriendsList())
+        for(IUser friend: Database.getInstance().getUserFriends().getFriendsList())
             friend.addOnUpdateListenerLifecycle(this, Lifecycle.Event.ON_STOP, listenerUserUpdate);
 
         // Set listener to notify update
         Database.getInstance().getUserFriends().addOnUpdateListenerLifecycle(this, Lifecycle.Event.ON_STOP, userFriends -> {
 
             // Set update listener to new users
-            List<UserInterface> newFriends = new ArrayList<>(userFriends.getFriendsList());
+            List<IUser> newFriends = new ArrayList<>(userFriends.getFriendsList());
             newFriends.removeAll(friendsListAdapter.getCurrentList());
-            for(UserInterface newFriend: newFriends) {
+            for(IUser newFriend: newFriends) {
                 newFriend.addOnUpdateListenerLifecycle(this, Lifecycle.Event.ON_STOP, listenerUserUpdate);
             }
 

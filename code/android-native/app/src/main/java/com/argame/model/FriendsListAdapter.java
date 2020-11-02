@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.argame.R;
-import com.argame.model.data_structures.user_data.UserInterface;
+import com.argame.model.data_structures.user_data.IUser;
 
-public class FriendsListAdapter extends ListAdapter<UserInterface, FriendsListAdapter.ViewFriendItem> {
+public class FriendsListAdapter extends ListAdapter<IUser, FriendsListAdapter.ViewFriendItem> {
     public class ViewFriendItem extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView textViewNickName;
         public TextView textViewCompleteName;
@@ -56,7 +56,7 @@ public class FriendsListAdapter extends ListAdapter<UserInterface, FriendsListAd
     }
 
     public FriendsListAdapter(boolean itemsSelectable, Runnable onItemClick) {
-        super(UserInterface.DIFF_CALLBACK);
+        super(IUser.DIFF_CALLBACK);
         this.itemsSelectable = itemsSelectable;
         this.onItemClick = onItemClick;
 
@@ -76,7 +76,7 @@ public class FriendsListAdapter extends ListAdapter<UserInterface, FriendsListAd
 
     @Override
     public void onBindViewHolder(ViewFriendItem holder, int position) {
-        UserInterface friend = this.getItem(position);
+        IUser friend = this.getItem(position);
         holder.textViewNickName.setText(friend.getNickname());
         holder.textViewCompleteName.setText(friend.getName() + " " + friend.getSurname());
         holder.imageViewConnectionStatus.setBackgroundResource(friend.getOnlineStatus() == 0 ? R.drawable.circle_offline : R.drawable.circle_online);
@@ -96,7 +96,7 @@ public class FriendsListAdapter extends ListAdapter<UserInterface, FriendsListAd
         this.onItemClick = onItemClick;
     }
 
-    public UserInterface getSelectedItem() {
+    public IUser getSelectedItem() {
         if(!this.itemsSelectable || this.selectedPosition == -1)
             return null;
 

@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ import android.widget.Button;
 import com.argame.R;
 import com.argame.model.FriendsListAdapter;
 import com.argame.model.Database;
-import com.argame.model.data_structures.user_data.UserInterface;
+import com.argame.model.data_structures.user_data.IUser;
 
 public class FragmentGames extends Fragment {
 
@@ -59,11 +58,11 @@ public class FragmentGames extends Fragment {
 
             AlertDialog alertDialogOpponent = alertDialogOpponentBuilder.setView(viewAlertDialogOpponent)
             .setPositiveButton(R.string.button_confirm_text, (dialog, which) -> {
-                UserInterface opponent = friendsListAdapter.getSelectedItem();
-                Log.d("debugg", "confirm");
+
+                // Create new game
+                IUser opponent = friendsListAdapter.getSelectedItem();
             })
             .setNegativeButton(R.string.button_cancel_text, (dialog, which) -> {
-                Log.d("debugg", "cancel");
             }).create();
 
             alertDialogOpponent.show();

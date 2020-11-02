@@ -5,9 +5,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.argame.model.data_structures.friends_data.Friends;
-import com.argame.model.data_structures.friends_data.FriendsInterface;
+import com.argame.model.data_structures.friends_data.IFriends;
 import com.argame.model.data_structures.user_data.User;
-import com.argame.model.data_structures.user_data.UserInterface;
+import com.argame.model.data_structures.user_data.IUser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -18,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,6 +38,7 @@ public class Database {
     // Firestore locations
     private static final String COLLECTION_USER_DATA = "users_data";
     private static final String COLLECTION_USER_FRIENDS = "users_friends";
+    private static final String COLLECTION_TIK_TAK_TOE_GAMES =  "tik_tak_toe_games";
 
     // Application data
     private User userData = new User();
@@ -182,11 +184,19 @@ public class Database {
                 });
     }
 
-    public UserInterface getUserData(){
+    public void createTikTacToeGame() {
+
+        // Prepare game data
+        Map<String, Object> gameData = new HashMap<>();
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        WriteBatch matchBatch = firestore.batch();
+    }
+
+    public IUser getUserData(){
         return this.userData;
     }
 
-    public FriendsInterface getUserFriends() {
+    public IFriends getUserFriends() {
         return this.userFriends;
     }
 

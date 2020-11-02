@@ -2,5 +2,5 @@ package com.argame.model.data_structures.user_data;
 
 public interface ListenerUserUpdate {
 
-    void update(UserInterface userData);
+    void update(IUser userData);
 }

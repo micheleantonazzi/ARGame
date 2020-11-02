@@ -4,9 +4,9 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.DiffUtil;
 
-public interface UserInterface {
+public interface IUser {
 
-    DiffUtil.ItemCallback<UserInterface> DIFF_CALLBACK = null;
+    DiffUtil.ItemCallback<IUser> DIFF_CALLBACK = null;
 
     void addOnUpdateListener(ListenerUserUpdate listener);
 
