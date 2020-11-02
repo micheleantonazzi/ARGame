@@ -21,6 +21,7 @@ import com.argame.activities.main.fragments.fragment_games.FragmentGamesDirectio
 import com.argame.activities.settings.account.AccountSettingsActivity;
 import com.argame.activities.settings.application.ApplicationSettingsActivity;
 import com.argame.model.Database;
+import com.argame.model.GameController;
 import com.argame.utilities.ThemeSelector;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
@@ -97,7 +98,8 @@ public class MainActivity extends AppCompatActivity {
             createSignInIntent();
         else{
             // Load user data
-            Database.getInstance().retrieveUserData();
+            Database.getInstance().initialize();
+            GameController.getInstance(this.getApplicationContext()).initialize();
         }
     }
 

@@ -38,8 +38,20 @@ public class TicTacToeGame implements ITicTacToeGame {
         map.put(MATRIX_FIELD, new ArrayList<>(Collections.nCopies(9, -1)));
         return map;
     }
+
+    synchronized public TicTacToeGame updateData(Map<String, Object> newData) {
+        this.ownerID = String.valueOf(newData.get(OWNER_ID_FIELD));
+        this.opponentID = String.valueOf(newData.get(OPPONENT_ID_FIELD));
+        this.agoraChannel = String.valueOf(newData.get(AGORA_CHANNEL_FIELD));
+        this.agoraToken = String.valueOf(newData.get(AGORA_TOKEN_FIELD));
+        this.accepted = Boolean.parseBoolean(String.valueOf(newData.get(ACCEPTED_FIELD)));
+        this.terminated = Boolean.parseBoolean(String.valueOf(newData.get(TERMINATED_FIELD)));
+        this.matrix = new ArrayList<>((List<Integer>) newData.get(MATRIX_FIELD));
+        return this;
+    }
+
     @Override
-    public String getMatchID() {
+    synchronized public String getMatchID() {
         return matchID;
     }
 
@@ -49,7 +61,7 @@ public class TicTacToeGame implements ITicTacToeGame {
     }
 
     @Override
-    public boolean isAccepted() {
+    synchronized public boolean isAccepted() {
         return accepted;
     }
 
@@ -59,7 +71,7 @@ public class TicTacToeGame implements ITicTacToeGame {
     }
 
     @Override
-    public boolean isTerminated() {
+    synchronized public boolean isTerminated() {
         return terminated;
     }
 
@@ -69,41 +81,41 @@ public class TicTacToeGame implements ITicTacToeGame {
     }
 
     @Override
-    public String getOwnerID() {
+    synchronized public String getOwnerID() {
         return ownerID;
     }
 
-    public TicTacToeGame setOwnerID(String ownerID) {
+    synchronized public TicTacToeGame setOwnerID(String ownerID) {
         this.ownerID = ownerID;
         return this;
     }
 
     @Override
-    public String getOpponentID() {
+    synchronized public String getOpponentID() {
         return opponentID;
     }
 
-    public TicTacToeGame setOpponentID(String opponentID) {
+    synchronized public TicTacToeGame setOpponentID(String opponentID) {
         this.opponentID = opponentID;
         return this;
     }
 
     @Override
-    public String getAgoraChannel() {
+    synchronized public String getAgoraChannel() {
         return agoraChannel;
     }
 
-    public TicTacToeGame setAgoraChannel(String agoraChannel) {
+    synchronized public TicTacToeGame setAgoraChannel(String agoraChannel) {
         this.agoraChannel = agoraChannel;
         return this;
     }
 
     @Override
-    public String getAgoraToken() {
+    synchronized public String getAgoraToken() {
         return agoraToken;
     }
 
-    public TicTacToeGame setAgoraToken(String agoraToken) {
+    synchronized public TicTacToeGame setAgoraToken(String agoraToken) {
         this.agoraToken = agoraToken;
         return this;
     }
