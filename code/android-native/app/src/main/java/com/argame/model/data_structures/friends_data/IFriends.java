@@ -17,4 +17,6 @@ public interface IFriends {
     List<IUser> getFriendsList();
 
     int getFriendOrderedNumber(IUser friend);
+
+    IUser getFriend(String friendID);
 }

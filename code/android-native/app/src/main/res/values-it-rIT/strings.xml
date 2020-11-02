@@ -4,6 +4,10 @@
     <string name="button_confirm_text">Conferma</string>
     <string name="button_cancel_text">Annulla</string>
 
+    <!-- Alert Dialog Accept Game -->
+    <string name="button_accept_game">Accetta</string>
+    <string name="button_refuse_game">Non ora</string>
+
     <!-- Main Activity -->
     <string name="app_name">ARGame</string>
     <string name="title_fragment_games">Giochi</string>

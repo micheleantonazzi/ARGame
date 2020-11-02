@@ -2,9 +2,16 @@ package com.argame.model;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+
+import com.argame.R;
 import com.argame.model.data_structures.tic_tac_toe_game.ITicTacToeGame;
 import com.argame.model.data_structures.tic_tac_toe_game.TicTacToeGame;
+import com.argame.model.data_structures.user_data.IUser;
 import com.argame.model.data_structures.users_current_game.UserCurrentGame;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -17,19 +24,21 @@ public class GameController {
 
     static private GameController INSTANCE;
 
-    private Context applicationContext = null;
+    private Context context = null;
+    private LayoutInflater layoutInflater = null;
     private boolean hasBeenInitialized = false;
     private TicTacToeGame currentTicTacToeGame = null;
 
     private GameController() {}
 
-    private GameController(Context applicationContext) {
-        this.applicationContext = applicationContext;
+    private GameController(Context context, LayoutInflater layoutInflater) {
+        this.context = context;
+        this.layoutInflater = layoutInflater;
     }
 
-    synchronized static public GameController getInstance(Context applicationContext){
+    synchronized static public GameController getInstance(Context applicationContext, LayoutInflater layoutInflater){
         if (INSTANCE == null){
-            INSTANCE = new GameController(applicationContext);
+            INSTANCE = new GameController(applicationContext, layoutInflater);
         }
 
         return INSTANCE;
@@ -93,10 +102,17 @@ public class GameController {
                                                 if(this.currentTicTacToeGame != null) {
                                                     this.currentTicTacToeGame.updateData(snapshotGame.getData());
 
-                                                    // Show dialog to accept the
-                                                    if(this. currentTicTacToeGame.getOpponentID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid()) &&
-                                                            !this.currentTicTacToeGame.isAccepted()) {
+                                                    // Obtain owner data
+                                                    IUser otherPlayer = Database.getInstance().getUserFriends().getFriend(
+                                                            this.currentTicTacToeGame.getOtherPlayerID(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                    );
 
+                                                    this.currentTicTacToeGame.setOtherPlayer(otherPlayer);
+
+                                                    // Show dialog to accept the
+                                                    if(this.currentTicTacToeGame.getOpponentID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid()) &&
+                                                            !this.currentTicTacToeGame.isAccepted()) {
+                                                        this.showDialogAcceptGame();
                                                     }
                                                 }
                                                 Log.d("debugg", "update game data");
@@ -190,5 +206,27 @@ public class GameController {
 
     synchronized public ITicTacToeGame getCurrentTicTacToeGame() {
         return this.currentTicTacToeGame;
+    }
+
+    private void showDialogAcceptGame() {
+
+        // Obtain owner data
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.context);
+        View view = this.layoutInflater.inflate(R.layout.alert_dialog_accept_game_layout, null);
+
+        TextView textViewMessage = view.findViewById(R.id.text_view_message);
+        textViewMessage.setText(this.currentTicTacToeGame.getOtherPlayer().getNickname() + "vuole sfidarti a " + "tris");
+
+        alertDialogBuilder.setView(view)
+                .setPositiveButton(R.string.button_accept_game, (dialog, which) -> {
+                    FirebaseFirestore.getInstance().collection(Database.COLLECTION_TIC_TAC_TOE_GAMES)
+                            .document(this.currentTicTacToeGame.getMatchID()).update(TicTacToeGame.ACCEPTED_FIELD, true);
+                })
+                .setNegativeButton(R.string.button_refuse_game, (dialog, which) -> {
+                    FirebaseFirestore.getInstance().collection(Database.COLLECTION_TIC_TAC_TOE_GAMES)
+                            .document(this.currentTicTacToeGame.getMatchID()).update(TicTacToeGame.ACCEPTED_FIELD, false);
+                })
+        .create().show();
     }
 }

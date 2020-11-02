@@ -1,5 +1,7 @@
 package com.argame.model.data_structures.tic_tac_toe_game;
 
+import com.argame.model.data_structures.user_data.IUser;
+
 public interface ITicTacToeGame {
 
     String getMatchID();
@@ -15,4 +17,6 @@ public interface ITicTacToeGame {
     String getAgoraToken();
 
     String getAgoraChannel();
+
+    IUser getOtherPlayer();
 }

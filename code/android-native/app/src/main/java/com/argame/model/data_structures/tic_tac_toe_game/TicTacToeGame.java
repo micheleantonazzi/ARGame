@@ -1,5 +1,8 @@
 package com.argame.model.data_structures.tic_tac_toe_game;
 
+import com.argame.model.data_structures.user_data.IUser;
+import com.argame.model.data_structures.user_data.User;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,6 +23,7 @@ public class TicTacToeGame implements ITicTacToeGame {
     private String matchID = "";
     private String ownerID = "";
     private String opponentID = "";
+    private IUser otherPlayer = new User();
     private String agoraChannel = "";
     private String agoraToken = "";
     private boolean accepted = false;
@@ -48,6 +52,15 @@ public class TicTacToeGame implements ITicTacToeGame {
         this.terminated = Boolean.parseBoolean(String.valueOf(newData.get(TERMINATED_FIELD)));
         this.matrix = new ArrayList<>((List<Integer>) newData.get(MATRIX_FIELD));
         return this;
+    }
+
+    synchronized public String getOtherPlayerID(String currentPlayerID) {
+        if(currentPlayerID.equals(this.ownerID))
+            return this.opponentID;
+        else if(currentPlayerID.equals(this.opponentID))
+            return this.ownerID;
+        else
+            return "";
     }
 
     @Override
@@ -117,6 +130,16 @@ public class TicTacToeGame implements ITicTacToeGame {
 
     synchronized public TicTacToeGame setAgoraToken(String agoraToken) {
         this.agoraToken = agoraToken;
+        return this;
+    }
+
+    @Override
+    synchronized public IUser getOtherPlayer() {
+        return otherPlayer;
+    }
+
+    synchronized public TicTacToeGame setOtherPlayer(IUser otherPlayer) {
+        this.otherPlayer = otherPlayer;
         return this;
     }
 }

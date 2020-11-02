@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         else{
             // Load user data
             Database.getInstance().initialize();
-            GameController.getInstance(this.getApplicationContext()).initialize();
+            GameController.getInstance(this, getLayoutInflater()).initialize();
         }
     }
 

@@ -95,4 +95,9 @@ public class Friends implements IFriends, SubjectUpdate {
     public int getFriendOrderedNumber(IUser friend) {
         return this.orderedUsers.indexOf(friend);
     }
+
+    @Override
+    public IUser getFriend(String friendID) {
+        return this.friends.get(friendID);
+    }
 }

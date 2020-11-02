@@ -7,6 +7,10 @@
     <string name="button_confirm_text">Confirm</string>
     <string name="button_cancel_text">Cancel</string>
 
+    <!-- Alert Dialog Accept Game -->
+    <string name="button_accept_game">Accept</string>
+    <string name="button_refuse_game">Not now</string>
+
     <!-- Main Activity -->
     <string name="app_name">ARGame</string>
     <string name="title_fragment_games">Games</string>
