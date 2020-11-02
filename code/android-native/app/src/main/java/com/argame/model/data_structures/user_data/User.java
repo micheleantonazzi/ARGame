@@ -34,13 +34,13 @@ public class User implements IUser, SubjectUpdate {
     };
 
     // Fields' name
-    public static String UID_FIELD = "uid";
-    public static String NAME_FIELD = "name";
-    public static String SURNAME_FIELD = "surname";
-    public static String NICKNAME_FIELD = "nickname";
-    public static String EMAIL_FIELD = "email";
-    public static String PROFILE_IMAGE_COUNT_FIELD = "profileImageCount";
-    public static String ONLINE_STATUS = "onlineStatus";
+    public static final String UID_FIELD = "uid";
+    public static final String NAME_FIELD = "name";
+    public static final String SURNAME_FIELD = "surname";
+    public static final String NICKNAME_FIELD = "nickname";
+    public static final String EMAIL_FIELD = "email";
+    public static final String PROFILE_IMAGE_COUNT_FIELD = "profileImageCount";
+    public static final String ONLINE_STATUS = "onlineStatus";
 
     private String uid = "";
     private String name = "";

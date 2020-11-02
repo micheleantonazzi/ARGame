@@ -6,8 +6,13 @@ import androidx.annotation.NonNull;
 
 import com.argame.model.data_structures.friends_data.Friends;
 import com.argame.model.data_structures.friends_data.IFriends;
+import com.argame.model.data_structures.tic_tac_toe_game.TicTacToeGame;
 import com.argame.model.data_structures.user_data.User;
 import com.argame.model.data_structures.user_data.IUser;
+import com.argame.model.data_structures.users_current_game.UsersCurrentGame;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -15,10 +20,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.HttpsCallableResult;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,7 +45,8 @@ public class Database {
     // Firestore locations
     private static final String COLLECTION_USER_DATA = "users_data";
     private static final String COLLECTION_USER_FRIENDS = "users_friends";
-    private static final String COLLECTION_TIK_TAK_TOE_GAMES =  "tik_tak_toe_games";
+    private static final String COLLECTION_TIC_TAC_TOE_GAMES =  "tic_tac_toe_games";
+    private static final String COLLECTION_USERS_CURRENT_GAME = "users_current_game";
 
     // Application data
     private User userData = new User();
@@ -184,12 +192,77 @@ public class Database {
                 });
     }
 
-    public void createTikTacToeGame() {
+    public void createTicTacToeGame(String opponentID) {
 
         // Prepare game data
-        Map<String, Object> gameData = new HashMap<>();
+        Map<String, Object> gameData = TicTacToeGame.getInitialFieldMap();
+        gameData.put(TicTacToeGame.OWNER_ID_FIELD, FirebaseAuth.getInstance().getCurrentUser().getUid());
+        gameData.put(TicTacToeGame.OPPONENT_ID_FIELD, opponentID);
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        WriteBatch matchBatch = firestore.batch();
+
+        // Create new match
+        firestore.collection(COLLECTION_TIC_TAC_TOE_GAMES)
+                .add(gameData).addOnSuccessListener(documentReference -> {
+                    /*
+                    Cloud function not working with the spark plan, use a test channel for agora
+
+                    // Get agora token for video call
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("uid", FirebaseAuth.getInstance().getCurrentUser().getUid().hashCode());
+                    data.put("channel_name", documentReference.getId());
+                    FirebaseFunctions.getInstance()
+                            .getHttpsCallable("createAgoraToken")
+                            .call(data)
+                            .continueWith(task -> {
+                                // This continuation runs on either success or failure, but if the task
+                                // has failed then getResult() will throw an Exception which will be
+                                // propagated down.
+
+                                if(!(task.getResult().getData() instanceof HashMap)) {
+                                    HashMap<String, Object> result = (HashMap<String, Object>) task.getResult().getData();
+                                    Log.d("debugg", "token: " + result.getClass().getName());
+                                    return result;
+                                }
+                                else
+                                    return new HashMap<String, Object>();
+
+                            })
+                            .addOnSuccessListener(resultMap -> {
+                                if(resultMap.keySet().size() == 0)
+                                    Log.w("debugg", "Agora token creation failed");
+                                else {
+                                    Log.d("debugg", "agora token " + resultMap.get("token"));
+                                }
+                            });
+                     */
+
+                    // Update agora channel name and token
+                    documentReference.update(TicTacToeGame.AGORA_CHANNEL_FIELD, "test");
+                    documentReference.update(TicTacToeGame.AGORA_TOKEN_FIELD, "00629740b29ac4d480e9ff663b48521191bIAC4/+nqf30nZzEUZDQtAKR3j27wx3VCG67bl+SJ9quvzgx+f9gAAAAAEADJ+bHOvmChXwEAAQC+YKFf");
+
+                    // Add match to users
+                    Map<String, Object> currentGame = new HashMap<>(2);
+                    currentGame.put(UsersCurrentGame.TYPE_FIELD, COLLECTION_TIC_TAC_TOE_GAMES);
+                    currentGame.put(UsersCurrentGame.GAME_ID_FIELD, documentReference.getId());
+                    firestore.collection(COLLECTION_USERS_CURRENT_GAME).document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .set(currentGame)
+                        .addOnSuccessListener(aVoid -> {
+                            Log.d("debugg", "Current game owner updated");
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.w("debugg", "Current game owner update failed", e);
+                        });
+
+                    firestore.collection(COLLECTION_USERS_CURRENT_GAME).document(opponentID)
+                            .set(currentGame)
+                            .addOnSuccessListener(aVoid -> {
+                                Log.d("debugg", "Current game opponent updated");
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.w("debugg", "Current game opponent update failed", e);
+                            });
+                })
+        .addOnFailureListener(e -> Log.w("debugg", "TicTacToeGame creation failure", e));
     }
 
     public IUser getUserData(){

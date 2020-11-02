@@ -61,6 +61,8 @@ public class FragmentGames extends Fragment {
 
                 // Create new game
                 IUser opponent = friendsListAdapter.getSelectedItem();
+
+                Database.getInstance().createTicTacToeGame(opponent.getUid());
             })
             .setNegativeButton(R.string.button_cancel_text, (dialog, which) -> {
             }).create();
