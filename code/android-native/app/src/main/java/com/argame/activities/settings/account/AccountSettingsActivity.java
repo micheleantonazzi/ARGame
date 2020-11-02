@@ -151,6 +151,9 @@ public class AccountSettingsActivity extends AppCompatActivity {
             Database.getInstance().updateUserData(editTextName.getText().toString(), editTextSurname.getText().toString(),
                     editTextNickName.getText().toString());
             menuItemConfirm.setVisible(false);
+            nameOldValue = editTextName.getText().toString();
+            surnameOldValue = editTextSurname.getText().toString();
+            nicknameOldValue = editTextNickName.getText().toString();
             return true;
         });
 
