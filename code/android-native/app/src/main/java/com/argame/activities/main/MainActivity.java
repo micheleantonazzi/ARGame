@@ -99,10 +99,11 @@ public class MainActivity extends AppCompatActivity {
             Database.getInstance().initialize();
             CurrentUser.getInstance().initialize();
             Friends.getInstance().initialize();
-            UserCurrentGame.getInstance().initialize(this, getLayoutInflater());
-            UserCurrentGame.getInstance().initialize(this, getLayoutInflater());
+            UserCurrentGame.getInstance().initialize().setContextAndInflater(this, getLayoutInflater());
         }
     }
+
+
 
     @Override
     public void onBackPressed() {

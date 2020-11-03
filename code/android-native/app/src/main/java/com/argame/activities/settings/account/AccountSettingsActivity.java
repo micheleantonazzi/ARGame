@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.argame.model.remote_structures.CurrentUser;
 import com.argame.model.data_structures.user_data.ListenerUserUpdate;
+import com.argame.model.remote_structures.UserCurrentGame;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -102,6 +103,12 @@ public class AccountSettingsActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        UserCurrentGame.getInstance().setContextAndInflater(this, getLayoutInflater());
     }
 
     @Override

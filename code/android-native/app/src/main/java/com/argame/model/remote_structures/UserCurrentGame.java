@@ -35,12 +35,9 @@ public class UserCurrentGame {
         return INSTANCE;
     }
 
-    synchronized public void initialize(Context context, LayoutInflater layoutInflater) {
+    synchronized public UserCurrentGame initialize() {
         if(FirebaseAuth.getInstance().getCurrentUser() == null || this.isInitialized)
-            return;
-
-        this.context = context;
-        this.layoutInflater = layoutInflater;
+            return this;
 
         // Set up firestore
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -76,5 +73,12 @@ public class UserCurrentGame {
                     }
                 });
         this.isInitialized = true;
+
+        return this;
+    }
+
+    synchronized public void setContextAndInflater(Context context, LayoutInflater layoutInflater) {
+        this.context = context;
+        this.layoutInflater = layoutInflater;
     }
 }
