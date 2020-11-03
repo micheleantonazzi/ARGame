@@ -6,7 +6,7 @@ public interface ITicTacToeGame {
 
     String getMatchID();
 
-    boolean isAccepted();
+    int getAcceptedStatus();
 
     boolean isTerminated();
 

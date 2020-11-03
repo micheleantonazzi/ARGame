@@ -11,11 +11,16 @@ import java.util.Map;
 
 public class TicTacToeGame implements ITicTacToeGame {
 
+    // Status field
+    public static final int ACCEPT_STATUS_NOT_ANSWERED = -1;
+    public static final int ACCEPT_STATUS_REFUSED = 0;
+    public static final int ACCEPT_STATUS_ACCEPTED = 1;
+
     // Fields name
     public static final String OWNER_ID_FIELD = "ownerID";
     public static final String OPPONENT_ID_FIELD = "opponentID";
     public static final String AGORA_CHANNEL_FIELD = "agoraChannel";
-    public static final String ACCEPTED_FIELD = "accepted";
+    public static final String ACCEPTED_FIELD = "accept_status";
     public static final String TERMINATED_FIELD = "terminated";
     public static final String AGORA_TOKEN_FIELD = "agoraToken";
     public static final String MATRIX_FIELD = "matrix";
@@ -26,7 +31,7 @@ public class TicTacToeGame implements ITicTacToeGame {
     private IUser otherPlayer = new User();
     private String agoraChannel = "";
     private String agoraToken = "";
-    private boolean accepted = false;
+    private int accepted = -1;
     private boolean terminated = false;
     private List<Integer> matrix = new ArrayList<>(Collections.nCopies(9, -1));
 
@@ -35,7 +40,7 @@ public class TicTacToeGame implements ITicTacToeGame {
         Map<String, Object> map = new HashMap<>();
         map.put(OWNER_ID_FIELD, "");
         map.put(OPPONENT_ID_FIELD, "");
-        map.put(ACCEPTED_FIELD, false);
+        map.put(ACCEPTED_FIELD, -1);
         map.put(TERMINATED_FIELD, false);
         map.put(AGORA_TOKEN_FIELD, "");
         map.put(AGORA_CHANNEL_FIELD, "");
@@ -48,7 +53,7 @@ public class TicTacToeGame implements ITicTacToeGame {
         this.opponentID = String.valueOf(newData.get(OPPONENT_ID_FIELD));
         this.agoraChannel = String.valueOf(newData.get(AGORA_CHANNEL_FIELD));
         this.agoraToken = String.valueOf(newData.get(AGORA_TOKEN_FIELD));
-        this.accepted = Boolean.parseBoolean(String.valueOf(newData.get(ACCEPTED_FIELD)));
+        this.accepted = Integer.parseInt(String.valueOf(newData.get(ACCEPTED_FIELD)));
         this.terminated = Boolean.parseBoolean(String.valueOf(newData.get(TERMINATED_FIELD)));
         this.matrix = new ArrayList<>((List<Integer>) newData.get(MATRIX_FIELD));
         return this;
@@ -74,11 +79,11 @@ public class TicTacToeGame implements ITicTacToeGame {
     }
 
     @Override
-    synchronized public boolean isAccepted() {
+    synchronized public int getAcceptedStatus() {
         return accepted;
     }
 
-    public TicTacToeGame setAccepted(boolean accepted) {
+    public TicTacToeGame setAccepted(int accepted) {
         this.accepted = accepted;
         return this;
     }

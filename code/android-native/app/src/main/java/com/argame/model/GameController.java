@@ -111,7 +111,7 @@ public class GameController {
 
                                                     // Show dialog to accept the
                                                     if(this.currentTicTacToeGame.getOpponentID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid()) &&
-                                                            !this.currentTicTacToeGame.isAccepted()) {
+                                                            this.currentTicTacToeGame.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_NOT_ANSWERED) {
                                                         this.showDialogAcceptGame();
                                                     }
                                                 }
@@ -216,16 +216,16 @@ public class GameController {
         View view = this.layoutInflater.inflate(R.layout.alert_dialog_accept_game_layout, null);
 
         TextView textViewMessage = view.findViewById(R.id.text_view_message);
-        textViewMessage.setText(this.currentTicTacToeGame.getOtherPlayer().getNickname() + "vuole sfidarti a " + "tris");
+        textViewMessage.setText(this.currentTicTacToeGame.getOtherPlayer().getNickname() + " " + this.context.getResources().getString(R.string.accept_game_message) + " tris");
 
         alertDialogBuilder.setView(view)
                 .setPositiveButton(R.string.button_accept_game, (dialog, which) -> {
                     FirebaseFirestore.getInstance().collection(Database.COLLECTION_TIC_TAC_TOE_GAMES)
-                            .document(this.currentTicTacToeGame.getMatchID()).update(TicTacToeGame.ACCEPTED_FIELD, true);
+                            .document(this.currentTicTacToeGame.getMatchID()).update(TicTacToeGame.ACCEPTED_FIELD, TicTacToeGame.ACCEPT_STATUS_ACCEPTED);
                 })
                 .setNegativeButton(R.string.button_refuse_game, (dialog, which) -> {
                     FirebaseFirestore.getInstance().collection(Database.COLLECTION_TIC_TAC_TOE_GAMES)
-                            .document(this.currentTicTacToeGame.getMatchID()).update(TicTacToeGame.ACCEPTED_FIELD, false);
+                            .document(this.currentTicTacToeGame.getMatchID()).update(TicTacToeGame.ACCEPTED_FIELD, TicTacToeGame.ACCEPT_STATUS_REFUSED);
                 })
         .create().show();
     }

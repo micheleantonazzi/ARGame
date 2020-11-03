@@ -182,7 +182,7 @@ public class Database {
                 .addOnCompleteListener(task -> {
                 })
                 .addOnFailureListener(exception -> {
-                    Log.w("debugg", "Update user data filed", exception);
+                    Log.w("debugg", "Update user data failed", exception);
                 });
     }
 

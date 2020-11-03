@@ -5,6 +5,7 @@
     <string name="button_cancel_text">Annulla</string>
 
     <!-- Alert Dialog Accept Game -->
+    <string name="accept_game_message">vuole sfidarti a</string>
     <string name="button_accept_game">Accetta</string>
     <string name="button_refuse_game">Non ora</string>
 

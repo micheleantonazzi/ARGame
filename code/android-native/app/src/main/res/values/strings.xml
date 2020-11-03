@@ -8,6 +8,7 @@
     <string name="button_cancel_text">Cancel</string>
 
     <!-- Alert Dialog Accept Game -->
+    <string name="accept_game_message">wants to challenge you to</string>
     <string name="button_accept_game">Accept</string>
     <string name="button_refuse_game">Not now</string>
 
