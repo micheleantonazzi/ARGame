@@ -7,12 +7,13 @@ import com.argame.model.data_structures.user_data.IUser;
 
 import java.util.List;
 
-public interface IFriends {
-    void addOnUpdateListener(ListenerFriendsUpdate listener);
+public interface IFriendsData {
+
+    void removeUpdateListener(ListenerFriendsUpdate listener);
 
     void addOnUpdateListenerLifecycle(LifecycleOwner owner, Lifecycle.Event event, ListenerFriendsUpdate listener);
 
-    void removeUpdateListener(ListenerFriendsUpdate listener);
+    void addOnUpdateListener(ListenerFriendsUpdate listener);
 
     List<IUser> getFriendsList();
 

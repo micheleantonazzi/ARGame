@@ -2,8 +2,7 @@ package com.argame.activities.settings.account;
 
 import android.os.Bundle;
 
-import com.argame.model.Database;
-import com.argame.model.data_structures.current_user.CurrentUser;
+import com.argame.model.remote_structures.CurrentUser;
 import com.argame.model.data_structures.user_data.ListenerUserUpdate;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.appbar.AppBarLayout;

@@ -75,7 +75,6 @@ public class User implements IUser, SubjectUpdate {
         this.listeners.remove(listener);
     }
 
-
     @Override
     synchronized public void notifyListeners() {
         for(ListenerUserUpdate listener: this.listeners)

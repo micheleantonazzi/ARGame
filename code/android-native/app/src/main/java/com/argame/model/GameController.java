@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 
 import com.argame.R;
-import com.argame.model.data_structures.friends_data.Friends;
+import com.argame.model.remote_structures.Friends;
 import com.argame.model.data_structures.tic_tac_toe_game.ITicTacToeGame;
 import com.argame.model.data_structures.tic_tac_toe_game.TicTacToeGame;
 import com.argame.model.data_structures.user_data.IUser;
@@ -104,7 +104,7 @@ public class GameController {
                                                     this.currentTicTacToeGame.updateData(snapshotGame.getData());
 
                                                     // Obtain owner data
-                                                    IUser otherPlayer = Friends.getInstance().getFriend(
+                                                    IUser otherPlayer = Friends.getInstance().getFriendsData().getFriend(
                                                             this.currentTicTacToeGame.getOtherPlayerID(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                                     );
 

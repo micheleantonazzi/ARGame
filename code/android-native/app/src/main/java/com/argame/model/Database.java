@@ -1,13 +1,7 @@
 package com.argame.model;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
-import com.argame.model.data_structures.friends_data.Friends;
-import com.argame.model.data_structures.friends_data.IFriends;
-import com.argame.model.data_structures.user_data.User;
-import com.argame.model.data_structures.user_data.IUser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -17,13 +11,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
-import com.google.firebase.firestore.ListenerRegistration;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class Database {
 

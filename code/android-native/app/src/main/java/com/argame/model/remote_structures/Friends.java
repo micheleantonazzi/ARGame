@@ -1,30 +1,24 @@
-package com.argame.model.data_structures.friends_data;
+package com.argame.model.remote_structures;
 
 import android.util.Log;
 
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleEventObserver;
-import androidx.lifecycle.LifecycleOwner;
-
-import com.argame.model.SubjectUpdate;
-
-import com.argame.model.data_structures.current_user.CurrentUser;
+import com.argame.model.data_structures.friends_data.FriendsData;
+import com.argame.model.data_structures.friends_data.IFriendsData;
+import com.argame.model.data_structures.friends_data.ListenerFriendsUpdate;
 import com.argame.model.data_structures.user_data.User;
-import com.argame.model.data_structures.user_data.IUser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Friends implements IFriends, SubjectUpdate {
+public class Friends {
 
     private static Friends INSTANCE;
 
@@ -35,10 +29,9 @@ public class Friends implements IFriends, SubjectUpdate {
     public static final String FRIENDS_FIELD = "friends";
 
     boolean isInitialize = false;
+    private final FriendsData friendsData = new FriendsData();
     private List<ListenerFriendsUpdate> listeners = new ArrayList<>();
-    private Map<String, User> friends = new HashMap<>();
     private Map<String, ListenerRegistration> friendsUpdateListeners = new HashMap<>();
-    private List<IUser> orderedUsers = new ArrayList<>();
 
     private Friends() {}
 
@@ -54,7 +47,7 @@ public class Friends implements IFriends, SubjectUpdate {
 
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         firestore.collection(COLLECTION_USER_FRIENDS).document(FirebaseAuth.getInstance().getCurrentUser().getUid()).addSnapshotListener((snapshotFriends, exception) -> {
-            synchronized (Friends.getInstance()) {
+            synchronized (this.friendsData) {
                 if (exception != null) {
                     Log.w("debugg", "Read user's friends failed", exception);
                     return;
@@ -64,16 +57,16 @@ public class Friends implements IFriends, SubjectUpdate {
                     Set<String> updatedFriendsIDs = new HashSet<>((List<String>) snapshotFriends.getData().get(Friends.FRIENDS_FIELD));
 
                     // REMOVE DELETED FRIENDS
-                    Set<String> deletedFriendsIDs = this.getDeletedFriendsIDs(updatedFriendsIDs);
+                    Set<String> deletedFriendsIDs = this.friendsData.getDeletedFriendsIDs(updatedFriendsIDs);
 
                     // Remove listeners that notify deleted friends changes
                     for (String deletedFriendID : deletedFriendsIDs)
                         this.friendsUpdateListeners.get(deletedFriendID).remove();
                     this.friendsUpdateListeners.keySet().removeAll(deletedFriendsIDs);
-                    this.removeFriendsUsingIDs(deletedFriendsIDs);
+                    this.friendsData.removeFriendsUsingIDs(deletedFriendsIDs);
 
                     // Add new friends
-                    Set<String> newFriendsIDs = this.getNewFriends(updatedFriendsIDs);
+                    Set<String> newFriendsIDs = this.friendsData.getNewFriends(updatedFriendsIDs);
                     for (String newFriendID : newFriendsIDs) {
 
                         // Create new friend instance
@@ -94,10 +87,10 @@ public class Friends implements IFriends, SubjectUpdate {
                                     }
                                 });
                         this.friendsUpdateListeners.put(newFriendID, listener);
-                        this.addNewFriend(newFriendID, newFriend);
+                        this.friendsData.addNewFriend(newFriendID, newFriend);
                     }
                     // Notify listeners that friends list is changed
-                    this.notifyListeners();
+                    this.friendsData.notifyListeners();
                 } else {
                     Log.d("debugg", "Current data: null");
                 }
@@ -105,77 +98,7 @@ public class Friends implements IFriends, SubjectUpdate {
         });
     }
 
-    private Set<String> getDeletedFriendsIDs(Set<String> updatedFriendsIDs) {
-        Set<String> deletedFriendsIDs = new HashSet<>(this.friends.keySet());
-        deletedFriendsIDs.removeAll(updatedFriendsIDs);
-        return deletedFriendsIDs;
-    }
-
-    private Set<String> getNewFriends(Set<String> updatedFriendsIDs) {
-        Set<String> newFriends = new HashSet<>(updatedFriendsIDs);
-        newFriends.removeAll(this.friends.keySet());
-        return newFriends;
-    }
-
-    private void addNewFriend(String friendID, User newFriend) {
-        this.friends.put(friendID, newFriend);
-        this.sortUser();
-    }
-
-    private void removeFriendsUsingIDs(Set<String> deletedFriendsIDs) {
-        this.friends.keySet().removeAll(deletedFriendsIDs);
-        this.sortUser();
-    }
-
-    // Listener pattern implementation
-    @Override
-    synchronized public void addOnUpdateListener(ListenerFriendsUpdate listener) {
-        if(!this.listeners.contains(listener))
-            this.listeners.add(listener);
-    }
-
-    @Override
-    synchronized public void addOnUpdateListenerLifecycle(LifecycleOwner owner, Lifecycle.Event event, ListenerFriendsUpdate listener) {
-        owner.getLifecycle().addObserver((LifecycleEventObserver) (source, e) -> {
-            synchronized (this) {
-                if (event == e)
-                    this.removeUpdateListener(listener);
-
-            }
-        });
-        this.listeners.add(listener);
-    }
-
-    @Override
-    synchronized public void removeUpdateListener(ListenerFriendsUpdate listener) {
-        this.listeners.remove(listener);
-    }
-
-
-    @Override
-    synchronized public void notifyListeners() {
-        for(ListenerFriendsUpdate listener: this.listeners)
-            listener.update(this);
-    }
-
-    private void sortUser() {
-        this.orderedUsers =  new ArrayList<>(this.friends.values());
-        Collections.sort(this.orderedUsers, (o1, o2) -> o1.getNickname().compareTo(o2.getNickname()));
-    }
-
-    @Override
-    synchronized public List<IUser> getFriendsList() {
-        return this.orderedUsers;
-
-    }
-
-    @Override
-    synchronized public int getFriendOrderedNumber(IUser friend) {
-        return this.orderedUsers.indexOf(friend);
-    }
-
-    @Override
-    synchronized public IUser getFriend(String friendID) {
-        return this.friends.get(friendID);
+    synchronized public IFriendsData getFriendsData() {
+        return this.friendsData;
     }
 }

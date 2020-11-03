@@ -1,4 +1,4 @@
-package com.argame.model.data_structures.current_user;
+package com.argame.model.remote_structures;
 
 import android.util.Log;
 
