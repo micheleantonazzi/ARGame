@@ -68,6 +68,19 @@ public class TicTacToeGame implements ITicTacToeGame {
             return "";
     }
 
+    public TicTacToeGame reset() {
+        this.matchID = "";
+        this.ownerID = "";
+        this.opponentID = "";
+        this.otherPlayer = new User();
+        this.agoraChannel = "";
+        this.agoraToken = "";
+        this.accepted = -1;
+        this.terminated = false;
+        this.matrix = new ArrayList<>(Collections.nCopies(9, -1));
+        return this;
+    }
+
     @Override
     synchronized public String getMatchID() {
         return matchID;

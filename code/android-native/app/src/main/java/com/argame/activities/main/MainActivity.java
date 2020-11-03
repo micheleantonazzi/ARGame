@@ -21,9 +21,9 @@ import com.argame.activities.main.fragments.fragment_games.FragmentGamesDirectio
 import com.argame.activities.settings.account.AccountSettingsActivity;
 import com.argame.activities.settings.application.ApplicationSettingsActivity;
 import com.argame.model.Database;
-import com.argame.model.GameController;
 import com.argame.model.remote_structures.CurrentUser;
 import com.argame.model.remote_structures.Friends;
+import com.argame.model.remote_structures.UserCurrentGame;
 import com.argame.utilities.ThemeSelector;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
@@ -59,28 +59,24 @@ public class MainActivity extends AppCompatActivity {
 
         // Setup the bottom navigation view
         this.bottomNavigationView = findViewById(R.id.bottom_navigation_view);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if(bottomNavigationView.getSelectedItemId() == item.getItemId())
-                    return false;
-
-                switch (item.getItemId()){
-                    case R.id.item_bottom_menu_games:
-
-                        navControllerBottomNavigation.navigate(
-                                FragmentFriendsDirections.actionNavigationFragmentFriendsToNavigationFragmentGames()
-
-                        );
-                        return true;
-                    case R.id.item_bottom_menu_friends:
-                        navControllerBottomNavigation.navigate(
-                                FragmentGamesDirections.actionNavigationFragmentGamesToNavigationFragmentFriends()
-                        );
-                        return true;
-                }
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            if(bottomNavigationView.getSelectedItemId() == item.getItemId())
                 return false;
+
+            switch (item.getItemId()){
+                case R.id.item_bottom_menu_games:
+                    navControllerBottomNavigation.navigate(
+                            FragmentFriendsDirections.actionNavigationFragmentFriendsToNavigationFragmentGames()
+
+                    );
+                    return true;
+                case R.id.item_bottom_menu_friends:
+                    navControllerBottomNavigation.navigate(
+                            FragmentGamesDirections.actionNavigationFragmentGamesToNavigationFragmentFriends()
+                    );
+                    return true;
             }
+            return false;
         });
 
         // Set theme according to the user preference
@@ -103,7 +99,8 @@ public class MainActivity extends AppCompatActivity {
             Database.getInstance().initialize();
             CurrentUser.getInstance().initialize();
             Friends.getInstance().initialize();
-            GameController.getInstance(this, getLayoutInflater()).initialize();
+            UserCurrentGame.getInstance().initialize(this, getLayoutInflater());
+            UserCurrentGame.getInstance().initialize(this, getLayoutInflater());
         }
     }
 

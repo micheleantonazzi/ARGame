@@ -21,10 +21,6 @@ public class Database {
     // Realtime database locations
     private static final String USERS_CONNECTION_STATUS = "users_connection_status";
 
-    // Firestore locations
-    public static final String COLLECTION_TIC_TAC_TOE_GAMES =  "tic_tac_toe_games";
-    public static final String COLLECTION_USERS_CURRENT_GAME = "users_current_game";
-
     private Database(){}
 
     synchronized static public Database getInstance(){

@@ -6,7 +6,6 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.argame.model.SubjectUpdate;
 import com.argame.model.data_structures.user_data.IUser;
-import com.argame.model.data_structures.user_data.ListenerUserUpdate;
 import com.argame.model.data_structures.user_data.User;
 
 import java.util.ArrayList;

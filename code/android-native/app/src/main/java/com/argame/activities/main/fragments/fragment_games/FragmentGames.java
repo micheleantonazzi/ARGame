@@ -17,7 +17,7 @@ import android.widget.Button;
 
 import com.argame.R;
 import com.argame.model.FriendsListAdapter;
-import com.argame.model.GameController;
+import com.argame.model.TicTacToeGameController;
 import com.argame.model.remote_structures.Friends;
 import com.argame.model.data_structures.user_data.IUser;
 
@@ -63,7 +63,7 @@ public class FragmentGames extends Fragment {
                 // Create new game
                 IUser opponent = friendsListAdapter.getSelectedItem();
 
-                GameController.getInstance().createTicTacToeGame(opponent.getUid());
+                TicTacToeGameController.getInstance().createTicTacToeGame(opponent.getUid());
             })
             .setNegativeButton(R.string.button_cancel_text, (dialog, which) -> {
             }).create();

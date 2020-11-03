@@ -4,14 +4,12 @@ import android.util.Log;
 
 import com.argame.model.data_structures.friends_data.FriendsData;
 import com.argame.model.data_structures.friends_data.IFriendsData;
-import com.argame.model.data_structures.friends_data.ListenerFriendsUpdate;
 import com.argame.model.data_structures.user_data.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -28,9 +26,8 @@ public class Friends {
     // Fields' name
     public static final String FRIENDS_FIELD = "friends";
 
-    boolean isInitialize = false;
+    boolean isInitialized = false;
     private final FriendsData friendsData = new FriendsData();
-    private List<ListenerFriendsUpdate> listeners = new ArrayList<>();
     private Map<String, ListenerRegistration> friendsUpdateListeners = new HashMap<>();
 
     private Friends() {}
@@ -42,7 +39,7 @@ public class Friends {
     }
 
     synchronized public void initialize() {
-        if(FirebaseAuth.getInstance().getCurrentUser() == null || !CurrentUser.getInstance().isInitialized() || this.isInitialize)
+        if(FirebaseAuth.getInstance().getCurrentUser() == null || !CurrentUser.getInstance().isInitialized() || this.isInitialized)
             return;
 
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
