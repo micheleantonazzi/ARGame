@@ -3,6 +3,7 @@ package com.argame.activities.settings.account;
 import android.os.Bundle;
 
 import com.argame.model.Database;
+import com.argame.model.data_structures.current_user.CurrentUser;
 import com.argame.model.data_structures.user_data.ListenerUserUpdate;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.appbar.AppBarLayout;
@@ -93,10 +94,10 @@ public class AccountSettingsActivity extends AppCompatActivity {
         };
 
         // Fill activity fields
-        listenerUserUpdate.update(Database.getInstance().getUserData());
+        listenerUserUpdate.update(CurrentUser.getInstance().getCurrentUser());
 
         // Pass the listener to the userData
-        Database.getInstance().getUserData().addOnUpdateListenerLifecycle(this, Lifecycle.Event.ON_DESTROY, listenerUserUpdate);
+        CurrentUser.getInstance().getCurrentUser().addOnUpdateListenerLifecycle(this, Lifecycle.Event.ON_DESTROY, listenerUserUpdate);
     }
 
     @Override
@@ -148,7 +149,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         editTextNickName.addTextChangedListener(textWatcherChange);
 
         menuItemConfirm.setOnMenuItemClickListener(item -> {
-            Database.getInstance().updateUserData(editTextName.getText().toString(), editTextSurname.getText().toString(),
+            CurrentUser.getInstance().updateUserData(editTextName.getText().toString(), editTextSurname.getText().toString(),
                     editTextNickName.getText().toString());
             menuItemConfirm.setVisible(false);
             nameOldValue = editTextName.getText().toString();

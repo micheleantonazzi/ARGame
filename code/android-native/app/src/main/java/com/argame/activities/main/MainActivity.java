@@ -22,6 +22,8 @@ import com.argame.activities.settings.account.AccountSettingsActivity;
 import com.argame.activities.settings.application.ApplicationSettingsActivity;
 import com.argame.model.Database;
 import com.argame.model.GameController;
+import com.argame.model.data_structures.current_user.CurrentUser;
+import com.argame.model.data_structures.friends_data.Friends;
 import com.argame.utilities.ThemeSelector;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
@@ -97,8 +99,10 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser == null)
             createSignInIntent();
         else{
-            // Load user data
+            // Initialize components
             Database.getInstance().initialize();
+            CurrentUser.getInstance().initialize();
+            Friends.getInstance().initialize();
             GameController.getInstance(this, getLayoutInflater()).initialize();
         }
     }

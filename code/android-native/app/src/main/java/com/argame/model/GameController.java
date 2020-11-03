@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 
 import com.argame.R;
+import com.argame.model.data_structures.friends_data.Friends;
 import com.argame.model.data_structures.tic_tac_toe_game.ITicTacToeGame;
 import com.argame.model.data_structures.tic_tac_toe_game.TicTacToeGame;
 import com.argame.model.data_structures.user_data.IUser;
@@ -103,7 +104,7 @@ public class GameController {
                                                     this.currentTicTacToeGame.updateData(snapshotGame.getData());
 
                                                     // Obtain owner data
-                                                    IUser otherPlayer = Database.getInstance().getUserFriends().getFriend(
+                                                    IUser otherPlayer = Friends.getInstance().getFriend(
                                                             this.currentTicTacToeGame.getOtherPlayerID(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                                     );
 
@@ -113,6 +114,9 @@ public class GameController {
                                                     if(this.currentTicTacToeGame.getOpponentID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid()) &&
                                                             this.currentTicTacToeGame.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_NOT_ANSWERED) {
                                                         this.showDialogAcceptGame();
+                                                    }
+                                                    else if(this.currentTicTacToeGame.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_ACCEPTED){
+
                                                     }
                                                 }
                                                 Log.d("debugg", "update game data");

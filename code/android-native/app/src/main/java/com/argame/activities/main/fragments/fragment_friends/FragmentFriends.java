@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.argame.R;
 import com.argame.model.Database;
 import com.argame.model.FriendsListAdapter;
+import com.argame.model.data_structures.friends_data.Friends;
 import com.argame.model.data_structures.user_data.ListenerUserUpdate;
 import com.argame.model.data_structures.user_data.IUser;
 
@@ -45,16 +46,16 @@ public class FragmentFriends extends Fragment {
         recyclerViewFriends.setAdapter(friendsListAdapter);
 
         // Submit friend list to adapter
-        friendsListAdapter.submitList(Database.getInstance().getUserFriends().getFriendsList());
+        friendsListAdapter.submitList(Friends.getInstance().getFriendsList());
 
         // Add update listener to friends
         ListenerUserUpdate listenerUserUpdate =
-                newFriend -> friendsListAdapter.notifyItemChanged(Database.getInstance().getUserFriends().getFriendOrderedNumber(newFriend));
-        for(IUser friend: Database.getInstance().getUserFriends().getFriendsList())
+                newFriend -> friendsListAdapter.notifyItemChanged(Friends.getInstance().getFriendOrderedNumber(newFriend));
+        for(IUser friend: Friends.getInstance().getFriendsList())
             friend.addOnUpdateListenerLifecycle(this, Lifecycle.Event.ON_STOP, listenerUserUpdate);
 
         // Set listener to notify update
-        Database.getInstance().getUserFriends().addOnUpdateListenerLifecycle(this, Lifecycle.Event.ON_STOP, userFriends -> {
+        Friends.getInstance().addOnUpdateListenerLifecycle(this, Lifecycle.Event.ON_STOP, userFriends -> {
 
             // Set update listener to new users
             List<IUser> newFriends = new ArrayList<>(userFriends.getFriendsList());
@@ -63,7 +64,7 @@ public class FragmentFriends extends Fragment {
                 newFriend.addOnUpdateListenerLifecycle(this, Lifecycle.Event.ON_STOP, listenerUserUpdate);
             }
 
-            friendsListAdapter.submitList(Database.getInstance().getUserFriends().getFriendsList());
+            friendsListAdapter.submitList(Friends.getInstance().getFriendsList());
         });
         return view;
     }

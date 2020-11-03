@@ -19,6 +19,7 @@ import com.argame.R;
 import com.argame.model.FriendsListAdapter;
 import com.argame.model.Database;
 import com.argame.model.GameController;
+import com.argame.model.data_structures.friends_data.Friends;
 import com.argame.model.data_structures.user_data.IUser;
 
 public class FragmentGames extends Fragment {
@@ -55,7 +56,7 @@ public class FragmentGames extends Fragment {
             recyclerViewFriends.setAdapter(friendsListAdapter);
 
             // Submit friend list to adapter
-            friendsListAdapter.submitList(Database.getInstance().getUserFriends().getFriendsList());
+            friendsListAdapter.submitList(Friends.getInstance().getFriendsList());
 
             AlertDialog alertDialogOpponent = alertDialogOpponentBuilder.setView(viewAlertDialogOpponent)
             .setPositiveButton(R.string.button_confirm_text, (dialog, which) -> {
