@@ -21,6 +21,7 @@ import com.argame.activities.main.fragments.fragment_games.FragmentGamesDirectio
 import com.argame.activities.settings.account.AccountSettingsActivity;
 import com.argame.activities.settings.application.ApplicationSettingsActivity;
 import com.argame.model.Database;
+import com.argame.model.TicTacToeGameController;
 import com.argame.model.remote_structures.CurrentUser;
 import com.argame.model.remote_structures.Friends;
 import com.argame.model.remote_structures.UserCurrentGame;
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
             CurrentUser.getInstance().initialize();
             Friends.getInstance().initialize();
             UserCurrentGame.getInstance().initialize().setContextAndInflater(this, getLayoutInflater());
+            TicTacToeGameController.getInstance().setContextAndLayoutInflater(this, getLayoutInflater());
         }
     }
 

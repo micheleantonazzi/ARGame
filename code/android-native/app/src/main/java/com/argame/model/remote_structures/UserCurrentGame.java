@@ -22,6 +22,7 @@ public class UserCurrentGame {
     public static final String IS_ACTIVE_FIELD = "isActive";
     public static final String TYPE_FIELD = "type";
     public static final String GAME_ID_FIELD = "gameID";
+    public static final String OWNER_ID_FIELD = "ownerID";
 
     private boolean isInitialized = false;
     private Context context;
@@ -56,9 +57,10 @@ public class UserCurrentGame {
                             return;
 
                         Boolean isActive = (Boolean) snapshotCurrentGame.getData().get(UserCurrentGame.IS_ACTIVE_FIELD);
+                        String ownerID = String.valueOf(snapshotCurrentGame.getData().get(UserCurrentGame.OWNER_ID_FIELD));
 
-                        // if game isn't active returns (there is no game in action)
-                        if(!isActive) {
+                        // If game isn't active or if the owner is this user returns (there is no game in action or the current user has created the match and the notification is useless)
+                        if(!isActive || ownerID.equals(CurrentUser.getInstance().getCurrentUser().getUid())) {
                             return;
                         }
 
@@ -75,6 +77,17 @@ public class UserCurrentGame {
         this.isInitialized = true;
 
         return this;
+    }
+
+    // This method is called by the opponent and set inactive the current game
+    synchronized public void matchRefused(String ownerID) {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+        firestore.collection(COLLECTION_USERS_CURRENT_GAME).document(CurrentUser.getInstance().getCurrentUser().getUid())
+                .update(IS_ACTIVE_FIELD, false);
+
+        firestore.collection(COLLECTION_USERS_CURRENT_GAME).document(ownerID)
+                .update(IS_ACTIVE_FIELD, false);
     }
 
     synchronized public void setContextAndInflater(Context context, LayoutInflater layoutInflater) {

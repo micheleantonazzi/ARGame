@@ -13,6 +13,8 @@ import com.argame.R;
 import com.argame.activities.tic_tac_toe.TicTacToeActivity;
 import com.argame.model.data_structures.tic_tac_toe_game.ITicTacToeGame;
 import com.argame.model.data_structures.tic_tac_toe_game.TicTacToeGame;
+import com.argame.model.data_structures.user_data.User;
+import com.argame.model.remote_structures.CurrentUser;
 import com.argame.model.remote_structures.Friends;
 import com.argame.model.remote_structures.UserCurrentGame;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,26 +44,9 @@ public class TicTacToeGameController {
         if (snapshotGame != null && snapshotGame.exists() && snapshotGame.getData() != null) {
             Log.d("debugg", "update game data");
 
-            if (this.currentTicTacToeGame != null) {
+            if (this.currentTicTacToeGame != null)
                 this.currentTicTacToeGame.updateData(snapshotGame.getData());
 
-                // Different action
-                if (this.currentTicTacToeGame.isOwner(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                    if (this.currentTicTacToeGame.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_NOT_ANSWERED)
-                        this.context.startActivity(new Intent(this.context, TicTacToeActivity.class));
-                    else if (this.currentTicTacToeGame.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_REFUSED)
-                        this.resetGame();
-                }
-                else {
-                    if (this.currentTicTacToeGame.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_NOT_ANSWERED)
-                        this.showDialogAcceptGame();
-                    else if (this.currentTicTacToeGame.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_REFUSED)
-                        this.resetGame();
-                    else if (this.currentTicTacToeGame.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_ACCEPTED)
-                        this.context.startActivity(new Intent(this.context, TicTacToeActivity.class));
-                }
-            }
-            Log.d("debugg", "update game data");
         } else {
             Log.w("debugg", "Game data: null");
         }
@@ -78,12 +63,32 @@ public class TicTacToeGameController {
         return INSTANCE;
     }
 
+    synchronized public void setContextAndLayoutInflater(Context context, LayoutInflater layoutInflater) {
+        this.context = context;
+        this.layoutInflater = layoutInflater;
+    }
+
+    // This method is called by the opponent, who must accept or reject the game
     synchronized public void checkNewTicTacToeGame(String gameID, Context context, LayoutInflater layoutInflater) {
 
         this.context = context;
         this.layoutInflater = layoutInflater;
 
-        this.startNewGame(gameID);
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        synchronized (this.currentTicTacToeGame) {
+            this.currentTicTacToeGame.reset().setMatchID(gameID);
+
+            // Add listener to TicTacToeGame
+            this.currentTicTacToeGame.addOnUpdateAcceptedStatus(gameAcceptedStatusChanged -> {
+                if (gameAcceptedStatusChanged.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_NOT_ANSWERED)
+                    this.showDialogAcceptGame();
+                else if (gameAcceptedStatusChanged.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_ACCEPTED)
+                    this.context.startActivity(new Intent(this.context, TicTacToeActivity.class));
+            });
+
+            this.gameListenerRegistration = firestore.collection(COLLECTION_TIC_TAC_TOE_GAMES).document(gameID)
+                    .addSnapshotListener(this.gameListener);
+        }
     }
 
     synchronized public void createTicTacToeGame(String opponentID) {
@@ -139,6 +144,7 @@ public class TicTacToeGameController {
             currentGame.put(UserCurrentGame.IS_ACTIVE_FIELD, true);
             currentGame.put(UserCurrentGame.TYPE_FIELD, COLLECTION_TIC_TAC_TOE_GAMES);
             currentGame.put(UserCurrentGame.GAME_ID_FIELD, documentReference.getId());
+            currentGame.put(UserCurrentGame.OWNER_ID_FIELD, CurrentUser.getInstance().getCurrentUser().getUid());
             firestore.collection(UserCurrentGame.COLLECTION_USERS_CURRENT_GAME).document(FirebaseAuth.getInstance().getCurrentUser().getUid())
                     .set(currentGame)
                     .addOnSuccessListener(aVoid -> {
@@ -156,24 +162,25 @@ public class TicTacToeGameController {
                     });
 
             // Attach listener to new match
-            this.startNewGame(documentReference.getId());
+            synchronized (this.currentTicTacToeGame) {
+                this.currentTicTacToeGame.reset().setMatchID(documentReference.getId());
+
+                // Add listener to TicTacToeGame
+                this.currentTicTacToeGame.addOnUpdateAcceptedStatus(gameAcceptedStatusChanged -> {
+                    if (gameAcceptedStatusChanged.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_NOT_ANSWERED)
+                        this.context.startActivity(new Intent(this.context, TicTacToeActivity.class));
+                });
+
+                this.gameListenerRegistration = firestore.collection(COLLECTION_TIC_TAC_TOE_GAMES).document(documentReference.getId())
+                        .addSnapshotListener(this.gameListener);
+            }
                 })
                 .addOnFailureListener(e -> Log.w("debugg", "TicTacToeGame creation failure", e));
     }
 
-    synchronized private void startNewGame(String gameID) {
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-
-        synchronized (this.currentTicTacToeGame) {
-            this.currentTicTacToeGame.reset().setMatchID(gameID);
-            this.gameListenerRegistration = firestore.collection(COLLECTION_TIC_TAC_TOE_GAMES).document(gameID)
-                    .addSnapshotListener(this.gameListener);
-        }
-    }
-
     synchronized private void resetGame() {
         synchronized (this.currentTicTacToeGame) {
-            // Remove old TicTAcToeGame
+            // Remove old TicTacToeGame
             if (this.gameListenerRegistration != null)
                 this.gameListenerRegistration.remove();
             this.currentTicTacToeGame.reset();

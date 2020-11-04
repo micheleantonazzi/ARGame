@@ -52,4 +52,7 @@
     <string name="system_theme">System</string>
     <string name="coloured_theme">Coloured</string>
     <string name="dark_theme">Dark</string>
+
+    <!-- TicTacToe activity -->
+    <string name="text_view_wait_opponent">Waiting for opponent</string>
 </resources>

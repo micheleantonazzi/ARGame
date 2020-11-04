@@ -17,4 +17,8 @@ public interface ITicTacToeGame {
     String getAgoraToken();
 
     String getAgoraChannel();
+
+    boolean isOwner();
+
+    void addOnUpdateAcceptedStatus(ListenerTicTacToeGameUpdate listener);
 }

@@ -2,12 +2,15 @@ package com.argame.model.data_structures.tic_tac_toe_game;
 
 import com.argame.model.data_structures.user_data.IUser;
 import com.argame.model.data_structures.user_data.User;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class TicTacToeGame implements ITicTacToeGame {
 
@@ -30,9 +33,11 @@ public class TicTacToeGame implements ITicTacToeGame {
     private String opponentID = "";
     private String agoraChannel = "";
     private String agoraToken = "";
-    private int accepted = -1;
+    private int accepted = -2;
     private boolean terminated = false;
     private List<Integer> matrix = new ArrayList<>(Collections.nCopies(9, -1));
+
+    private Set<ListenerTicTacToeGameUpdate> listenerAcceptedStatus = new HashSet<>();
 
 
     public static Map<String, Object> getInitialFieldMap() {
@@ -52,14 +57,21 @@ public class TicTacToeGame implements ITicTacToeGame {
         this.opponentID = String.valueOf(newData.get(OPPONENT_ID_FIELD));
         this.agoraChannel = String.valueOf(newData.get(AGORA_CHANNEL_FIELD));
         this.agoraToken = String.valueOf(newData.get(AGORA_TOKEN_FIELD));
-        this.accepted = Integer.parseInt(String.valueOf(newData.get(ACCEPTED_FIELD)));
+
+        int oldAcceptedStatus = this.accepted;
+        this.accepted = Integer.parseInt(String.valueOf(newData.get(ACCEPTED_FIELD)));;
         this.terminated = Boolean.parseBoolean(String.valueOf(newData.get(TERMINATED_FIELD)));
         this.matrix = new ArrayList<>((List<Integer>) newData.get(MATRIX_FIELD));
+
+        if (this.accepted != oldAcceptedStatus) {
+            this.notifyAcceptedStatusListeners();
+        }
         return this;
     }
 
-    synchronized public boolean isOwner(String playerID) {
-        return !this.ownerID.equals("") && !this.opponentID.equals("") && this.ownerID.equals(playerID);
+    @Override
+    synchronized public boolean isOwner() {
+        return !this.ownerID.equals("") && !this.opponentID.equals("") && this.ownerID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid());
     }
 
     synchronized public String getOtherPlayerID(String currentPlayerID) {
@@ -77,10 +89,21 @@ public class TicTacToeGame implements ITicTacToeGame {
         this.opponentID = "";
         this.agoraChannel = "";
         this.agoraToken = "";
-        this.accepted = -1;
+        this.accepted = -2;
         this.terminated = false;
+        this.listenerAcceptedStatus = new HashSet<>();
         this.matrix = new ArrayList<>(Collections.nCopies(9, -1));
         return this;
+    }
+
+    @Override
+    synchronized public void addOnUpdateAcceptedStatus(ListenerTicTacToeGameUpdate listener) {
+        this.listenerAcceptedStatus.add(listener);
+    }
+
+    private void notifyAcceptedStatusListeners() {
+        for(ListenerTicTacToeGameUpdate listener: this.listenerAcceptedStatus)
+            listener.update(this);
     }
 
     @Override

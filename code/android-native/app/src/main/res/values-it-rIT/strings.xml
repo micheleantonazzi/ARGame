@@ -49,4 +49,7 @@
     <string name="coloured_theme">Colorato</string>
     <string name="dark_theme">Scuro</string>
 
+    <!-- TicTacToe activity -->
+    <string name="text_view_wait_opponent">In attesa dell\'avversario</string>
+
 </resources>
