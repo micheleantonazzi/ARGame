@@ -28,7 +28,6 @@ public class TicTacToeGame implements ITicTacToeGame {
     private String matchID = "";
     private String ownerID = "";
     private String opponentID = "";
-    private IUser otherPlayer = new User();
     private String agoraChannel = "";
     private String agoraToken = "";
     private int accepted = -1;
@@ -59,6 +58,10 @@ public class TicTacToeGame implements ITicTacToeGame {
         return this;
     }
 
+    synchronized public boolean isOwner(String playerID) {
+        return !this.ownerID.equals("") && !this.opponentID.equals("") && this.ownerID.equals(playerID);
+    }
+
     synchronized public String getOtherPlayerID(String currentPlayerID) {
         if(currentPlayerID.equals(this.ownerID))
             return this.opponentID;
@@ -68,11 +71,10 @@ public class TicTacToeGame implements ITicTacToeGame {
             return "";
     }
 
-    public TicTacToeGame reset() {
+    synchronized public TicTacToeGame reset() {
         this.matchID = "";
         this.ownerID = "";
         this.opponentID = "";
-        this.otherPlayer = new User();
         this.agoraChannel = "";
         this.agoraToken = "";
         this.accepted = -1;
@@ -148,16 +150,6 @@ public class TicTacToeGame implements ITicTacToeGame {
 
     synchronized public TicTacToeGame setAgoraToken(String agoraToken) {
         this.agoraToken = agoraToken;
-        return this;
-    }
-
-    @Override
-    synchronized public IUser getOtherPlayer() {
-        return otherPlayer;
-    }
-
-    synchronized public TicTacToeGame setOtherPlayer(IUser otherPlayer) {
-        this.otherPlayer = otherPlayer;
         return this;
     }
 }

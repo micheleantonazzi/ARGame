@@ -18,6 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activities.tic_tac_toe.TicTacToeActivity"></activity>
+        <activity android:name=".activities.tic_tac_toe.TicTacToeActivityCall" />
         <activity
             android:name=".activities.settings.account.AccountSettingsActivity"
             android:label="@string/title_activity_account_settings"

@@ -16,23 +16,23 @@
     <string name="app_name">ARGame</string>
     <string name="title_fragment_games">Games</string>
 
-        <!-- Fragment games -->
-        <string name="button_play_text">Play</string>
-        
-            <!-- Alert dialog opponent -->
-            <string name="text_view_title">Choose your opponent</string>
+    <!-- Fragment games -->
+    <string name="button_play_text">Play</string>
 
-        <!-- Fragment friends -->
-        <string name="title_fragment_friends">Friends</string>
-        <string name="image_view_friend_profile_image_description">Friend\'s profile image</string>
+    <!-- Alert dialog opponent -->
+    <string name="text_view_title">Choose your opponent</string>
 
-        <!-- Bottom menu -->
-        <string name="item_bottom_menu_games">Games</string>
-        <string name="item_bottom_menu_friends">Friends</string>
+    <!-- Fragment friends -->
+    <string name="title_fragment_friends">Friends</string>
+    <string name="image_view_friend_profile_image_description">Friend\'s profile image</string>
 
-        <!-- Main menu -->
-        <string name="item_menu_main_activity_account">Account settings</string>
-        <string name="item_menu_main_activity_application">App settings</string>
+    <!-- Bottom menu -->
+    <string name="item_bottom_menu_games">Games</string>
+    <string name="item_bottom_menu_friends">Friends</string>
+
+    <!-- Main menu -->
+    <string name="item_menu_main_activity_account">Account settings</string>
+    <string name="item_menu_main_activity_application">App settings</string>
 
 
     <!-- Account Settings Activity -->

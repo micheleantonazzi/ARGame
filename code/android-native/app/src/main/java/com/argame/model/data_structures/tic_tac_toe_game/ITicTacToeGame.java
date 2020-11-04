@@ -17,6 +17,4 @@ public interface ITicTacToeGame {
     String getAgoraToken();
 
     String getAgoraChannel();
-
-    IUser getOtherPlayer();
 }
