@@ -4,10 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 
-import com.argame.model.Database;
 import com.argame.model.TicTacToeGameController;
-import com.argame.model.data_structures.tic_tac_toe_game.TicTacToeGame;
-import com.argame.model.data_structures.user_data.IUser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -25,6 +22,7 @@ public class UserCurrentGame {
     public static final String OWNER_ID_FIELD = "ownerID";
 
     private boolean isInitialized = false;
+    private boolean isFirstRead = true;
     private Context context;
     private LayoutInflater layoutInflater;
 
@@ -52,22 +50,22 @@ public class UserCurrentGame {
                     }
                     if (snapshotCurrentGame != null && snapshotCurrentGame.exists() && snapshotCurrentGame.getData() != null) {
 
-                        // Check if data comes from cache: in this case return
-                        if(snapshotCurrentGame.getMetadata().isFromCache())
-                            return;
-
                         Boolean isActive = (Boolean) snapshotCurrentGame.getData().get(UserCurrentGame.IS_ACTIVE_FIELD);
                         String ownerID = String.valueOf(snapshotCurrentGame.getData().get(UserCurrentGame.OWNER_ID_FIELD));
 
                         // If game isn't active or if the owner is this user returns (there is no game in action or the current user has created the match and the notification is useless)
-                        if(!isActive || ownerID.equals(CurrentUser.getInstance().getCurrentUser().getUid())) {
+                        if(!isActive) {
                             return;
                         }
 
                         // Add listener to current game (based of correct type)
                         switch (snapshotCurrentGame.getData().get(UserCurrentGame.TYPE_FIELD).toString()) {
                             case TicTacToeGameController.COLLECTION_TIC_TAC_TOE_GAMES:
-                                TicTacToeGameController.getInstance().checkNewTicTacToeGame(snapshotCurrentGame.get(GAME_ID_FIELD).toString(), this.context, this.layoutInflater);
+                                // If this user is the opponent, ask for game
+                                if (!ownerID.equals(CurrentUser.getInstance().getCurrentUser().getUid()))
+                                    TicTacToeGameController.getInstance().askNewTicTacToeGame(snapshotCurrentGame.get(GAME_ID_FIELD).toString(), this.context, this.layoutInflater);
+                                else
+                                    TicTacToeGameController.getInstance().checkGameResume(snapshotCurrentGame.get(GAME_ID_FIELD).toString());
                                 return;
                         }
                     } else {

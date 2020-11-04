@@ -69,7 +69,7 @@ public class TicTacToeGameController {
     }
 
     // This method is called by the opponent, who must accept or reject the game
-    synchronized public void checkNewTicTacToeGame(String gameID, Context context, LayoutInflater layoutInflater) {
+    synchronized public void askNewTicTacToeGame(String gameID, Context context, LayoutInflater layoutInflater) {
 
         this.context = context;
         this.layoutInflater = layoutInflater;
@@ -84,11 +84,31 @@ public class TicTacToeGameController {
                     this.showDialogAcceptGame();
                 else if (gameAcceptedStatusChanged.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_ACCEPTED)
                     this.context.startActivity(new Intent(this.context, TicTacToeActivity.class));
+                else if (gameAcceptedStatusChanged.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_REFUSED)
+                    UserCurrentGame.getInstance().matchRefused(this.currentTicTacToeGame.getOwnerID());
             });
 
             this.gameListenerRegistration = firestore.collection(COLLECTION_TIC_TAC_TOE_GAMES).document(gameID)
                     .addSnapshotListener(this.gameListener);
         }
+    }
+
+    synchronized public void checkGameResume(String gameID) {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        synchronized (this.currentTicTacToeGame) {
+            if (this.currentTicTacToeGame.getMatchID().equals("")) {
+                this.currentTicTacToeGame.reset().setMatchID(gameID);
+
+                this.currentTicTacToeGame.addOnUpdateAcceptedStatus(gameAcceptedStatusChanged -> {
+                    if (gameAcceptedStatusChanged.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_ACCEPTED)
+                        this.context.startActivity(new Intent(this.context, TicTacToeActivity.class));
+
+                });
+                this.gameListenerRegistration = firestore.collection(COLLECTION_TIC_TAC_TOE_GAMES).document(gameID)
+                        .addSnapshotListener(this.gameListener);
+            }
+        }
+
     }
 
     synchronized public void createTicTacToeGame(String opponentID) {

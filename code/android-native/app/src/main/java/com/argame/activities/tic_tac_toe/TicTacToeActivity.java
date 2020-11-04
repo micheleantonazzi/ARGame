@@ -34,27 +34,28 @@ public class TicTacToeActivity extends AppCompatActivity {
 
         setContentView(R.layout.tic_tac_toe_activity_layout);
         if (savedInstanceState == null) {
-            if (this.ticTacToeGame.isOwner())
+            if (this.ticTacToeGame.isOwner() && this.ticTacToeGame.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_NOT_ANSWERED) {
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.container, TicTacToeFragmentWaitOpponent.newInstance())
+                        .commit();
+                this.ticTacToeGame.addOnUpdateAcceptedStatus(gameAcceptedStatusChanged -> {
+                    if (gameAcceptedStatusChanged.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_REFUSED)
+                        finish();
+                    else if (this.ticTacToeGame.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_ACCEPTED){
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.container, TicTacToeFragmentGame.newInstance())
+                                .commit();
+                    }
+                });
+            }
+            else if (this.ticTacToeGame.isOwner() && this.ticTacToeGame.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_ACCEPTED)
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, TicTacToeFragmentGame.newInstance())
                         .commit();
             else
                 getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, TicTacToeFragmentGame.newInstance())
                 .commit();
-        }
-
-        // Attach listener to game
-        if (this.ticTacToeGame.isOwner()) {
-            this.ticTacToeGame.addOnUpdateAcceptedStatus(gameAcceptedStatusChanged -> {
-                if (gameAcceptedStatusChanged.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_REFUSED)
-                    finish();
-                else if (this.ticTacToeGame.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_ACCEPTED){
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.container, TicTacToeFragmentGame.newInstance())
-                            .commit();
-                }
-            });
         }
     }
 }
