@@ -1,7 +1,11 @@
 package com.argame.activities.tic_tac_toe;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
@@ -13,9 +17,14 @@ import com.argame.activities.tic_tac_toe.fragments.TicTacToeFragmentWaitOpponent
 import com.argame.model.TicTacToeGameController;
 import com.argame.model.data_structures.tic_tac_toe_game.ITicTacToeGame;
 import com.argame.model.data_structures.tic_tac_toe_game.TicTacToeGame;
+//import com.viro.core.ViroView;
 
 public class TicTacToeActivity extends AppCompatActivity {
 
+    private static final int PERMISSION_REQUEST = 22;
+
+    private boolean permission_camera = false;
+    private boolean permission_microphone = false;
     private ITicTacToeGame ticTacToeGame;
 
     @Override
@@ -33,6 +42,9 @@ public class TicTacToeActivity extends AppCompatActivity {
         this.ticTacToeGame = TicTacToeGameController.getInstance().getCurrentTicTacToeGame();
 
         setContentView(R.layout.tic_tac_toe_activity_layout);
+
+        this.requestPermissions();
+
         if (savedInstanceState == null) {
             if (this.ticTacToeGame.isOwner() && this.ticTacToeGame.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_NOT_ANSWERED) {
                 getSupportFragmentManager().beginTransaction()
@@ -56,6 +68,43 @@ public class TicTacToeActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, TicTacToeFragmentGame.newInstance())
                 .commit();
+        }
+    }
+
+    private void requestPermissions() {
+        // Request permissions (camera and microphone)
+        String[] permissions = new String[]{"", "", ""};
+
+        if (ContextCompat.checkSelfPermission(
+                getApplicationContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED)
+            permissions[0] = Manifest.permission.CAMERA;
+        else
+            this.permission_camera = true;
+
+        if(ContextCompat.checkSelfPermission(
+                getApplicationContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED)
+            permissions[1] = Manifest.permission.RECORD_AUDIO;
+        else
+            this.permission_microphone = true;
+
+        if(ContextCompat.checkSelfPermission(
+                getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
+            permissions[2] = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
+        ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    this.permission_camera = true;
+                else if (grantResults.length > 1 && grantResults[1] == PackageManager.PERMISSION_GRANTED)
+                    this.permission_microphone = true;
+                return;
         }
     }
 }
