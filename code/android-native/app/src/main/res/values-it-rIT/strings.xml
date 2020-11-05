@@ -52,4 +52,7 @@
     <!-- TicTacToe activity -->
     <string name="text_view_wait_opponent">In attesa dell\'avversario</string>
 
+        <!-- Fragment game setup environment-->
+        <string name="text_view_setup_environment_search_plans">Muovi il dispositivo per cercare superfici</string>
+        <string name="text_view_setup_environment_put_game_playground">Ora seleziona il punto dove posizionare il campo da gioco</string>
 </resources>

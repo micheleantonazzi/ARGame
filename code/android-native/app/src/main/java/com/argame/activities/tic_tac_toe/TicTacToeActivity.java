@@ -12,7 +12,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.argame.R;
-import com.argame.activities.tic_tac_toe.fragments.TicTacToeFragmentGame;
+import com.argame.activities.tic_tac_toe.fragments.game.TicTacToeFragmentGame;
 import com.argame.activities.tic_tac_toe.fragments.TicTacToeFragmentWaitOpponent;
 import com.argame.model.TicTacToeGameController;
 import com.argame.model.data_structures.tic_tac_toe_game.ITicTacToeGame;

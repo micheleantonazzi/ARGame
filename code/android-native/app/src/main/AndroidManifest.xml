@@ -17,6 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data android:name="com.google.ar.core" android:value="optional" />
         <activity android:name=".activities.tic_tac_toe.TicTacToeActivity"></activity>
         <activity android:name=".activities.tic_tac_toe.TicTacToeActivityCall" />
         <activity
