@@ -127,10 +127,12 @@ public class TicTacToeFragmentGame extends Fragment {
 
                 // Update the mesh surface geometry
                 Node node = this.surfaces.get(arAnchor.getAnchorId());
-                Quad plane = (Quad) node.getGeometry();
-                Vector dimensions = planeAnchor.getExtent();
-                plane.setWidth(dimensions.x);
-                plane.setHeight(dimensions.z);
+                if(node != null) {
+                    Quad plane = (Quad) node.getGeometry();
+                    Vector dimensions = planeAnchor.getExtent();
+                    plane.setWidth(dimensions.x);
+                    plane.setHeight(dimensions.z);
+                }
             }
         }
 
