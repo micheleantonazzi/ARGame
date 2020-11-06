@@ -1,6 +1,7 @@
 package com.argame.activities.tic_tac_toe.fragments.game;
 
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,13 +18,16 @@ import com.viro.core.ARAnchor;
 import com.viro.core.ARNode;
 import com.viro.core.ARPlaneAnchor;
 import com.viro.core.ARScene;
+import com.viro.core.AsyncObject3DListener;
 import com.viro.core.ClickListener;
 import com.viro.core.ClickState;
 import com.viro.core.Material;
 import com.viro.core.Node;
+import com.viro.core.Object3D;
 import com.viro.core.OmniLight;
 import com.viro.core.Quad;
 import com.viro.core.Surface;
+import com.viro.core.Texture;
 import com.viro.core.Vector;
 import com.viro.core.ViroView;
 import com.viro.core.ViroViewARCore;
@@ -35,10 +39,14 @@ import java.util.List;
 
 public class TicTacToeFragmentGame extends Fragment {
 
+    private static final float PLAYGROUND_SCALE = 0.03f;
     private ViroView viroView;
     private ARScene arScene;
     private TextView textViewSetupEnvironment;
 
+    private Object3D playground;
+    private boolean showPlanes = true;
+    private boolean playgroundPositioned = false;
     private boolean gameStarted = false;
 
     private boolean surfacesDetected = false;
@@ -66,7 +74,7 @@ public class TicTacToeFragmentGame extends Fragment {
         public void onAnchorFound(ARAnchor arAnchor, ARNode arNode) {
 
             // Spawn a visual plane if a PlaneAnchor was found
-            if (!gameStarted && arAnchor.getType() == ARAnchor.Type.PLANE){
+            if (showPlanes && arAnchor.getType() == ARAnchor.Type.PLANE){
                 ARPlaneAnchor planeAnchor = (ARPlaneAnchor) arAnchor;
 
                 // Create the visual geometry representing this plane
@@ -94,7 +102,11 @@ public class TicTacToeFragmentGame extends Fragment {
                 planeNode.setClickListener(new ClickListener() {
                     @Override
                     public void onClick(int i, Node node, Vector vector) {
-                        Log.d("debugg", "clicked plane " + i);
+                        if (!playgroundPositioned) {
+                            createPlayground(vector);
+                            showPlanes = false;
+                            playgroundPositioned = true;
+                        }
                     }
 
                     @Override
@@ -152,13 +164,14 @@ public class TicTacToeFragmentGame extends Fragment {
         // Inflate the view to setup the AR environment
         View viewSetupEnvironment = View.inflate(this.getActivity(), R.layout.tic_tac_toe_setup_environment_layout, this.viroView);
         this.textViewSetupEnvironment = viewSetupEnvironment.findViewById(R.id.text_view_setup_environment);
+
         return this.viroView;
     }
 
 
     private void displayScene() {
         this.arScene = new ARScene();
-        this.arScene.displayPointCloud(true);
+        this.arScene.displayPointCloud(false);
 
         // Add some lights to the scene; this will give the Android's some nice illumination.
         Node rootNode = this.arScene.getRootNode();
@@ -184,7 +197,28 @@ public class TicTacToeFragmentGame extends Fragment {
         // Set listener to detect planes
         this.arScene.setListener(this.trackedPlanesListener);
 
+        // Load graphics objects
+        this.playground = new Object3D();
+        this.playground.setRotation(new Vector(-Math.toRadians(90.0), 0, 0));
+        this.playground.setScale(new Vector(PLAYGROUND_SCALE, PLAYGROUND_SCALE, PLAYGROUND_SCALE));
+        this.playground.loadModel(viroView.getViroContext(), Uri.parse("file:///android_asset/tictactoe/playground/playground.obj"), Object3D.Type.OBJ, new AsyncObject3DListener() {
+            @Override
+            public void onObject3DLoaded(final Object3D object, final Object3D.Type type) {
+                Log.d("debugg", "Playground loaded");
+            }
+
+            @Override
+            public void onObject3DFailed(String s) {
+                Log.e("debugg", "Load playground failed " + s);
+            }
+        });
         this.viroView.setScene(arScene);
+    }
+
+    synchronized private void createPlayground(Vector position) {
+        this.playground.setPosition(position);
+        this.arScene.getRootNode().addChildNode(this.playground);
+        Log.d("debugg", "Positioned");
     }
 
     @Override
