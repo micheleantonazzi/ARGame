@@ -1,0 +1,13 @@
+# Blender MTL File: 'x.blend'
+# Material Count: 1
+
+newmtl Gallotti_Radice_Tip_Tap_Toe_mtl_4
+Ns 10.000002
+Ka 1.000000 1.000000 1.000000
+Kd 0.564700 0.403900 0.094100
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Bump /home/michele/Toe_bump.jpg
