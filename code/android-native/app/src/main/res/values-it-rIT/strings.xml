@@ -55,4 +55,5 @@
         <!-- Fragment game setup environment-->
         <string name="text_view_setup_environment_search_plans">Muovi il dispositivo per cercare superfici</string>
         <string name="text_view_setup_environment_put_game_playground">Ora seleziona il punto dove posizionare il campo da gioco</string>
+        <string name="text_view_setup_environment_put_videocall_visualizer">Dove vuoi vedere il tuo avversario?</string>
 </resources>

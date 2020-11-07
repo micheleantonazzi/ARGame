@@ -26,8 +26,6 @@ import com.viro.core.Node;
 import com.viro.core.Object3D;
 import com.viro.core.OmniLight;
 import com.viro.core.Quad;
-import com.viro.core.Surface;
-import com.viro.core.Texture;
 import com.viro.core.Vector;
 import com.viro.core.ViroView;
 import com.viro.core.ViroViewARCore;
@@ -45,12 +43,13 @@ public class TicTacToeFragmentGame extends Fragment {
     private TextView textViewSetupEnvironment;
 
     private Object3D playground;
-    private List<Node> cellsNodes = new ArrayList<>(9);
+    private List<Node> planesClickable = new ArrayList<>(9);
     private boolean showPlanes = true;
     private boolean playgroundPositioned = false;
-    private boolean gameStarted = false;
-
+    private boolean videocallPositioned = false;
     private boolean surfacesDetected = false;
+    private boolean gameStarted = false;
+    private PlanesAnimator planesAnimator = new PlanesAnimator(this.planesClickable);
 
     private ARScene.Listener trackedPlanesListener = new ARScene.Listener() {
 
@@ -102,7 +101,7 @@ public class TicTacToeFragmentGame extends Fragment {
                 // Attach click listeners to be notified upon a plane onClick.
                 planeNode.setClickListener(new ClickListener() {
                     @Override
-                    public void onClick(int i, Node node, Vector vector) {
+                    public void onClick(int count, Node node, Vector vector) {
                         Log.d("debugg", "clicked");
                         if (!playgroundPositioned) {
                             // Load graphics objects
@@ -122,27 +121,39 @@ public class TicTacToeFragmentGame extends Fragment {
                             });
 
                             // Create planes to click
-                            Quad plane = new Quad(7,7);
-                            plane.setWidth(7);
-                            plane.setHeight(7);
+                            for(int i = 0; i < 9; i++) {
+                                Quad plane = new Quad(6.5f,6.5f);
+                                Material material = new Material();
+                                material.setDiffuseColor(Color.argb(0, 255, 255, 255));
+                                plane.setMaterials(Arrays.asList(material));
+                                Node planeNode = new Node();
+                                planeNode.setGeometry(plane);
+                                playground.addChildNode(planeNode);
+                                planesClickable.add(planeNode);
+                            }
 
-                            // Set a default material for this plane.
-                            Material material = new Material();
-                            material.setDiffuseColor(Color.parseColor("#BFFFFFFF"));
-                            plane.setMaterials(Arrays.asList(material));
-                            Node planeNode = new Node();
-                            planeNode.setGeometry(plane);
-                            planeNode.setPosition(new Vector(0, 0, 2.28f));
-                            playground.addChildNode(planeNode);
+                            // Position clickable planes
+                            planesClickable.get(0).setPosition(new Vector(-8, 8, 2.28f));
+                            planesClickable.get(1).setPosition(new Vector(0, 8, 2.28f));
+                            planesClickable.get(2).setPosition(new Vector(8, 8, 2.28f));
+                            planesClickable.get(3).setPosition(new Vector(-8, 0, 2.28f));
+                            planesClickable.get(4).setPosition(new Vector(0, 0, 2.28f));
+                            planesClickable.get(5).setPosition(new Vector(8, 0, 2.28f));
+                            planesClickable.get(6).setPosition(new Vector(-8, -8, 2.28f));
+                            planesClickable.get(7).setPosition(new Vector(0, -8, 2.28f));
+                            planesClickable.get(8).setPosition(new Vector(8, -8, 2.28f));
 
                             // Set playground's scale and rotation
                             playground.setScale(new Vector(PLAYGROUND_SCALE, PLAYGROUND_SCALE, PLAYGROUND_SCALE));
                             playground.setRotation(new Vector(-Math.toRadians(90.0), 0, 0));
                             playground.setPosition(vector);
 
-
+                            textViewSetupEnvironment.setText(R.string.text_view_setup_environment_put_videocall_visualizer);
                             showPlanes = false;
                             playgroundPositioned = true;
+                        }
+                        else if (!videocallPositioned) {
+
                         }
                     }
 
@@ -150,7 +161,6 @@ public class TicTacToeFragmentGame extends Fragment {
                     public void onClickState(int i, Node node, ClickState clickState, Vector vector) {
                     }
                 });
-
 
                 if(!surfacesDetected)
                     textViewSetupEnvironment.setText(R.string.text_view_setup_environment_put_game_playground);
