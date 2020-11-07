@@ -1,5 +1,9 @@
 package com.argame.activities.tic_tac_toe.fragments.game;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,10 +30,13 @@ import com.viro.core.Node;
 import com.viro.core.Object3D;
 import com.viro.core.OmniLight;
 import com.viro.core.Quad;
+import com.viro.core.Texture;
 import com.viro.core.Vector;
 import com.viro.core.ViroView;
 import com.viro.core.ViroViewARCore;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -45,9 +52,9 @@ public class TicTacToeFragmentGame extends Fragment {
     private Object3D playground;
     private List<Node> planesClickable = new ArrayList<>(9);
     private boolean showPlanes = true;
+    private boolean surfacesDetected = false;
     private boolean playgroundPositioned = false;
     private boolean videocallPositioned = false;
-    private boolean surfacesDetected = false;
     private boolean gameStarted = false;
     private PlanesAnimator planesAnimator = new PlanesAnimator(this.planesClickable);
 
@@ -100,6 +107,7 @@ public class TicTacToeFragmentGame extends Fragment {
 
                 // Attach click listeners to be notified upon a plane onClick.
                 planeNode.setClickListener(new ClickListener() {
+
                     @Override
                     public void onClick(int count, Node node, Vector vector) {
                         Log.d("debugg", "clicked");
@@ -153,7 +161,33 @@ public class TicTacToeFragmentGame extends Fragment {
                             playgroundPositioned = true;
                         }
                         else if (!videocallPositioned) {
+                            Log.d("debugg", "position hologgram");
+                            final Bitmap bitmapParticle = getBitmapFromAsset(getActivity(), "hologram/particle_texture.png");
+                            final Bitmap bitmapBase = getBitmapFromAsset(getActivity(), "hologram/base_texture.jpg");
+                            Object3D hologram = new Object3D();
+                            hologram.loadModel(viroView.getViroContext(), Uri.parse("file:///android_asset/hologram/hologram_base.obj"), Object3D.Type.OBJ, new AsyncObject3DListener() {
+                                @Override
+                                public void onObject3DLoaded(final Object3D object, final Object3D.Type type) {
+                                    Log.d("debugg", "Hologram loaded");
+                                    // Show the playground when the model has been loaded
+                                    Texture particleTexture = new Texture(bitmapParticle, Texture.Format.RGBA8, false, false);
+                                    Texture baseTexture = new Texture(bitmapBase, Texture.Format.RGBA8, false, false);
+                                    hologram.getMaterials().get(0).setDiffuseTexture(particleTexture);
+                                    hologram.getMaterials().get(1).setDiffuseTexture(baseTexture);
+                                    arScene.getRootNode().addChildNode(hologram);
 
+                                }
+
+                                @Override
+                                public void onObject3DFailed(String s) {
+                                    Log.e("debugg", "Load hologram failed " + s);
+                                }
+                            });
+
+                            hologram.setScale(new Vector(0.01, 0.01, 0.01));
+                            hologram.setPosition(vector);
+
+                            videocallPositioned = true;
                         }
                     }
 
@@ -246,6 +280,19 @@ public class TicTacToeFragmentGame extends Fragment {
         this.arScene.setListener(this.trackedPlanesListener);
 
         this.viroView.setScene(arScene);
+    }
+
+    private Bitmap getBitmapFromAsset(final Context context, String assetName) {
+        AssetManager assetManager = context.getResources().getAssets();
+        InputStream imageStream;
+        try {
+            imageStream = assetManager.open(assetName);
+        } catch (IOException exception) {
+            Log.w("debugg", "Unable to find image [" + assetName + "] in assets! Error: "
+                    + exception.getMessage());
+            return null;
+        }
+        return BitmapFactory.decodeStream(imageStream);
     }
 
     @Override
