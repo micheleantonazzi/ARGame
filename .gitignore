@@ -144,6 +144,8 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 
+*.blend1
+
 # Android Profiling
 *.hprof
 
