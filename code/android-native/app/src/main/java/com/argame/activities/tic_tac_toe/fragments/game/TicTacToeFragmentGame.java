@@ -176,6 +176,10 @@ public class TicTacToeFragmentGame extends Fragment {
                                     hologram.getMaterials().get(1).setDiffuseTexture(baseTexture);
                                     arScene.getRootNode().addChildNode(hologram);
 
+                                    for(Node plane: surfaces.values())
+                                        plane.removeFromParentNode();
+
+                                    surfaces = new HashMap<>();
                                 }
 
                                 @Override
@@ -188,6 +192,7 @@ public class TicTacToeFragmentGame extends Fragment {
                             hologram.setPosition(vector);
 
                             videocallPositioned = true;
+                            showPlanes = false;
                         }
                     }
 
@@ -203,7 +208,7 @@ public class TicTacToeFragmentGame extends Fragment {
 
         @Override
         public void onAnchorUpdated(ARAnchor arAnchor, ARNode arNode) {
-            if (arAnchor.getType() == ARAnchor.Type.PLANE) {
+            if (showPlanes && arAnchor.getType() == ARAnchor.Type.PLANE) {
                 ARPlaneAnchor planeAnchor = (ARPlaneAnchor) arAnchor;
 
                 // Update the mesh surface geometry
