@@ -55,5 +55,6 @@
         <string name="text_view_setup_environment_search_plans">Move your device to search for surfaces</string>
         <string name="text_view_setup_environment_put_game_playground">Now tap where to place the playground</string>
         <string name="text_view_setup_environment_put_videocall_visualizer">Where do you want to see your opponent?</string>
+        <string name="menu_item_edit_scene">Edit scene</string>
 
 </resources>

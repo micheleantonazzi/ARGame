@@ -1,4 +1,4 @@
-package com.argame.activities.tic_tac_toe.fragments.game;
+package com.argame.arcore;
 
 import android.graphics.Color;
 

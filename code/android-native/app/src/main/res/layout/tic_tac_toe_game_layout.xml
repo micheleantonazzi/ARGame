@@ -7,6 +7,7 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:background="?android:colorPrimary"
@@ -16,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/text_view_setup_environment"
+            android:id="@+id/text_view_suggestions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
@@ -31,4 +32,29 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/menu_tic_tac_toe_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        app:menu_showShadow="true"
+        app:menu_openDirection="up"
+        android:visibility="visible"
+        app:menu_colorNormal="?android:colorPrimary"
+        app:menu_colorPressed="?android:colorPrimary">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/button_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_edit_24"
+            app:fab_label="@string/menu_item_edit_scene"
+            app:fab_colorNormal="?android:colorPrimary"
+            app:fab_colorPressed="?android:colorPrimary" />
+
+    </com.github.clans.fab.FloatingActionMenu>
 </androidx.constraintlayout.widget.ConstraintLayout>

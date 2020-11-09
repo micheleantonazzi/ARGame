@@ -1,11 +1,6 @@
 package com.argame.activities.tic_tac_toe.fragments.game;
 
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +13,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.argame.R;
+import com.argame.arcore.Hologram;
+import com.argame.arcore.Playground;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.viro.core.ARAnchor;
 import com.viro.core.ARNode;
 import com.viro.core.ARPlaneAnchor;
@@ -30,13 +29,10 @@ import com.viro.core.Node;
 import com.viro.core.Object3D;
 import com.viro.core.OmniLight;
 import com.viro.core.Quad;
-import com.viro.core.Texture;
 import com.viro.core.Vector;
 import com.viro.core.ViroView;
 import com.viro.core.ViroViewARCore;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -44,19 +40,20 @@ import java.util.List;
 
 public class TicTacToeFragmentGame extends Fragment {
 
-    private static final float PLAYGROUND_SCALE = 0.03f;
     private ViroView viroView;
     private ARScene arScene;
-    private TextView textViewSetupEnvironment;
+    private FloatingActionMenu menu;
+    private TextView textViewSuggestions;
 
-    private Object3D playground;
-    private List<Node> planesClickable = new ArrayList<>(9);
+    // Component 3D
+    private Playground playground;
+    private Hologram hologram;
+
     private boolean showPlanes = true;
     private boolean surfacesDetected = false;
     private boolean playgroundPositioned = false;
     private boolean videocallPositioned = false;
     private boolean gameStarted = false;
-    private PlanesAnimator planesAnimator = new PlanesAnimator(this.planesClickable);
 
     private ARScene.Listener trackedPlanesListener = new ARScene.Listener() {
 
@@ -110,11 +107,9 @@ public class TicTacToeFragmentGame extends Fragment {
 
                     @Override
                     public void onClick(int count, Node node, Vector vector) {
-                        Log.d("debugg", "clicked");
                         if (!playgroundPositioned) {
                             // Load graphics objects
-                            playground = new Object3D();
-                            playground.loadModel(viroView.getViroContext(), Uri.parse("file:///android_asset/tictactoe/playground/playground.obj"), Object3D.Type.OBJ, new AsyncObject3DListener() {
+                            playground = new Playground(getActivity(), viroView.getViroContext(), new AsyncObject3DListener() {
                                 @Override
                                 public void onObject3DLoaded(final Object3D object, final Object3D.Type type) {
 
@@ -127,56 +122,21 @@ public class TicTacToeFragmentGame extends Fragment {
                                     Log.e("debugg", "Load playground failed " + s);
                                 }
                             });
-
-                            // Create planes to click
-                            for(int i = 0; i < 9; i++) {
-                                Quad plane = new Quad(6.5f,6.5f);
-                                Material material = new Material();
-                                material.setDiffuseColor(Color.argb(0, 255, 255, 255));
-                                plane.setMaterials(Arrays.asList(material));
-                                Node planeNode = new Node();
-                                planeNode.setGeometry(plane);
-                                playground.addChildNode(planeNode);
-                                planesClickable.add(planeNode);
-                            }
-
-                            // Position clickable planes
-                            planesClickable.get(0).setPosition(new Vector(-8, 8, 2.28f));
-                            planesClickable.get(1).setPosition(new Vector(0, 8, 2.28f));
-                            planesClickable.get(2).setPosition(new Vector(8, 8, 2.28f));
-                            planesClickable.get(3).setPosition(new Vector(-8, 0, 2.28f));
-                            planesClickable.get(4).setPosition(new Vector(0, 0, 2.28f));
-                            planesClickable.get(5).setPosition(new Vector(8, 0, 2.28f));
-                            planesClickable.get(6).setPosition(new Vector(-8, -8, 2.28f));
-                            planesClickable.get(7).setPosition(new Vector(0, -8, 2.28f));
-                            planesClickable.get(8).setPosition(new Vector(8, -8, 2.28f));
-
-                            // Set playground's scale and rotation
-                            playground.setScale(new Vector(PLAYGROUND_SCALE, PLAYGROUND_SCALE, PLAYGROUND_SCALE));
-                            playground.setRotation(new Vector(-Math.toRadians(90.0), 0, 0));
                             playground.setPosition(vector);
 
-                            textViewSetupEnvironment.setText(R.string.text_view_setup_environment_put_videocall_visualizer);
+                            textViewSuggestions.setText(R.string.text_view_setup_environment_put_videocall_visualizer);
                             showPlanes = false;
                             playgroundPositioned = true;
-                        }
-                        else if (!videocallPositioned) {
-                            Log.d("debugg", "position hologgram");
-                            final Bitmap bitmapParticle = getBitmapFromAsset(getActivity(), "hologram/particle_texture.png");
-                            final Bitmap bitmapBase = getBitmapFromAsset(getActivity(), "hologram/base_texture.jpg");
-                            Object3D hologram = new Object3D();
-                            hologram.loadModel(viroView.getViroContext(), Uri.parse("file:///android_asset/hologram/hologram_base.obj"), Object3D.Type.OBJ, new AsyncObject3DListener() {
-                                @Override
-                                public void onObject3DLoaded(final Object3D object, final Object3D.Type type) {
-                                    Log.d("debugg", "Hologram loaded");
-                                    // Show the playground when the model has been loaded
-                                    Texture particleTexture = new Texture(bitmapParticle, Texture.Format.RGBA8, false, false);
-                                    Texture baseTexture = new Texture(bitmapBase, Texture.Format.RGBA8, false, false);
-                                    hologram.getMaterials().get(0).setDiffuseTexture(particleTexture);
-                                    hologram.getMaterials().get(1).setDiffuseTexture(baseTexture);
-                                    arScene.getRootNode().addChildNode(hologram);
+                        } else if (!videocallPositioned) {
 
-                                    for(Node plane: surfaces.values())
+                            hologram = new Hologram(getActivity(), viroView.getViroContext(), new AsyncObject3DListener() {
+
+                                @Override
+                                public void onObject3DLoaded(Object3D object3D, Object3D.Type type) {
+
+                                    arScene.getRootNode().addChildNode(object3D);
+
+                                    for (Node plane : surfaces.values())
                                         plane.removeFromParentNode();
 
                                     surfaces = new HashMap<>();
@@ -184,25 +144,23 @@ public class TicTacToeFragmentGame extends Fragment {
 
                                 @Override
                                 public void onObject3DFailed(String s) {
-                                    Log.e("debugg", "Load hologram failed " + s);
+
                                 }
                             });
-
-                            hologram.setScale(new Vector(0.01, 0.01, 0.01));
                             hologram.setPosition(vector);
 
                             videocallPositioned = true;
                             showPlanes = false;
+
                         }
                     }
-
                     @Override
                     public void onClickState(int i, Node node, ClickState clickState, Vector vector) {
                     }
                 });
 
                 if(!surfacesDetected)
-                    textViewSetupEnvironment.setText(R.string.text_view_setup_environment_put_game_playground);
+                    textViewSuggestions.setText(R.string.text_view_setup_environment_put_game_playground);
             }
         }
 
@@ -250,8 +208,35 @@ public class TicTacToeFragmentGame extends Fragment {
         });
 
         // Inflate the view to setup the AR environment
-        View viewSetupEnvironment = View.inflate(this.getActivity(), R.layout.tic_tac_toe_setup_environment_layout, this.viroView);
-        this.textViewSetupEnvironment = viewSetupEnvironment.findViewById(R.id.text_view_setup_environment);
+        View viewGame = View.inflate(this.getActivity(), R.layout.tic_tac_toe_game_layout, this.viroView);
+        this.menu = viewGame.findViewById(R.id.menu_tic_tac_toe_game);
+        this.textViewSuggestions = viewGame.findViewById(R.id.text_view_suggestions);
+
+        // Set menu actions
+        FloatingActionButton buttonEdit = viewGame.findViewById(R.id.button_edit);
+        buttonEdit.setOnClickListener(new View.OnClickListener() {
+            private boolean edit = false;
+            private int colorAccent = getActivity().getTheme().obtainStyledAttributes(new int[] {R.attr.colorAccent}).getColor(0, Color.TRANSPARENT);
+            private int colorPrimary = getActivity().getTheme().obtainStyledAttributes(new int[] {R.attr.colorPrimary}).getColor(0, Color.TRANSPARENT);
+
+
+            @Override
+            public void onClick(View v) {
+                this.edit = !this.edit;
+
+                if(this.edit) {
+                    buttonEdit.setColorNormal(this.colorAccent);
+                    buttonEdit.setColorPressed(this.colorAccent);
+                }
+                else {
+                    buttonEdit.setColorNormal(this.colorPrimary);
+                    buttonEdit.setColorPressed(this.colorPrimary);
+                }
+
+                playground.setEditMode(this.edit);
+                hologram.setEditMode(this.edit);
+            }
+        });
 
         return this.viroView;
     }
@@ -285,19 +270,6 @@ public class TicTacToeFragmentGame extends Fragment {
         this.arScene.setListener(this.trackedPlanesListener);
 
         this.viroView.setScene(arScene);
-    }
-
-    private Bitmap getBitmapFromAsset(final Context context, String assetName) {
-        AssetManager assetManager = context.getResources().getAssets();
-        InputStream imageStream;
-        try {
-            imageStream = assetManager.open(assetName);
-        } catch (IOException exception) {
-            Log.w("debugg", "Unable to find image [" + assetName + "] in assets! Error: "
-                    + exception.getMessage());
-            return null;
-        }
-        return BitmapFactory.decodeStream(imageStream);
     }
 
     @Override
