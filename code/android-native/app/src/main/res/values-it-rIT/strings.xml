@@ -57,4 +57,6 @@
         <string name="text_view_setup_environment_put_game_playground">Ora seleziona il punto dove posizionare il campo da gioco</string>
         <string name="text_view_setup_environment_put_videocall_visualizer">Dove vuoi vedere il tuo avversario?</string>
         <string name="menu_item_edit_scene">Modifica scena</string>
+        <string name="menu_item_edit_scene_return_to_game">Ritorna al gioco</string>
+
 </resources>

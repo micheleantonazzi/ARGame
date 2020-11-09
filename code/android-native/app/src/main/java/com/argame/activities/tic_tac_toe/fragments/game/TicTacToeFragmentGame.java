@@ -227,14 +227,19 @@ public class TicTacToeFragmentGame extends Fragment {
                 if(this.edit) {
                     buttonEdit.setColorNormal(this.colorAccent);
                     buttonEdit.setColorPressed(this.colorAccent);
+                    buttonEdit.setLabelText(getResources().getString(R.string.menu_item_edit_scene_return_to_game));
                 }
                 else {
                     buttonEdit.setColorNormal(this.colorPrimary);
                     buttonEdit.setColorPressed(this.colorPrimary);
+                    buttonEdit.setLabelText(getResources().getString(R.string.menu_item_edit_scene));
                 }
 
-                playground.setEditMode(this.edit);
-                hologram.setEditMode(this.edit);
+                if (playground != null)
+                    playground.setEditMode(this.edit);
+
+                if (hologram != null)
+                    hologram.setEditMode(this.edit);
             }
         });
 
