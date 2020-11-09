@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import com.argame.R;
 import com.argame.arcore.Hologram;
 import com.argame.arcore.Playground;
+import com.argame.model.data_structures.tic_tac_toe_game.ITicTacToeGame;
+import com.argame.model.remote_structures.TicTacToeGameController;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.viro.core.ARAnchor;
@@ -40,6 +42,7 @@ import java.util.List;
 
 public class TicTacToeFragmentGame extends Fragment {
 
+    private ITicTacToeGame ticTacToeGame;
     private ViroView viroView;
     private ARScene arScene;
     private FloatingActionMenu menu;
@@ -108,6 +111,7 @@ public class TicTacToeFragmentGame extends Fragment {
                     @Override
                     public void onClick(int count, Node node, Vector vector) {
                         if (!playgroundPositioned) {
+
                             // Load graphics objects
                             playground = new Playground(getActivity(), viroView.getViroContext(), new AsyncObject3DListener() {
                                 @Override
@@ -124,7 +128,7 @@ public class TicTacToeFragmentGame extends Fragment {
                             });
                             playground.setPosition(vector);
 
-                            textViewSuggestions.setText(R.string.text_view_setup_environment_put_videocall_visualizer);
+                            textViewSuggestions.setText(R.string.text_view_suggestions_put_videocall_visualizer);
                             showPlanes = false;
                             playgroundPositioned = true;
                         } else if (!videocallPositioned) {
@@ -151,7 +155,7 @@ public class TicTacToeFragmentGame extends Fragment {
 
                             videocallPositioned = true;
                             showPlanes = false;
-
+                            setupEnvironmentTerminated();
                         }
                     }
                     @Override
@@ -160,7 +164,7 @@ public class TicTacToeFragmentGame extends Fragment {
                 });
 
                 if(!surfacesDetected)
-                    textViewSuggestions.setText(R.string.text_view_setup_environment_put_game_playground);
+                    textViewSuggestions.setText(R.string.text_view_suggestions_put_game_playground);
             }
         }
 
@@ -243,6 +247,7 @@ public class TicTacToeFragmentGame extends Fragment {
             }
         });
 
+        this.ticTacToeGame = TicTacToeGameController.getInstance().getCurrentTicTacToeGame();
         return this.viroView;
     }
 
@@ -275,6 +280,20 @@ public class TicTacToeFragmentGame extends Fragment {
         this.arScene.setListener(this.trackedPlanesListener);
 
         this.viroView.setScene(arScene);
+    }
+
+    private void setupEnvironmentTerminated() {
+
+        this.ticTacToeGame.addOnSetupCompletedStatusListener(gameOnSetupCompletedChange -> {
+            if (gameOnSetupCompletedChange.isStarted())
+                this.textViewSuggestions.setText(this.ticTacToeGame.isMyTurn() ?
+                        R.string.text_view_suggestion_is_my_turn :
+                        R.string.text_view_suggestion_is_not_my_turn);
+            else
+                this.textViewSuggestions.setText(R.string.text_view_suggestions_wait_opponent);
+        });
+
+        TicTacToeGameController.getInstance().setSetupCompleted();
     }
 
     @Override

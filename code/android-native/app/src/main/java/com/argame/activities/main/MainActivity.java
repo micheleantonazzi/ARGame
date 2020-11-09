@@ -1,6 +1,5 @@
 package com.argame.activities.main;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -21,7 +20,7 @@ import com.argame.activities.main.fragments.fragment_games.FragmentGamesDirectio
 import com.argame.activities.settings.account.AccountSettingsActivity;
 import com.argame.activities.settings.application.ApplicationSettingsActivity;
 import com.argame.model.Database;
-import com.argame.model.TicTacToeGameController;
+import com.argame.model.remote_structures.TicTacToeGameController;
 import com.argame.model.remote_structures.CurrentUser;
 import com.argame.model.remote_structures.Friends;
 import com.argame.model.remote_structures.UserCurrentGame;

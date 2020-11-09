@@ -14,7 +14,7 @@ import android.view.WindowManager;
 import com.argame.R;
 import com.argame.activities.tic_tac_toe.fragments.game.TicTacToeFragmentGame;
 import com.argame.activities.tic_tac_toe.fragments.TicTacToeFragmentWaitOpponent;
-import com.argame.model.TicTacToeGameController;
+import com.argame.model.remote_structures.TicTacToeGameController;
 import com.argame.model.data_structures.tic_tac_toe_game.ITicTacToeGame;
 import com.argame.model.data_structures.tic_tac_toe_game.TicTacToeGame;
 //import com.viro.core.ViroView;
@@ -50,7 +50,7 @@ public class TicTacToeActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.container, TicTacToeFragmentWaitOpponent.newInstance())
                         .commit();
-                this.ticTacToeGame.addOnUpdateAcceptedStatus(gameAcceptedStatusChanged -> {
+                this.ticTacToeGame.addOnUpdateAcceptedStatusListener(gameAcceptedStatusChanged -> {
                     if (gameAcceptedStatusChanged.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_REFUSED)
                         finish();
                     else if (this.ticTacToeGame.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_ACCEPTED){

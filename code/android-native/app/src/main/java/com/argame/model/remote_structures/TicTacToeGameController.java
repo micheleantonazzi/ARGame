@@ -1,4 +1,4 @@
-package com.argame.model;
+package com.argame.model.remote_structures;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,10 +13,6 @@ import com.argame.R;
 import com.argame.activities.tic_tac_toe.TicTacToeActivity;
 import com.argame.model.data_structures.tic_tac_toe_game.ITicTacToeGame;
 import com.argame.model.data_structures.tic_tac_toe_game.TicTacToeGame;
-import com.argame.model.data_structures.user_data.User;
-import com.argame.model.remote_structures.CurrentUser;
-import com.argame.model.remote_structures.Friends;
-import com.argame.model.remote_structures.UserCurrentGame;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -79,7 +75,7 @@ public class TicTacToeGameController {
             this.currentTicTacToeGame.reset().setMatchID(gameID);
 
             // Add listener to TicTacToeGame
-            this.currentTicTacToeGame.addOnUpdateAcceptedStatus(gameAcceptedStatusChanged -> {
+            this.currentTicTacToeGame.addOnUpdateAcceptedStatusListener(gameAcceptedStatusChanged -> {
                 if (gameAcceptedStatusChanged.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_NOT_ANSWERED)
                     this.showDialogAcceptGame();
                 else if (gameAcceptedStatusChanged.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_ACCEPTED)
@@ -99,7 +95,7 @@ public class TicTacToeGameController {
             if (this.currentTicTacToeGame.getMatchID().equals("")) {
                 this.currentTicTacToeGame.reset().setMatchID(gameID);
 
-                this.currentTicTacToeGame.addOnUpdateAcceptedStatus(gameAcceptedStatusChanged -> {
+                this.currentTicTacToeGame.addOnUpdateAcceptedStatusListener(gameAcceptedStatusChanged -> {
                     if (gameAcceptedStatusChanged.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_ACCEPTED)
                         this.context.startActivity(new Intent(this.context, TicTacToeActivity.class));
 
@@ -186,7 +182,7 @@ public class TicTacToeGameController {
                 this.currentTicTacToeGame.reset().setMatchID(documentReference.getId());
 
                 // Add listener to TicTacToeGame
-                this.currentTicTacToeGame.addOnUpdateAcceptedStatus(gameAcceptedStatusChanged -> {
+                this.currentTicTacToeGame.addOnUpdateAcceptedStatusListener(gameAcceptedStatusChanged -> {
                     if (gameAcceptedStatusChanged.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_NOT_ANSWERED)
                         this.context.startActivity(new Intent(this.context, TicTacToeActivity.class));
                 });
@@ -231,5 +227,12 @@ public class TicTacToeGameController {
                             .document(this.currentTicTacToeGame.getMatchID()).update(TicTacToeGame.ACCEPTED_FIELD, TicTacToeGame.ACCEPT_STATUS_REFUSED);
                 })
         .create().show();
+    }
+
+    public void setSetupCompleted() {
+        FirebaseFirestore.getInstance().collection(COLLECTION_TIC_TAC_TOE_GAMES).document(currentTicTacToeGame.getMatchID())
+                .update(currentTicTacToeGame.isOwner() ?
+                        TicTacToeGame.OWNER_SETUP_COMPLETED_FIELD :
+                        TicTacToeGame.OPPONENT_SETUP_COMPLETED_FIELD, true);
     }
 }

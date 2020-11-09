@@ -52,9 +52,12 @@
     <string name="text_view_wait_opponent">Waiting for opponent</string>
 
         <!-- Fragment game setup environment-->
-        <string name="text_view_setup_environment_search_plans">Move your device to search for surfaces</string>
-        <string name="text_view_setup_environment_put_game_playground">Now tap where to place the playground</string>
-        <string name="text_view_setup_environment_put_videocall_visualizer">Where do you want to see your opponent?</string>
+        <string name="text_view_suggestions_search_plans">Move your device to search for surfaces</string>
+        <string name="text_view_suggestions_put_game_playground">Now tap where to place the playground</string>
+        <string name="text_view_suggestions_put_videocall_visualizer">Where do you want to see your opponent?</string>
+        <string name="text_view_suggestions_wait_opponent">Wait for the opponent to finish the configuration</string>
+        <string name="text_view_suggestion_is_my_turn">It\'s your turn, make your move</string>
+        <string name="text_view_suggestion_is_not_my_turn">Wait for your opponent to make his move</string>
         <string name="menu_item_edit_scene">Edit scene</string>
         <string name="menu_item_edit_scene_return_to_game">Return to game</string>
 

@@ -17,7 +17,7 @@ import android.widget.Button;
 
 import com.argame.R;
 import com.argame.model.FriendsListAdapter;
-import com.argame.model.TicTacToeGameController;
+import com.argame.model.remote_structures.TicTacToeGameController;
 import com.argame.model.remote_structures.Friends;
 import com.argame.model.data_structures.user_data.IUser;
 

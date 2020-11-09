@@ -20,5 +20,13 @@ public interface ITicTacToeGame {
 
     boolean isOwner();
 
-    void addOnUpdateAcceptedStatus(ListenerTicTacToeGameUpdate listener);
+    boolean isOpponent();
+
+    void addOnUpdateAcceptedStatusListener(ListenerTicTacToeGameUpdate listener);
+
+    void addOnSetupCompletedStatusListener(ListenerTicTacToeGameUpdate listener);
+
+    boolean isStarted();
+
+    boolean isMyTurn();
 }
