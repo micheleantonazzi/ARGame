@@ -1,9 +1,10 @@
-package com.argame.arcore;
+package com.argame.arcore.tic_tac_toe;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
+import com.argame.arcore.Component3D;
 import com.viro.core.AsyncObject3DListener;
 import com.viro.core.Object3D;
 import com.viro.core.Texture;
@@ -14,15 +15,17 @@ public class Hologram extends Component3D {
 
     static public final Vector INITIAL_SCALE = new Vector(0.01f, 0.01f, 0.01f);
 
-    private Context context;
-    private Boolean editMode = false;
+    public Hologram(Context context, ViroContext viroContext) {
+        super(context, viroContext, Uri.parse("file:///android_asset/hologram/hologram_base.obj"));
 
-    public Hologram(Context context, ViroContext viroContext, AsyncObject3DListener listener) {
-        super(context);
+        this.setScale(INITIAL_SCALE);
+    }
 
+    @Override
+    public void loadDefaultModel(AsyncObject3DListener listener) {
         final Bitmap bitmapParticle = getBitmapFromAsset("hologram/particle_texture.png");
         final Bitmap bitmapBase = getBitmapFromAsset("hologram/base_texture.jpg");
-        this.loadModel(viroContext, Uri.parse("file:///android_asset/hologram/hologram_base.obj"), Object3D.Type.OBJ, new AsyncObject3DListener() {
+        this.loadModel(super.getViroContext(), this.getUri(), Object3D.Type.OBJ, new AsyncObject3DListener() {
             @Override
             public void onObject3DLoaded(final Object3D object, final Object3D.Type type) {
 
@@ -40,9 +43,5 @@ public class Hologram extends Component3D {
                 listener.onObject3DFailed(s);
             }
         });
-
-        this.setScale(INITIAL_SCALE);
     }
-
-
 }

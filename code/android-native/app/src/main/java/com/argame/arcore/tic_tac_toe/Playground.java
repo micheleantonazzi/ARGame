@@ -1,10 +1,11 @@
-package com.argame.arcore;
+package com.argame.arcore.tic_tac_toe;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.util.Log;
 
+import com.argame.arcore.Component3D;
 import com.argame.model.data_structures.tic_tac_toe_game.TicTacToeGame;
 import com.argame.model.remote_structures.TicTacToeGameController;
 import com.viro.core.AnimationTimingFunction;
@@ -19,6 +20,7 @@ import com.viro.core.Quad;
 import com.viro.core.Vector;
 import com.viro.core.ViroContext;
 
+import java.io.ObjectStreamException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +29,6 @@ public class Playground extends Component3D {
 
     public static final Vector INITIAL_SCALE = new Vector(0.03f, 0.03f, 0.03f);
 
-    private ViroContext viroContext;
     private boolean isMyTurn = false;
     private int userPiece = -1;
     private List<Node> planesClickable = new ArrayList<>(9);
@@ -35,12 +36,19 @@ public class Playground extends Component3D {
     private PlanesAnimator planesAnimator = new PlanesAnimator(planesClickable);
 
 
-    public Playground(Context context, ViroContext viroContext, AsyncObject3DListener listener) {
-        super(context);
+    public Playground(Context context, ViroContext viroContext) {
+        super(context, viroContext, Uri.parse("file:///android_asset/tictactoe/playground/playground.obj"));
 
-        this.viroContext = viroContext;
+        this.setDragType(DragType.FIXED_TO_WORLD);
 
-        this.loadModel(viroContext, Uri.parse("file:///android_asset/tictactoe/playground/playground.obj"), Object3D.Type.OBJ, new AsyncObject3DListener() {
+        this.setDefaultRotationX(-Math.toRadians(90.0f));
+        this.setScale(INITIAL_SCALE);
+        this.setRotation(new Vector(-Math.toRadians(90.0), 0, 0));
+    }
+
+    @Override
+    public void loadDefaultModel(AsyncObject3DListener listener) {
+        this.loadModel(this.getViroContext(), this.getUri(), Type.OBJ, new AsyncObject3DListener() {
             @Override
             public void onObject3DLoaded(Object3D object3D, Type type) {
                 createClickablePlanes();
@@ -52,12 +60,6 @@ public class Playground extends Component3D {
                 listener.onObject3DFailed(s);
             }
         });
-
-        this.setDragType(DragType.FIXED_TO_WORLD);
-
-        this.setDefaultRotationX(-Math.toRadians(90.0f));
-        this.setScale(INITIAL_SCALE);
-        this.setRotation(new Vector(-Math.toRadians(90.0), 0, 0));
     }
 
     private void createClickablePlanes() {
@@ -93,26 +95,36 @@ public class Playground extends Component3D {
                     if (!isMyTurn || Playground.this.isEditModeEnabled())
                         return;
 
-                    Log.d("debugg", "plane clicked");
-                    Object3D piece = new Object3D();
-                    Uri uri = Uri.EMPTY;
-                    if (userPiece == TicTacToeGame.PIECE_X)
-                        uri = Uri.parse("file:///android_asset/tictactoe/x/x.obj");
-                    else if (userPiece == TicTacToeGame.PIECE_O)
-                        uri = Uri.parse("file:///android_asset/tictactoe/o/o.obj");
+                    if (userPiece == TicTacToeGame.PIECE_X) {
+                        PieceX pieceX = new PieceX(getContext(), getViroContext());
+                        pieceX.loadDefaultModel(new AsyncObject3DListener() {
+                            @Override
+                            public void onObject3DLoaded(Object3D object3D, Type type) {
+                                Playground.this.addChildNode(pieceX);
+                            }
 
-                    piece.loadModel(viroContext, uri, Type.OBJ, new AsyncObject3DListener() {
-                        @Override
-                        public void onObject3DLoaded(Object3D object3D, Type type) {
-                            Playground.this.addChildNode(piece);
-                        }
+                            @Override
+                            public void onObject3DFailed(String s) {
 
-                        @Override
-                        public void onObject3DFailed(String s) {
+                            }
+                        });
+                        pieceX.setPosition(plane.getPositionRealtime());
+                    }
+                    else if (userPiece == TicTacToeGame.PIECE_O) {
+                        PieceO pieceO = new PieceO(getContext(), getViroContext());
+                        pieceO.loadDefaultModel(new AsyncObject3DListener() {
+                            @Override
+                            public void onObject3DLoaded(Object3D object3D, Type type) {
+                                Playground.this.addChildNode(pieceO);
+                            }
 
-                        }
-                    });
-                    piece.setPosition(plane.getPositionRealtime());
+                            @Override
+                            public void onObject3DFailed(String s) {
+
+                            }
+                        });
+                        pieceO.setPosition(plane.getPositionRealtime());
+                    }
 
                     // Delete clickable plane
                     int planePosition = planesClickable.indexOf(plane);

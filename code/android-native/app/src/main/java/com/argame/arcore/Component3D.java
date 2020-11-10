@@ -4,27 +4,34 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Log;
 
+import com.viro.core.AsyncObject3DListener;
 import com.viro.core.Object3D;
 import com.viro.core.PinchState;
 import com.viro.core.RotateState;
 import com.viro.core.Vector;
+import com.viro.core.ViroContext;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-public class Component3D extends Object3D {
+abstract public class Component3D extends Object3D {
 
     private Context context;
+    private ViroContext viroContext;
+    Uri uri;
     private float rotateStart;
     private float scaleStart;
     private boolean editMode = false;
 
     private double defaultRotationX = 0;
 
-    public Component3D(Context context) {
+    public Component3D(Context context, ViroContext viroContext, Uri uri) {
         this.context = context;
+        this.viroContext = viroContext;
+        this.uri = uri;
     }
 
     public Bitmap getBitmapFromAsset(String assetName) {
@@ -72,7 +79,21 @@ public class Component3D extends Object3D {
         return this.editMode;
     }
 
+    abstract public void loadDefaultModel(AsyncObject3DListener listener);
+
     public void setDefaultRotationX(double defaultRotationX) {
         this.defaultRotationX = defaultRotationX;
+    }
+
+    public Context getContext() {
+        return this.context;
+    }
+
+    public ViroContext getViroContext() {
+        return this.viroContext;
+    }
+
+    public Uri getUri() {
+        return this.uri;
     }
 }

@@ -13,8 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.argame.R;
-import com.argame.arcore.Hologram;
-import com.argame.arcore.Playground;
+import com.argame.arcore.tic_tac_toe.Hologram;
+import com.argame.arcore.tic_tac_toe.Playground;
 import com.argame.model.data_structures.tic_tac_toe_game.ITicTacToeGame;
 import com.argame.model.remote_structures.TicTacToeGameController;
 import com.github.clans.fab.FloatingActionButton;
@@ -113,7 +113,8 @@ public class TicTacToeFragmentGame extends Fragment {
                         if (!playgroundPositioned) {
 
                             // Load graphics objects
-                            playground = new Playground(getActivity(), viroView.getViroContext(), new AsyncObject3DListener() {
+                            playground = new Playground(getActivity(), viroView.getViroContext());
+                            playground.loadDefaultModel(new AsyncObject3DListener() {
                                 @Override
                                 public void onObject3DLoaded(final Object3D object, final Object3D.Type type) {
 
@@ -126,6 +127,7 @@ public class TicTacToeFragmentGame extends Fragment {
                                     Log.e("debugg", "Load playground failed " + s);
                                 }
                             });
+
                             playground.setPosition(vector);
                             playground.setUserPiece(ticTacToeGame.getUserPiece());
 
@@ -134,7 +136,8 @@ public class TicTacToeFragmentGame extends Fragment {
                             playgroundPositioned = true;
                         } else if (!videocallPositioned) {
 
-                            hologram = new Hologram(getActivity(), viroView.getViroContext(), new AsyncObject3DListener() {
+                            hologram = new Hologram(getActivity(), viroView.getViroContext());
+                            hologram.loadDefaultModel(new AsyncObject3DListener() {
 
                                 @Override
                                 public void onObject3DLoaded(Object3D object3D, Object3D.Type type) {
