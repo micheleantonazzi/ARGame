@@ -36,6 +36,7 @@ public class Playground extends Component3D {
     private PlanesAnimator planesAnimator = new PlanesAnimator(planesClickable);
 
     private void createClickablePlanes() {
+
         // Create planes to click
         for(int i = 0; i < 9; i++) {
             Quad plane = new Quad(6.5f,6.5f);
@@ -102,7 +103,7 @@ public class Playground extends Component3D {
                     // Delete clickable plane
                     int planePosition = planesClickable.indexOf(plane);
                     plane.removeFromParentNode();
-                    planesClickable.add(planePosition, null);
+                    planesClickable.set(planePosition, null);
 
                     TicTacToeGameController.getInstance().makeMove(planePosition);
                     isMyTurn(false);

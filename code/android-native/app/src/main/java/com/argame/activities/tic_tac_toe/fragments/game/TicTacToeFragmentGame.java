@@ -16,6 +16,7 @@ import com.argame.R;
 import com.argame.arcore.tic_tac_toe.Hologram;
 import com.argame.arcore.tic_tac_toe.Playground;
 import com.argame.model.data_structures.tic_tac_toe_game.ITicTacToeGame;
+import com.argame.model.data_structures.tic_tac_toe_game.ListenerTicTacToeGameUpdate;
 import com.argame.model.remote_structures.TicTacToeGameController;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -306,6 +307,18 @@ public class TicTacToeFragmentGame extends Fragment {
                 this.playground.isMyTurn(false);
 
             }
+        });
+
+        this.ticTacToeGame.addOnTurnChangeListener(gameOnTurnChanged -> {
+            if (ticTacToeGame.isMyTurn()) {
+                textViewSuggestions.setText(R.string.text_view_suggestion_is_my_turn);
+                playground.setMatrix(ticTacToeGame.getMatrix());
+            }
+
+            else
+                textViewSuggestions.setText(R.string.text_view_suggestion_is_not_my_turn);
+
+            playground.isMyTurn(ticTacToeGame.isMyTurn());
         });
 
         TicTacToeGameController.getInstance().setSetupCompleted();

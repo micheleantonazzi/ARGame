@@ -28,6 +28,8 @@ public interface ITicTacToeGame {
 
     void addOnSetupCompletedStatusListener(ListenerTicTacToeGameUpdate listener);
 
+    void addOnTurnChangeListener(ListenerTicTacToeGameUpdate listener);
+
     boolean isStarted();
 
     boolean isMyTurn();

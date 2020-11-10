@@ -55,16 +55,22 @@ public class TicTacToeGame implements ITicTacToeGame {
     private boolean isOwner = false;
     private boolean isOpponent = false;
 
-    private Set<ListenerTicTacToeGameUpdate> listenerAcceptedStatus = new HashSet<>();
-    private Set<ListenerTicTacToeGameUpdate> listenerSetupCompleted = new HashSet<>();
+    private Set<ListenerTicTacToeGameUpdate> listenersAcceptedStatus = new HashSet<>();
+    private Set<ListenerTicTacToeGameUpdate> listenersSetupCompleted = new HashSet<>();
+    private Set<ListenerTicTacToeGameUpdate> listenersTurnChanged = new HashSet<>();
 
     private void notifyAcceptedStatusListeners() {
-        for(ListenerTicTacToeGameUpdate listener: this.listenerAcceptedStatus)
+        for(ListenerTicTacToeGameUpdate listener: this.listenersAcceptedStatus)
             listener.update(this);
     }
 
     private void notifySetupCompletedListeners() {
-        for(ListenerTicTacToeGameUpdate listener: this.listenerSetupCompleted)
+        for(ListenerTicTacToeGameUpdate listener: this.listenersSetupCompleted)
+            listener.update(this);
+    }
+
+    private void notifyTurnChangedListeners() {
+        for(ListenerTicTacToeGameUpdate listener: this.listenersTurnChanged)
             listener.update(this);
     }
 
@@ -88,7 +94,6 @@ public class TicTacToeGame implements ITicTacToeGame {
         this.opponentID = String.valueOf(newData.get(OPPONENT_ID_FIELD));
         this.agoraChannel = String.valueOf(newData.get(AGORA_CHANNEL_FIELD));
         this.agoraToken = String.valueOf(newData.get(AGORA_TOKEN_FIELD));
-        this.turn = String.valueOf(newData.get(TURN_FIELD));
 
         // Update fields with listeners
         int oldAcceptedStatus = this.accepted;
@@ -99,6 +104,9 @@ public class TicTacToeGame implements ITicTacToeGame {
         this.ownerSetupCompleted = Boolean.parseBoolean(String.valueOf(newData.get(OWNER_SETUP_COMPLETED_FIELD)));
         this.opponentSetupCompleted = Boolean.parseBoolean(String.valueOf(newData.get(OPPONENT_SETUP_COMPLETED_FIELD)));
 
+        String oldTurn = this.turn;
+        this.turn = String.valueOf(newData.get(TURN_FIELD));
+
         this.terminated = Boolean.parseBoolean(String.valueOf(newData.get(TERMINATED_FIELD)));
         this.matrix = new ArrayList<>((List<Long>) newData.get(MATRIX_FIELD));
 
@@ -106,9 +114,11 @@ public class TicTacToeGame implements ITicTacToeGame {
         if (this.accepted != oldAcceptedStatus)
             this.notifyAcceptedStatusListeners();
 
-
         if (this.ownerSetupCompleted != oldOwnerSetupCompleted || this.opponentSetupCompleted != oldOpponentSetupCompleted)
             this.notifySetupCompletedListeners();
+
+        if (!this.turn.equals(oldTurn))
+            this.notifyTurnChangedListeners();
 
         // Update local fields
         this.isOwner = this.isOwner();
@@ -146,20 +156,26 @@ public class TicTacToeGame implements ITicTacToeGame {
         this.ownerSetupCompleted = false;
         this.opponentSetupCompleted = false;
         this.turn = "";
-        this.listenerAcceptedStatus = new HashSet<>();
-        this.listenerSetupCompleted = new HashSet<>();
+        this.listenersAcceptedStatus = new HashSet<>();
+        this.listenersSetupCompleted = new HashSet<>();
+        this.listenersTurnChanged = new HashSet<>();
         this.matrix = new ArrayList<>(Collections.nCopies(9, (long) -1));
         return this;
     }
 
     @Override
     synchronized public void addOnUpdateAcceptedStatusListener(ListenerTicTacToeGameUpdate listener) {
-        this.listenerAcceptedStatus.add(listener);
+        this.listenersAcceptedStatus.add(listener);
     }
 
     @Override
     public void addOnSetupCompletedStatusListener(ListenerTicTacToeGameUpdate listener) {
-        this.listenerSetupCompleted.add(listener);
+        this.listenersSetupCompleted.add(listener);
+    }
+
+    @Override
+    public void addOnTurnChangeListener(ListenerTicTacToeGameUpdate listener) {
+        this.listenersTurnChanged.add(listener);
     }
 
     @Override
