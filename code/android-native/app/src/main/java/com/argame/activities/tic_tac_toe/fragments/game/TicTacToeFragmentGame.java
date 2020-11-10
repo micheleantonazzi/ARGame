@@ -291,6 +291,7 @@ public class TicTacToeFragmentGame extends Fragment {
 
         this.ticTacToeGame.addOnSetupCompletedStatusListener(gameOnSetupCompletedChange -> {
             if (gameOnSetupCompletedChange.isStarted()) {
+                this.playground.setMatrix(this.ticTacToeGame.getMatrix());
                 if (this.ticTacToeGame.isMyTurn()) {
                     this.textViewSuggestions.setText(R.string.text_view_suggestion_is_my_turn);
                     this.playground.isMyTurn(true);

@@ -23,8 +23,8 @@ public class TicTacToeGame implements ITicTacToeGame {
     private static final String TURN_OPPONENT = "OPPONENT";
 
     // Piece X O
-    public static final int PIECE_X = 0;
-    public static final int PIECE_O = 1;
+    public static final long PIECE_X = 0;
+    public static final long PIECE_O = 1;
 
     // Fields name
     public static final String OWNER_ID_FIELD = "ownerID";
@@ -49,7 +49,7 @@ public class TicTacToeGame implements ITicTacToeGame {
     private String turn = "";
     private int accepted = -2;
     private boolean terminated = false;
-    private List<Integer> matrix = new ArrayList<>(Collections.nCopies(9, -1));
+    private List<Long> matrix = new ArrayList<Long>(Collections.nCopies(9, (long) -1));
 
     // Fields that exist locally
     private boolean isOwner = false;
@@ -100,7 +100,7 @@ public class TicTacToeGame implements ITicTacToeGame {
         this.opponentSetupCompleted = Boolean.parseBoolean(String.valueOf(newData.get(OPPONENT_SETUP_COMPLETED_FIELD)));
 
         this.terminated = Boolean.parseBoolean(String.valueOf(newData.get(TERMINATED_FIELD)));
-        this.matrix = new ArrayList<>((List<Integer>) newData.get(MATRIX_FIELD));
+        this.matrix = new ArrayList<>((List<Long>) newData.get(MATRIX_FIELD));
 
         // Call listeners
         if (this.accepted != oldAcceptedStatus)
@@ -148,7 +148,7 @@ public class TicTacToeGame implements ITicTacToeGame {
         this.turn = "";
         this.listenerAcceptedStatus = new HashSet<>();
         this.listenerSetupCompleted = new HashSet<>();
-        this.matrix = new ArrayList<>(Collections.nCopies(9, -1));
+        this.matrix = new ArrayList<>(Collections.nCopies(9, (long) -1));
         return this;
     }
 
@@ -243,7 +243,7 @@ public class TicTacToeGame implements ITicTacToeGame {
     }
 
     @Override
-    synchronized public int getUserPiece() {
+    synchronized public long getUserPiece() {
         if (this.isOwner())
             return PIECE_X;
 
@@ -251,12 +251,12 @@ public class TicTacToeGame implements ITicTacToeGame {
     }
 
     @Override
-    public List<Integer> getMatrix() {
+    public List<Long> getMatrix() {
         return this.matrix;
     }
 
-    synchronized public List<Integer> getMatrixMakeMove(int position) {
-        List<Integer> newMatrix = new ArrayList<>(this.matrix);
+    synchronized public List<Long> getMatrixMakeMove(int position) {
+        List<Long> newMatrix = new ArrayList<>(this.matrix);
         newMatrix.set(position, getUserPiece());
 
         return newMatrix;
@@ -264,8 +264,8 @@ public class TicTacToeGame implements ITicTacToeGame {
 
     synchronized public String nextTurn() {
         if (this.turn.equals(TURN_OWNER))
-            return TURN_OWNER;
-        else
             return TURN_OPPONENT;
+        else
+            return TURN_OWNER;
     }
 }

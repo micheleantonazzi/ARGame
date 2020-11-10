@@ -32,7 +32,7 @@ public interface ITicTacToeGame {
 
     boolean isMyTurn();
 
-    int getUserPiece();
+    long getUserPiece();
 
-    List<Integer> getMatrix();
+    List<Long> getMatrix();
 }

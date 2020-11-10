@@ -30,37 +30,10 @@ public class Playground extends Component3D {
     public static final Vector INITIAL_SCALE = new Vector(0.03f, 0.03f, 0.03f);
 
     private boolean isMyTurn = false;
-    private int userPiece = -1;
+    private long userPiece = -1;
     private List<Node> planesClickable = new ArrayList<>(9);
 
     private PlanesAnimator planesAnimator = new PlanesAnimator(planesClickable);
-
-
-    public Playground(Context context, ViroContext viroContext) {
-        super(context, viroContext, Uri.parse("file:///android_asset/tictactoe/playground/playground.obj"));
-
-        this.setDragType(DragType.FIXED_TO_WORLD);
-
-        this.setDefaultRotationX(-Math.toRadians(90.0f));
-        this.setScale(INITIAL_SCALE);
-        this.setRotation(new Vector(-Math.toRadians(90.0), 0, 0));
-    }
-
-    @Override
-    public void loadDefaultModel(AsyncObject3DListener listener) {
-        this.loadModel(this.getViroContext(), this.getUri(), Type.OBJ, new AsyncObject3DListener() {
-            @Override
-            public void onObject3DLoaded(Object3D object3D, Type type) {
-                createClickablePlanes();
-                listener.onObject3DLoaded(object3D, type);
-            }
-
-            @Override
-            public void onObject3DFailed(String s) {
-                listener.onObject3DFailed(s);
-            }
-        });
-    }
 
     private void createClickablePlanes() {
         // Create planes to click
@@ -142,6 +115,32 @@ public class Playground extends Component3D {
             });
     }
 
+    public Playground(Context context, ViroContext viroContext) {
+        super(context, viroContext, Uri.parse("file:///android_asset/tictactoe/playground/playground.obj"));
+
+        this.setDragType(DragType.FIXED_TO_WORLD);
+
+        this.setDefaultRotationX(-Math.toRadians(90.0f));
+        this.setScale(INITIAL_SCALE);
+        this.setRotation(new Vector(-Math.toRadians(90.0), 0, 0));
+    }
+
+    @Override
+    public void loadDefaultModel(AsyncObject3DListener listener) {
+        this.loadModel(this.getViroContext(), this.getUri(), Type.OBJ, new AsyncObject3DListener() {
+            @Override
+            public void onObject3DLoaded(Object3D object3D, Type type) {
+                createClickablePlanes();
+                listener.onObject3DLoaded(object3D, type);
+            }
+
+            @Override
+            public void onObject3DFailed(String s) {
+                listener.onObject3DFailed(s);
+            }
+        });
+    }
+
     public void isMyTurn(boolean isMyTurn) {
         this.isMyTurn = isMyTurn;
 
@@ -151,9 +150,58 @@ public class Playground extends Component3D {
             this.planesAnimator.stopAnimation();
     }
 
-    public void setUserPiece(int userPiece) {
+    public void setUserPiece(long userPiece) {
         this.userPiece = userPiece;
     }
+
+    public void setMatrix(List<Long> pieces) {
+        for(int i = 0; i < pieces.size(); i++) {
+            Long piece = pieces.get(i);
+            Node plane = this.planesClickable.get(i);
+
+            if (plane != null) {
+                if (piece == TicTacToeGame.PIECE_X) {
+                    PieceX pieceX = new PieceX(this.getContext(), this.getViroContext());
+                    pieceX.loadDefaultModel(new AsyncObject3DListener() {
+                        @Override
+                        public void onObject3DLoaded(Object3D object3D, Type type) {
+                            Playground.this.addChildNode(pieceX);
+                        }
+
+                        @Override
+                        public void onObject3DFailed(String s) {
+
+                        }
+                    });
+                    pieceX.setPosition(plane.getPositionRealtime());
+
+                    // Remove plane
+                    plane.removeFromParentNode();
+                    this.planesClickable.set(i, null);
+                }
+                else if (piece == TicTacToeGame.PIECE_O) {
+                    PieceO pieceO = new PieceO(this.getContext(), this.getViroContext());
+                    pieceO.loadDefaultModel(new AsyncObject3DListener() {
+                        @Override
+                        public void onObject3DLoaded(Object3D object3D, Type type) {
+                            Playground.this.addChildNode(pieceO);
+                        }
+
+                        @Override
+                        public void onObject3DFailed(String s) {
+
+                        }
+                    });
+                    pieceO.setPosition(plane.getPositionRealtime());
+
+                    // Remove plane
+                    plane.removeFromParentNode();
+                    this.planesClickable.set(i, null);
+                }
+            }
+        }
+    }
+
 
     private class PlanesAnimator {
 
