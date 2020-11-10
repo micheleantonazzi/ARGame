@@ -22,6 +22,10 @@ public class TicTacToeGame implements ITicTacToeGame {
     private static final String TURN_OWNER = "OWNER";
     private static final String TURN_OPPONENT = "OPPONENT";
 
+    // Piece X O
+    public static final int PIECE_X = 0;
+    public static final int PIECE_O = 1;
+
     // Fields name
     public static final String OWNER_ID_FIELD = "ownerID";
     public static final String OPPONENT_ID_FIELD = "opponentID";
@@ -236,5 +240,32 @@ public class TicTacToeGame implements ITicTacToeGame {
     @Override
     synchronized public boolean isMyTurn() {
         return this.isOwner && this.turn.equals(TURN_OWNER) || this.isOpponent && this.turn.equals(TURN_OPPONENT);
+    }
+
+    @Override
+    synchronized public int getUserPiece() {
+        if (this.isOwner())
+            return PIECE_X;
+
+        return PIECE_O;
+    }
+
+    @Override
+    public List<Integer> getMatrix() {
+        return this.matrix;
+    }
+
+    synchronized public List<Integer> getMatrixMakeMove(int position) {
+        List<Integer> newMatrix = new ArrayList<>(this.matrix);
+        newMatrix.set(position, getUserPiece());
+
+        return newMatrix;
+    }
+
+    synchronized public String nextTurn() {
+        if (this.turn.equals(TURN_OWNER))
+            return TURN_OWNER;
+        else
+            return TURN_OPPONENT;
     }
 }

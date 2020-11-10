@@ -2,6 +2,8 @@ package com.argame.model.data_structures.tic_tac_toe_game;
 
 import com.argame.model.data_structures.user_data.IUser;
 
+import java.util.List;
+
 public interface ITicTacToeGame {
 
     String getMatchID();
@@ -29,4 +31,8 @@ public interface ITicTacToeGame {
     boolean isStarted();
 
     boolean isMyTurn();
+
+    int getUserPiece();
+
+    List<Integer> getMatrix();
 }

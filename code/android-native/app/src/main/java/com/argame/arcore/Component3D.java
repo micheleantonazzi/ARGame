@@ -68,6 +68,10 @@ public class Component3D extends Object3D {
         }
     }
 
+    synchronized public boolean isEditModeEnabled() {
+        return this.editMode;
+    }
+
     public void setDefaultRotationX(double defaultRotationX) {
         this.defaultRotationX = defaultRotationX;
     }

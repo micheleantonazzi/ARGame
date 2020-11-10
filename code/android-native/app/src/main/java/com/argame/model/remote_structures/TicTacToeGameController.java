@@ -20,6 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TicTacToeGameController {
@@ -234,5 +235,21 @@ public class TicTacToeGameController {
                 .update(currentTicTacToeGame.isOwner() ?
                         TicTacToeGame.OWNER_SETUP_COMPLETED_FIELD :
                         TicTacToeGame.OPPONENT_SETUP_COMPLETED_FIELD, true);
+    }
+
+    public void setSetupNotCompleted() {
+        FirebaseFirestore.getInstance().collection(COLLECTION_TIC_TAC_TOE_GAMES).document(currentTicTacToeGame.getMatchID())
+                .update(currentTicTacToeGame.isOwner() ?
+                        TicTacToeGame.OWNER_SETUP_COMPLETED_FIELD :
+                        TicTacToeGame.OPPONENT_SETUP_COMPLETED_FIELD, false);
+    }
+
+    public void makeMove(int position) {
+        Map<String, Object> updateMap = new HashMap<>(2);
+        updateMap.put(TicTacToeGame.MATRIX_FIELD, this.currentTicTacToeGame.getMatrixMakeMove(position));
+        updateMap.put(TicTacToeGame.TURN_FIELD, this.currentTicTacToeGame.nextTurn());
+
+        FirebaseFirestore.getInstance().collection(COLLECTION_TIC_TAC_TOE_GAMES).document(currentTicTacToeGame.getMatchID())
+                .update(updateMap);
     }
 }

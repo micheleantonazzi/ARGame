@@ -127,6 +127,7 @@ public class TicTacToeFragmentGame extends Fragment {
                                 }
                             });
                             playground.setPosition(vector);
+                            playground.setUserPiece(ticTacToeGame.getUserPiece());
 
                             textViewSuggestions.setText(R.string.text_view_suggestions_put_videocall_visualizer);
                             showPlanes = false;
@@ -194,6 +195,37 @@ public class TicTacToeFragmentGame extends Fragment {
         return new TicTacToeFragmentGame();
     }
 
+    private void displayScene() {
+        this.arScene = new ARScene();
+        this.arScene.displayPointCloud(false);
+
+        // Add some lights to the scene; this will give the Android's some nice illumination.
+        Node rootNode = this.arScene.getRootNode();
+        List<Vector> lightPositions = new ArrayList<>();
+        lightPositions.add(new Vector(-10,  10, 1));
+        lightPositions.add(new Vector(10,  10, 1));
+
+        float intensity = 300;
+        List<Integer> lightColors = new ArrayList();
+        lightColors.add(Color.WHITE);
+        lightColors.add(Color.WHITE);
+
+        for (int i = 0; i < lightPositions.size(); i++) {
+            OmniLight light = new OmniLight();
+            light.setColor(lightColors.get(i));
+            light.setPosition(lightPositions.get(i));
+            light.setAttenuationStartDistance(20);
+            light.setAttenuationEndDistance(30);
+            light.setIntensity(intensity);
+            rootNode.addLight(light);
+        }
+
+        // Set listener to detect planes
+        this.arScene.setListener(this.trackedPlanesListener);
+
+        this.viroView.setScene(arScene);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -248,49 +280,28 @@ public class TicTacToeFragmentGame extends Fragment {
         });
 
         this.ticTacToeGame = TicTacToeGameController.getInstance().getCurrentTicTacToeGame();
+        TicTacToeGameController.getInstance().setSetupNotCompleted();
         return this.viroView;
-    }
-
-    private void displayScene() {
-        this.arScene = new ARScene();
-        this.arScene.displayPointCloud(false);
-
-        // Add some lights to the scene; this will give the Android's some nice illumination.
-        Node rootNode = this.arScene.getRootNode();
-        List<Vector> lightPositions = new ArrayList<>();
-        lightPositions.add(new Vector(-10,  10, 1));
-        lightPositions.add(new Vector(10,  10, 1));
-
-        float intensity = 300;
-        List<Integer> lightColors = new ArrayList();
-        lightColors.add(Color.WHITE);
-        lightColors.add(Color.WHITE);
-
-        for (int i = 0; i < lightPositions.size(); i++) {
-            OmniLight light = new OmniLight();
-            light.setColor(lightColors.get(i));
-            light.setPosition(lightPositions.get(i));
-            light.setAttenuationStartDistance(20);
-            light.setAttenuationEndDistance(30);
-            light.setIntensity(intensity);
-            rootNode.addLight(light);
-        }
-
-        // Set listener to detect planes
-        this.arScene.setListener(this.trackedPlanesListener);
-
-        this.viroView.setScene(arScene);
     }
 
     private void setupEnvironmentTerminated() {
 
         this.ticTacToeGame.addOnSetupCompletedStatusListener(gameOnSetupCompletedChange -> {
-            if (gameOnSetupCompletedChange.isStarted())
-                this.textViewSuggestions.setText(this.ticTacToeGame.isMyTurn() ?
-                        R.string.text_view_suggestion_is_my_turn :
-                        R.string.text_view_suggestion_is_not_my_turn);
-            else
+            if (gameOnSetupCompletedChange.isStarted()) {
+                if (this.ticTacToeGame.isMyTurn()) {
+                    this.textViewSuggestions.setText(R.string.text_view_suggestion_is_my_turn);
+                    this.playground.isMyTurn(true);
+                }
+                else {
+                    this.textViewSuggestions.setText(R.string.text_view_suggestion_is_not_my_turn);
+                    this.playground.isMyTurn(false);
+                }
+            }
+            else {
                 this.textViewSuggestions.setText(R.string.text_view_suggestions_wait_opponent);
+                this.playground.isMyTurn(false);
+
+            }
         });
 
         TicTacToeGameController.getInstance().setSetupCompleted();
