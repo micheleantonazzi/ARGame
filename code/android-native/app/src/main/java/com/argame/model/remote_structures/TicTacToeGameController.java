@@ -255,6 +255,8 @@ public class TicTacToeGameController {
             updateMap.put(TicTacToeGame.TERMINATED_FIELD, true);
             updateMap.put(TicTacToeGame.WINNER_FIELD, this.currentTicTacToeGame.getRole());
         }
+        else if (!newMatrix.contains((long) -1))
+            updateMap.put(TicTacToeGame.TERMINATED_FIELD, true);
 
         FirebaseFirestore.getInstance().collection(COLLECTION_TIC_TAC_TOE_GAMES).document(currentTicTacToeGame.getMatchID())
                 .update(updateMap);

@@ -61,6 +61,7 @@
         <string name="text_view_suggestion_is_not_my_turn">Attendi che l\'avversario faccia la sua mossa</string>
         <string name="text_view_suggestion_win">HAI VINTO</string>
         <string name="text_view_suggestion_lose">HAI PERSO</string>
+        <string name="text_view_suggestion_parity">LA PARTITA È TERMINATA SENZA UN VINCITORE</string>
         <string name="menu_item_edit_scene">Modifica scena</string>
         <string name="menu_item_edit_scene_return_to_game">Ritorna al gioco</string>
 

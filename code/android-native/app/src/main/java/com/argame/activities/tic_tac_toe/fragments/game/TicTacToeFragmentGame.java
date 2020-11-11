@@ -315,6 +315,8 @@ public class TicTacToeFragmentGame extends Fragment {
 
                 if (this.ticTacToeGame.isLooser())
                     textViewSuggestions.setText(R.string.text_view_suggestion_lose);
+                else if (this.ticTacToeGame.isTerminated())
+                    textViewSuggestions.setText(R.string.text_view_suggestion_parity);
                 else {
                     textViewSuggestions.setText(R.string.text_view_suggestion_is_my_turn);
                     playground.isMyTurn(true);
@@ -325,6 +327,10 @@ public class TicTacToeFragmentGame extends Fragment {
                 if (this.ticTacToeGame.isWinner()) {
                     UserCurrentGame.getInstance().setMatchNotActive(this.ticTacToeGame.getOwnerID(), this.ticTacToeGame.getOpponentID());
                     textViewSuggestions.setText(R.string.text_view_suggestion_win);
+                }
+                else if (this.ticTacToeGame.isTerminated()) {
+                    textViewSuggestions.setText(R.string.text_view_suggestion_parity);
+                    UserCurrentGame.getInstance().setMatchNotActive(this.ticTacToeGame.getOwnerID(), this.ticTacToeGame.getOpponentID());
                 }
                 else
                     textViewSuggestions.setText(R.string.text_view_suggestion_is_not_my_turn);
