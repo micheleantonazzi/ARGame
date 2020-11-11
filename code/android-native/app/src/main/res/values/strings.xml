@@ -63,6 +63,8 @@
         <string name="text_view_suggestions_wait_opponent">Wait for the opponent to finish the configuration</string>
         <string name="text_view_suggestion_is_my_turn">It\'s your turn, make your move</string>
         <string name="text_view_suggestion_is_not_my_turn">Wait for your opponent to make his move</string>
-        <string name="menu_item_edit_scene">Edit scene</string>
+        <string name="text_view_suggestion_win">YOU WIN</string>
+        <string name="text_view_suggestion_lose">YOU LOSE</string>
+    <string name="menu_item_edit_scene">Edit scene</string>
         <string name="menu_item_edit_scene_return_to_game">Return to game</string>
 </resources>

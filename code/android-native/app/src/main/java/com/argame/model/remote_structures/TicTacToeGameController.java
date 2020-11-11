@@ -82,7 +82,7 @@ public class TicTacToeGameController {
                 else if (gameAcceptedStatusChanged.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_ACCEPTED)
                     this.context.startActivity(new Intent(this.context, TicTacToeActivity.class));
                 else if (gameAcceptedStatusChanged.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_REFUSED)
-                    UserCurrentGame.getInstance().matchRefused(this.currentTicTacToeGame.getOwnerID());
+                    UserCurrentGame.getInstance().setMatchNotActive(this.currentTicTacToeGame.getOwnerID(), FirebaseAuth.getInstance().getCurrentUser().getUid());
             });
 
             this.gameListenerRegistration = firestore.collection(COLLECTION_TIC_TAC_TOE_GAMES).document(gameID)
@@ -195,7 +195,7 @@ public class TicTacToeGameController {
                 .addOnFailureListener(e -> Log.w("debugg", "TicTacToeGame creation failure", e));
     }
 
-    synchronized private void resetGame() {
+    synchronized public void resetGame() {
         synchronized (this.currentTicTacToeGame) {
             // Remove old TicTacToeGame
             if (this.gameListenerRegistration != null)
@@ -246,8 +246,15 @@ public class TicTacToeGameController {
 
     public void makeMove(int position) {
         Map<String, Object> updateMap = new HashMap<>(2);
-        updateMap.put(TicTacToeGame.MATRIX_FIELD, this.currentTicTacToeGame.getMatrixMakeMove(position));
+        List<Long> newMatrix = this.currentTicTacToeGame.getMatrixMakeMove(position);
+        updateMap.put(TicTacToeGame.MATRIX_FIELD, newMatrix);
         updateMap.put(TicTacToeGame.TURN_FIELD, this.currentTicTacToeGame.nextTurn());
+
+        // Check if the user win the game
+        if (TicTacToeGame.checkWinner(newMatrix).equals(this.currentTicTacToeGame.getRole())) {
+            updateMap.put(TicTacToeGame.TERMINATED_FIELD, true);
+            updateMap.put(TicTacToeGame.WINNER_FIELD, this.currentTicTacToeGame.getRole());
+        }
 
         FirebaseFirestore.getInstance().collection(COLLECTION_TIC_TAC_TOE_GAMES).document(currentTicTacToeGame.getMatchID())
                 .update(updateMap);

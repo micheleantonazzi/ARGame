@@ -37,4 +37,12 @@ public interface ITicTacToeGame {
     long getUserPiece();
 
     List<Long> getMatrix();
+
+    boolean isWinner();
+
+    boolean isLooser();
+
+    String getRole();
+
+    String getOtherPlayerRole();
 }

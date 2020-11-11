@@ -76,11 +76,11 @@ public class UserCurrentGame {
         return this;
     }
 
-    // This method is called by the opponent and set inactive the current game
-    synchronized public void matchRefused(String ownerID) {
+    // This method is called by the opponent when it refuses the match or when the match finishes with a winner
+    synchronized public void setMatchNotActive(String ownerID, String opponentID) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
-        firestore.collection(COLLECTION_USERS_CURRENT_GAME).document(CurrentUser.getInstance().getCurrentUser().getUid())
+        firestore.collection(COLLECTION_USERS_CURRENT_GAME).document(opponentID)
                 .update(IS_ACTIVE_FIELD, false);
 
         firestore.collection(COLLECTION_USERS_CURRENT_GAME).document(ownerID)

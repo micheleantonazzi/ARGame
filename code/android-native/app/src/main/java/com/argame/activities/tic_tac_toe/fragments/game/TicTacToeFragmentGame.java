@@ -16,8 +16,9 @@ import com.argame.R;
 import com.argame.arcore.tic_tac_toe.Hologram;
 import com.argame.arcore.tic_tac_toe.Playground;
 import com.argame.model.data_structures.tic_tac_toe_game.ITicTacToeGame;
-import com.argame.model.data_structures.tic_tac_toe_game.ListenerTicTacToeGameUpdate;
+import com.argame.model.data_structures.tic_tac_toe_game.TicTacToeGame;
 import com.argame.model.remote_structures.TicTacToeGameController;
+import com.argame.model.remote_structures.UserCurrentGame;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.viro.core.ARAnchor;
@@ -57,7 +58,6 @@ public class TicTacToeFragmentGame extends Fragment {
     private boolean surfacesDetected = false;
     private boolean playgroundPositioned = false;
     private boolean videocallPositioned = false;
-    private boolean gameStarted = false;
 
     private ARScene.Listener trackedPlanesListener = new ARScene.Listener() {
 
@@ -311,14 +311,24 @@ public class TicTacToeFragmentGame extends Fragment {
 
         this.ticTacToeGame.addOnTurnChangeListener(gameOnTurnChanged -> {
             if (ticTacToeGame.isMyTurn()) {
-                textViewSuggestions.setText(R.string.text_view_suggestion_is_my_turn);
                 playground.setMatrix(ticTacToeGame.getMatrix());
+
+                if (this.ticTacToeGame.isLooser())
+                    textViewSuggestions.setText(R.string.text_view_suggestion_lose);
+                else {
+                    textViewSuggestions.setText(R.string.text_view_suggestion_is_my_turn);
+                    playground.isMyTurn(true);
+                }
             }
 
-            else
-                textViewSuggestions.setText(R.string.text_view_suggestion_is_not_my_turn);
-
-            playground.isMyTurn(ticTacToeGame.isMyTurn());
+            else {
+                if (this.ticTacToeGame.isWinner()) {
+                    UserCurrentGame.getInstance().setMatchNotActive(this.ticTacToeGame.getOwnerID(), this.ticTacToeGame.getOpponentID());
+                    textViewSuggestions.setText(R.string.text_view_suggestion_win);
+                }
+                else
+                    textViewSuggestions.setText(R.string.text_view_suggestion_is_not_my_turn);
+            }
         });
 
         TicTacToeGameController.getInstance().setSetupCompleted();

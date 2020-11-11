@@ -1,5 +1,7 @@
 package com.argame.model.data_structures.tic_tac_toe_game;
 
+import android.view.WindowInsets;
+
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -19,12 +21,15 @@ public class TicTacToeGame implements ITicTacToeGame {
     public static final int ACCEPT_STATUS_ACCEPTED = 1;
 
     // Turn
-    private static final String TURN_OWNER = "OWNER";
-    private static final String TURN_OPPONENT = "OPPONENT";
+    private static final String OWNER = "OWNER";
+    private static final String OPPONENT = "OPPONENT";
 
     // Piece X O
+    public static final long PIECE_NEUTRAL = -1;
     public static final long PIECE_X = 0;
     public static final long PIECE_O = 1;
+    public static final long PIECE_OWNER = PIECE_X;
+    public static final long PIECE_OPPONENT = PIECE_O;
 
     // Fields name
     public static final String OWNER_ID_FIELD = "ownerID";
@@ -35,6 +40,7 @@ public class TicTacToeGame implements ITicTacToeGame {
     public static final String OWNER_SETUP_COMPLETED_FIELD = "ownerSetupCompleted";
     public static final String OPPONENT_SETUP_COMPLETED_FIELD = "opponentSetupCompleted";
     public static final String TURN_FIELD = "turn";
+    public static final String WINNER_FIELD = "winner";
     public static final String AGORA_TOKEN_FIELD = "agoraToken";
     public static final String MATRIX_FIELD = "matrix";
 
@@ -49,6 +55,7 @@ public class TicTacToeGame implements ITicTacToeGame {
     private String turn = "";
     private int accepted = -2;
     private boolean terminated = false;
+    private String winner = "";
     private List<Long> matrix = new ArrayList<Long>(Collections.nCopies(9, (long) -1));
 
     // Fields that exist locally
@@ -84,9 +91,52 @@ public class TicTacToeGame implements ITicTacToeGame {
         map.put(AGORA_CHANNEL_FIELD, "");
         map.put(OWNER_SETUP_COMPLETED_FIELD, false);
         map.put(OPPONENT_SETUP_COMPLETED_FIELD, false);
-        map.put(TURN_FIELD, new Random().nextInt(2) % 2 == 0 ? TURN_OWNER : TURN_OPPONENT);
+        map.put(TURN_FIELD, new Random().nextInt(2) % 2 == 0 ? OWNER : OPPONENT);
+        map.put(WINNER_FIELD, "");
         map.put(MATRIX_FIELD, new ArrayList<>(Collections.nCopies(9, -1)));
         return map;
+    }
+
+    static private boolean checkEquality(long[] array, int length) {
+        for(int i = 0; i < length - 1; ++i) {
+            if (array[i] != array[i + 1])
+                return false;
+        }
+        return true;
+    }
+
+    static public String checkWinner(List<Long> matrix) {
+
+        // Check rows
+        for(int i = 0; i < 3; i++) {
+            long[] row = new long[3];
+            for(int y = 0; y < 3; y++) {
+                row[y] = matrix.get(i * 3 + y);
+            }
+            if (row[0] != PIECE_NEUTRAL && checkEquality(row, 3))
+                return row[0] == PIECE_OWNER ? OWNER : OPPONENT;
+        }
+
+        // Check columns
+        for(int i = 0; i < 3; i++) {
+            long[] column = new long[3];
+            for(int y = 0; y < 3; y++) {
+                column[y] = matrix.get(i + y * 3);
+            }
+            if (column[0] != PIECE_NEUTRAL && checkEquality(column, 3))
+                return column[0] == PIECE_OWNER ? OWNER : OPPONENT;
+        }
+
+        // Check diagonals
+        if (matrix.get(0) != PIECE_NEUTRAL && matrix.get(0).equals(matrix.get(4)) &&
+                matrix.get(4).equals(matrix.get(8)))
+            return matrix.get(0) == PIECE_OWNER ? OWNER : OPPONENT;
+
+        if (matrix.get(2) != PIECE_NEUTRAL && matrix.get(2).equals(matrix.get(4)) &&
+                matrix.get(4).equals(matrix.get(6)))
+            return matrix.get(2) == PIECE_OWNER ? OWNER : OPPONENT;
+
+        return "";
     }
 
     synchronized public TicTacToeGame updateData(Map<String, Object> newData) {
@@ -94,6 +144,7 @@ public class TicTacToeGame implements ITicTacToeGame {
         this.opponentID = String.valueOf(newData.get(OPPONENT_ID_FIELD));
         this.agoraChannel = String.valueOf(newData.get(AGORA_CHANNEL_FIELD));
         this.agoraToken = String.valueOf(newData.get(AGORA_TOKEN_FIELD));
+        this.winner = String.valueOf(newData.get(WINNER_FIELD));
 
         // Update fields with listeners
         int oldAcceptedStatus = this.accepted;
@@ -159,6 +210,7 @@ public class TicTacToeGame implements ITicTacToeGame {
         this.listenersAcceptedStatus = new HashSet<>();
         this.listenersSetupCompleted = new HashSet<>();
         this.listenersTurnChanged = new HashSet<>();
+        this.winner = "";
         this.matrix = new ArrayList<>(Collections.nCopies(9, (long) -1));
         return this;
     }
@@ -255,7 +307,7 @@ public class TicTacToeGame implements ITicTacToeGame {
 
     @Override
     synchronized public boolean isMyTurn() {
-        return this.isOwner && this.turn.equals(TURN_OWNER) || this.isOpponent && this.turn.equals(TURN_OPPONENT);
+        return this.isOwner && this.turn.equals(OWNER) || this.isOpponent && this.turn.equals(OPPONENT);
     }
 
     @Override
@@ -267,7 +319,7 @@ public class TicTacToeGame implements ITicTacToeGame {
     }
 
     @Override
-    public List<Long> getMatrix() {
+    synchronized public List<Long> getMatrix() {
         return this.matrix;
     }
 
@@ -279,9 +331,34 @@ public class TicTacToeGame implements ITicTacToeGame {
     }
 
     synchronized public String nextTurn() {
-        if (this.turn.equals(TURN_OWNER))
-            return TURN_OPPONENT;
+        if (this.turn.equals(OWNER))
+            return OPPONENT;
         else
-            return TURN_OWNER;
+            return OWNER;
+    }
+
+    @Override
+    synchronized public boolean isWinner() {
+        return this.winner.equals(this.getRole());
+    }
+
+    @Override
+    synchronized public boolean isLooser() {
+        return this.winner.equals(this.getOtherPlayerRole());
+    }
+
+    @Override
+    public String getRole() {
+        if (this.isOwner)
+            return OWNER;
+
+        return OPPONENT;
+    }
+
+    public String getOtherPlayerRole() {
+        if (this.isOwner)
+            return OPPONENT;
+
+        return OWNER;
     }
 }
