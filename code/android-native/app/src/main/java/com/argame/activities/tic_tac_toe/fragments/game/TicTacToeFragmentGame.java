@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -16,7 +17,6 @@ import com.argame.R;
 import com.argame.arcore.tic_tac_toe.Hologram;
 import com.argame.arcore.tic_tac_toe.Playground;
 import com.argame.model.data_structures.tic_tac_toe_game.ITicTacToeGame;
-import com.argame.model.data_structures.tic_tac_toe_game.TicTacToeGame;
 import com.argame.model.remote_structures.TicTacToeGameController;
 import com.argame.model.remote_structures.UserCurrentGame;
 import com.github.clans.fab.FloatingActionButton;
@@ -42,23 +42,33 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import io.agora.rtc.IRtcEngineEventHandler;
+import io.agora.rtc.RtcEngine;
+import io.agora.rtc.video.VideoCanvas;
+
 public class TicTacToeFragmentGame extends Fragment {
+
+    private static final String PERMISSION_CAMERA = "permissionCamera";
+    private static final String PERMISSION_MICROPHONE = "permissionMicrophone";
+
 
     private ITicTacToeGame ticTacToeGame;
     private ViroView viroView;
     private ARScene arScene;
     private FloatingActionMenu menu;
     private TextView textViewSuggestions;
-
-    // Component 3D
-    private Playground playground;
-    private Hologram hologram;
-
     private boolean showPlanes = true;
     private boolean surfacesDetected = false;
     private boolean playgroundPositioned = false;
     private boolean videocallPositioned = false;
 
+    // Permission fields
+    private boolean permissionCamera = false;
+    private boolean permissionMicrophone = false;
+
+    // Viro components
+    private Playground playground;
+    private Hologram hologram;
     private ARScene.Listener trackedPlanesListener = new ARScene.Listener() {
 
         private HashMap<String, Node> surfaces = new HashMap<>();
@@ -114,7 +124,7 @@ public class TicTacToeFragmentGame extends Fragment {
                         if (!playgroundPositioned) {
 
                             // Load graphics objects
-                            playground = new Playground(getActivity(), viroView.getViroContext());
+                            playground = new Playground(getActivity(), viroView);
                             playground.loadDefaultModel(new AsyncObject3DListener() {
                                 @Override
                                 public void onObject3DLoaded(final Object3D object, final Object3D.Type type) {
@@ -137,7 +147,16 @@ public class TicTacToeFragmentGame extends Fragment {
                             playgroundPositioned = true;
                         } else if (!videocallPositioned) {
 
-                            hologram = new Hologram(getActivity(), viroView.getViroContext());
+
+                            View v = getActivity().getLayoutInflater().inflate(R.layout.ar_videocall_layout, null);
+                            /*
+                            surfaceView = v.findViewById(R.id.surface_view_local_video);
+                            surfaceView.setZOrderMediaOverlay(true);
+                            rtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
+
+                             */
+                            hologram = new Hologram(getActivity(), viroView, v);
+
                             hologram.loadDefaultModel(new AsyncObject3DListener() {
 
                                 @Override
@@ -195,8 +214,49 @@ public class TicTacToeFragmentGame extends Fragment {
         }
     };
 
-    public static TicTacToeFragmentGame newInstance() {
-        return new TicTacToeFragmentGame();
+    // Agora components
+    private RtcEngine rtcEngine;
+    SurfaceView surfaceView;
+    private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
+
+        @Override
+        // Listen for the onJoinChannelSuccess callback.
+        // This callback occurs when the local user successfully joins the channel.
+        public void onJoinChannelSuccess(String channel, final int uid, int elapsed) {
+            Log.i("debugg","Join channel " + channel + " success, uid: " + (uid & 0xFFFFFFFFL));
+        }
+
+        @Override
+        // Listen for the onFirstRemoteVideoDecoded callback.
+        // This callback occurs when the first video frame of a remote user is received and decoded after the remote user successfully joins the channel.
+        // You can call the setupRemoteVideo method in this callback to set up the remote video view.
+        public void onFirstRemoteVideoDecoded(final int uid, int width, int height, int elapsed) {
+            rtcEngine.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
+        }
+
+        @Override
+        // Listen for the onUserOffline callback.
+        // This callback occurs when the remote user leaves the channel or drops offline.
+        public void onUserOffline(final int uid, int reason) {
+        }
+
+        @Override
+        public void onRemoteVideoStateChanged(int uid, int state, int reason, int elapsed) {
+            super.onRemoteVideoStateChanged(uid, state, reason, elapsed);
+
+            Log.d("debugg", "STATE " + state);
+        }
+    };
+
+    public static TicTacToeFragmentGame newInstance(boolean permissionCamera, boolean permissionMicrophone) {
+        TicTacToeFragmentGame fragment = new TicTacToeFragmentGame();
+
+        Bundle args = new Bundle();
+        args.putBoolean(PERMISSION_CAMERA, permissionCamera);
+        args.putBoolean(PERMISSION_MICROPHONE, permissionMicrophone);
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     private void displayScene() {
@@ -234,6 +294,9 @@ public class TicTacToeFragmentGame extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+        this.permissionCamera = this.getArguments().getBoolean(PERMISSION_CAMERA);
+        this.permissionMicrophone = this.getArguments().getBoolean(PERMISSION_MICROPHONE);
 
         this.viroView = new ViroViewARCore(this.getActivity(), new ViroViewARCore.StartupListener() {
             @Override
@@ -285,6 +348,23 @@ public class TicTacToeFragmentGame extends Fragment {
 
         this.ticTacToeGame = TicTacToeGameController.getInstance().getCurrentTicTacToeGame();
         TicTacToeGameController.getInstance().setSetupNotCompleted();
+
+        // Setup agora engine
+
+        // Initialize RTCEngine
+        try {
+            this.rtcEngine = RtcEngine.create(this.getActivity().getBaseContext(), getString(R.string.agora_app_id), this.mRtcEventHandler);
+        } catch (Exception e) {
+            Log.e("debugg", Log.getStackTraceString(e));
+        }
+
+        // Enable RTC video and audio
+        if(this.rtcEngine != null && this.permissionCamera)
+            this.rtcEngine.enableVideo();
+
+        if(this.rtcEngine != null && this.permissionMicrophone)
+            this.rtcEngine.enableAudio();
+
         return this.viroView;
     }
 
@@ -368,5 +448,7 @@ public class TicTacToeFragmentGame extends Fragment {
     public void onDestroy(){
         super.onDestroy();
         this.viroView.onActivityDestroyed(this.getActivity());
+        this.rtcEngine.leaveChannel();
+        RtcEngine.destroy();
     }
 }

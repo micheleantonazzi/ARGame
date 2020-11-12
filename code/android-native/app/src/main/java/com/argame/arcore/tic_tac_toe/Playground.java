@@ -19,6 +19,7 @@ import com.viro.core.Object3D;
 import com.viro.core.Quad;
 import com.viro.core.Vector;
 import com.viro.core.ViroContext;
+import com.viro.core.ViroView;
 
 import java.io.ObjectStreamException;
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ public class Playground extends Component3D {
                         return;
 
                     if (userPiece == TicTacToeGame.PIECE_X) {
-                        PieceX pieceX = new PieceX(getContext(), getViroContext());
+                        PieceX pieceX = new PieceX(getContext(), getViroView());
                         pieceX.loadDefaultModel(new AsyncObject3DListener() {
                             @Override
                             public void onObject3DLoaded(Object3D object3D, Type type) {
@@ -85,7 +86,7 @@ public class Playground extends Component3D {
                         pieceX.setPosition(plane.getPositionRealtime());
                     }
                     else if (userPiece == TicTacToeGame.PIECE_O) {
-                        PieceO pieceO = new PieceO(getContext(), getViroContext());
+                        PieceO pieceO = new PieceO(getContext(), getViroView());
                         pieceO.loadDefaultModel(new AsyncObject3DListener() {
                             @Override
                             public void onObject3DLoaded(Object3D object3D, Type type) {
@@ -116,8 +117,8 @@ public class Playground extends Component3D {
             });
     }
 
-    public Playground(Context context, ViroContext viroContext) {
-        super(context, viroContext, Uri.parse("file:///android_asset/tictactoe/playground/playground.obj"));
+    public Playground(Context context, ViroView viroView) {
+        super(context, viroView, Uri.parse("file:///android_asset/tictactoe/playground/playground.obj"));
 
         this.setDragType(DragType.FIXED_TO_WORLD);
 
@@ -128,7 +129,7 @@ public class Playground extends Component3D {
 
     @Override
     public void loadDefaultModel(AsyncObject3DListener listener) {
-        this.loadModel(this.getViroContext(), this.getUri(), Type.OBJ, new AsyncObject3DListener() {
+        this.loadModel(this.getViroView().getViroContext(), this.getUri(), Type.OBJ, new AsyncObject3DListener() {
             @Override
             public void onObject3DLoaded(Object3D object3D, Type type) {
                 createClickablePlanes();
@@ -162,7 +163,7 @@ public class Playground extends Component3D {
 
             if (plane != null) {
                 if (piece == TicTacToeGame.PIECE_X) {
-                    PieceX pieceX = new PieceX(this.getContext(), this.getViroContext());
+                    PieceX pieceX = new PieceX(this.getContext(), this.getViroView());
                     pieceX.loadDefaultModel(new AsyncObject3DListener() {
                         @Override
                         public void onObject3DLoaded(Object3D object3D, Type type) {
@@ -181,7 +182,7 @@ public class Playground extends Component3D {
                     this.planesClickable.set(i, null);
                 }
                 else if (piece == TicTacToeGame.PIECE_O) {
-                    PieceO pieceO = new PieceO(this.getContext(), this.getViroContext());
+                    PieceO pieceO = new PieceO(this.getContext(), this.getViroView());
                     pieceO.loadDefaultModel(new AsyncObject3DListener() {
                         @Override
                         public void onObject3DLoaded(Object3D object3D, Type type) {

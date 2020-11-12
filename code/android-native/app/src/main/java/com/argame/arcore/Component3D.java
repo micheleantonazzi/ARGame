@@ -13,6 +13,7 @@ import com.viro.core.PinchState;
 import com.viro.core.RotateState;
 import com.viro.core.Vector;
 import com.viro.core.ViroContext;
+import com.viro.core.ViroView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +21,7 @@ import java.io.InputStream;
 abstract public class Component3D extends Object3D {
 
     private Context context;
-    private ViroContext viroContext;
+    private ViroView viroView;
     Uri uri;
     private float rotateStart;
     private float scaleStart;
@@ -28,9 +29,9 @@ abstract public class Component3D extends Object3D {
 
     private double defaultRotationX = 0;
 
-    public Component3D(Context context, ViroContext viroContext, Uri uri) {
+    public Component3D(Context context, ViroView viroContext, Uri uri) {
         this.context = context;
-        this.viroContext = viroContext;
+        this.viroView = viroContext;
         this.uri = uri;
     }
 
@@ -89,8 +90,8 @@ abstract public class Component3D extends Object3D {
         return this.context;
     }
 
-    public ViroContext getViroContext() {
-        return this.viroContext;
+    public ViroView getViroView() {
+        return this.viroView;
     }
 
     public Uri getUri() {

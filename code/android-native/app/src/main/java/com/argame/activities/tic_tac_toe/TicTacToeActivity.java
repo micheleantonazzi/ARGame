@@ -23,15 +23,14 @@ public class TicTacToeActivity extends AppCompatActivity {
 
     private static final int PERMISSION_REQUEST = 22;
 
-    private boolean permission_camera = false;
-    private boolean permission_microphone = false;
+    private boolean permissionCamera = false;
+    private boolean permissionMicrophone = false;
     private ITicTacToeGame ticTacToeGame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d("debugg", "oncreate");
         // Set window styles for fullscreen-window size
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
@@ -55,18 +54,18 @@ public class TicTacToeActivity extends AppCompatActivity {
                         finish();
                     else if (this.ticTacToeGame.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_ACCEPTED){
                         getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.container, TicTacToeFragmentGame.newInstance())
+                                .replace(R.id.container, TicTacToeFragmentGame.newInstance(this.permissionCamera, this.permissionMicrophone))
                                 .commit();
                     }
                 });
             }
             else if (this.ticTacToeGame.isOwner() && this.ticTacToeGame.getAcceptedStatus() == TicTacToeGame.ACCEPT_STATUS_ACCEPTED)
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, TicTacToeFragmentGame.newInstance())
+                        .replace(R.id.container, TicTacToeFragmentGame.newInstance(this.permissionCamera, this.permissionMicrophone))
                         .commit();
             else
                 getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, TicTacToeFragmentGame.newInstance())
+                .replace(R.id.container, TicTacToeFragmentGame.newInstance(this.permissionCamera, this.permissionMicrophone))
                 .commit();
         }
     }
@@ -79,13 +78,13 @@ public class TicTacToeActivity extends AppCompatActivity {
                 getApplicationContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED)
             permissions[0] = Manifest.permission.CAMERA;
         else
-            this.permission_camera = true;
+            this.permissionCamera = true;
 
         if(ContextCompat.checkSelfPermission(
                 getApplicationContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED)
             permissions[1] = Manifest.permission.RECORD_AUDIO;
         else
-            this.permission_microphone = true;
+            this.permissionMicrophone = true;
 
         if(ContextCompat.checkSelfPermission(
                 getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
@@ -101,9 +100,9 @@ public class TicTacToeActivity extends AppCompatActivity {
             case PERMISSION_REQUEST:
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    this.permission_camera = true;
+                    this.permissionCamera = true;
                 else if (grantResults.length > 1 && grantResults[1] == PackageManager.PERMISSION_GRANTED)
-                    this.permission_microphone = true;
+                    this.permissionMicrophone = true;
                 return;
         }
     }
