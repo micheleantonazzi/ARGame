@@ -12,4 +12,6 @@
     <color name="colorFriendOffline">#ff0000</color>
     <color name="colorFriendOnline">#7fff00</color>
 
+    <color name="colorDark">#242424</color>
+
 </resources>

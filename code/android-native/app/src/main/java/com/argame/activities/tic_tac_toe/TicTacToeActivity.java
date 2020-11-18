@@ -5,14 +5,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.argame.R;
-import com.argame.activities.tic_tac_toe.fragments.game.TicTacToeFragmentGame;
+import com.argame.activities.tic_tac_toe.fragments.TicTacToeFragmentGame;
 import com.argame.activities.tic_tac_toe.fragments.TicTacToeFragmentWaitOpponent;
 import com.argame.model.remote_structures.TicTacToeGameController;
 import com.argame.model.data_structures.tic_tac_toe_game.ITicTacToeGame;

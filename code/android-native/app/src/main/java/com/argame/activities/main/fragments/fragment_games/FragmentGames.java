@@ -40,7 +40,7 @@ public class FragmentGames extends Fragment {
         buttonStartGame.setOnClickListener(v -> {
 
             // Build alert dialog opponent
-            alertDialogOpponentBuilder = new AlertDialog.Builder(this.getContext());
+            alertDialogOpponentBuilder = new AlertDialog.Builder(this.getActivity());
             View viewAlertDialogOpponent = getLayoutInflater().inflate(R.layout.alert_dialog_opponent_layout, null);
 
             // Setup friends recycle view

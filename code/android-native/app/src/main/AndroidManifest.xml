@@ -20,7 +20,6 @@
         android:requestLegacyExternalStorage="true">
         <meta-data android:name="com.google.ar.core" android:value="optional" />
         <activity android:name=".activities.tic_tac_toe.TicTacToeActivity"></activity>
-        <activity android:name=".activities.tic_tac_toe.TicTacToeActivityCall" />
         <activity
             android:name=".activities.settings.account.AccountSettingsActivity"
             android:label="@string/title_activity_account_settings"

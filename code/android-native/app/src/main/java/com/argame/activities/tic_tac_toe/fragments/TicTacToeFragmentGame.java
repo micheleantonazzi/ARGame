@@ -1,11 +1,10 @@
-package com.argame.activities.tic_tac_toe.fragments.game;
+package com.argame.activities.tic_tac_toe.fragments;
 
 import android.graphics.Color;
 import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -43,10 +42,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
-import io.agora.rtc.video.VideoCanvas;
 
 public class TicTacToeFragmentGame extends Fragment {
 
@@ -307,8 +304,8 @@ public class TicTacToeFragmentGame extends Fragment {
         FloatingActionButton buttonEdit = viewGame.findViewById(R.id.button_edit);
         buttonEdit.setOnClickListener(new View.OnClickListener() {
             private boolean edit = false;
-            private int colorAccent = getActivity().getTheme().obtainStyledAttributes(new int[] {R.attr.colorAccent}).getColor(0, Color.TRANSPARENT);
-            private int colorPrimary = getActivity().getTheme().obtainStyledAttributes(new int[] {R.attr.colorPrimary}).getColor(0, Color.TRANSPARENT);
+            private int colorButtonDisabled = getActivity().getTheme().obtainStyledAttributes(new int[] {R.attr.colorButtonDisabled}).getColor(0, Color.TRANSPARENT);
+            private int colorButtonEnabled = getActivity().getTheme().obtainStyledAttributes(new int[] {R.attr.colorPrimary}).getColor(0, Color.TRANSPARENT);
 
 
             @Override
@@ -316,13 +313,13 @@ public class TicTacToeFragmentGame extends Fragment {
                 this.edit = !this.edit;
 
                 if(this.edit) {
-                    buttonEdit.setColorNormal(this.colorAccent);
-                    buttonEdit.setColorPressed(this.colorAccent);
+                    buttonEdit.setColorNormal(this.colorButtonDisabled);
+                    buttonEdit.setColorPressed(this.colorButtonDisabled);
                     buttonEdit.setLabelText(getResources().getString(R.string.menu_item_edit_scene_return_to_game));
                 }
                 else {
-                    buttonEdit.setColorNormal(this.colorPrimary);
-                    buttonEdit.setColorPressed(this.colorPrimary);
+                    buttonEdit.setColorNormal(this.colorButtonEnabled);
+                    buttonEdit.setColorPressed(this.colorButtonEnabled);
                     buttonEdit.setLabelText(getResources().getString(R.string.menu_item_edit_scene));
                 }
 
@@ -337,24 +334,24 @@ public class TicTacToeFragmentGame extends Fragment {
         FloatingActionButton buttonMicrophone = viewGame.findViewById(R.id.button_enable_microphone);
         buttonMicrophone.setOnClickListener(new View.OnClickListener() {
             private boolean microphoneEnabled = true;
-            private int colorAccent = getActivity().getTheme().obtainStyledAttributes(new int[] {R.attr.colorAccent}).getColor(0, Color.TRANSPARENT);
-            private int colorPrimary = getActivity().getTheme().obtainStyledAttributes(new int[] {R.attr.colorPrimary}).getColor(0, Color.TRANSPARENT);
+            private int colorButtonDisabled = getActivity().getTheme().obtainStyledAttributes(new int[] {R.attr.colorButtonDisabled}).getColor(0, Color.TRANSPARENT);
+            private int colorButtonEnabled = getActivity().getTheme().obtainStyledAttributes(new int[] {R.attr.colorPrimary}).getColor(0, Color.TRANSPARENT);
 
             @Override
             public void onClick(View v) {
                 this.microphoneEnabled = !this.microphoneEnabled;
 
                 if (this.microphoneEnabled) {
-                    buttonMicrophone.setColorNormal(colorPrimary);
-                    buttonMicrophone.setColorPressed(colorPrimary);
-                    buttonMicrophone.setImageResource(R.drawable.icon_mic_24);
+                    buttonMicrophone.setColorNormal(colorButtonEnabled);
+                    buttonMicrophone.setColorPressed(colorButtonEnabled);
+                    buttonMicrophone.setImageIcon(Icon.createWithResource(getActivity(), R.drawable.icon_mic_24));
                     buttonMicrophone.setLabelText(getResources().getString(R.string.menu_item_microphone_enabled));
                     rtcEngine.muteLocalAudioStream(false);
                 }
                 else {
-                    buttonMicrophone.setColorNormal(colorAccent);
-                    buttonMicrophone.setColorPressed(colorAccent);
-                    buttonMicrophone.setImageResource(R.drawable.icon_mic_off_24);
+                    buttonMicrophone.setColorNormal(colorButtonDisabled);
+                    buttonMicrophone.setColorPressed(colorButtonDisabled);
+                    buttonMicrophone.setImageIcon(Icon.createWithResource(getActivity(), R.drawable.icon_mic_off_24));
                     buttonMicrophone.setLabelText(getResources().getString(R.string.menu_item_microphone_disabled));
                     rtcEngine.muteLocalAudioStream(true);
                 }

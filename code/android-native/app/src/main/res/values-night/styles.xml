@@ -6,5 +6,6 @@
         <item name="colorBackgroundGeneral">@color/colorPrimaryDarkNight</item>
         <item name="colorBackgroundContainer">@color/colorPrimaryNight</item>
         <item name="colorTextSecondary">#d4d7d1</item>
+        <item name="colorButtonDisabled">@color/colorAccentNight</item>
     </style>
 </resources>

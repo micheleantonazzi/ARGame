@@ -3,4 +3,5 @@
     <attr name="colorBackgroundGeneral" format="reference|color" />
     <attr name="colorBackgroundContainer" format="reference|color" />
     <attr name="colorTextSecondary" format="reference|color" />
+    <attr name="colorButtonDisabled" format="reference|color" />
 </resources>

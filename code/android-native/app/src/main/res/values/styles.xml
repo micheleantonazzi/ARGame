@@ -6,7 +6,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorBackgroundGeneral">#ffcba3</item>
         <item name="colorBackgroundContainer">@color/white</item>
-        <item name="colorTextSecondary">#222222</item>
+        <item name="colorTextSecondary">@color/colorDark</item>
+        <item name="colorButtonDisabled">@color/colorAccentNight</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
