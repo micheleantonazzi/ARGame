@@ -131,8 +131,14 @@ public class TicTacToeFragmentGame extends Fragment {
                                 @Override
                                 public void onObject3DLoaded(final Object3D object, final Object3D.Type type) {
 
+                                    for (Node plane : surfaces.values())
+                                        plane.removeFromParentNode();
+
+                                    surfaces = new HashMap<>();
+
                                     // Show the playground when the model has been loaded
                                     arScene.getRootNode().addChildNode(playground);
+                                    setupEnvironmentTerminated();
                                 }
 
                                 @Override
@@ -147,7 +153,6 @@ public class TicTacToeFragmentGame extends Fragment {
                             textViewSuggestions.setText(R.string.text_view_suggestions_put_videocall_visualizer);
                             showPlanes = false;
                             playgroundPositioned = true;
-                            setupEnvironmentTerminated();
                         } else if (!videocallPositioned) {
 
                             hologram = new Hologram(getActivity(), viroView);
@@ -344,12 +349,14 @@ public class TicTacToeFragmentGame extends Fragment {
                     buttonMicrophone.setColorPressed(colorPrimary);
                     buttonMicrophone.setImageResource(R.drawable.icon_mic_24);
                     buttonMicrophone.setLabelText(getResources().getString(R.string.menu_item_microphone_enabled));
+                    rtcEngine.muteLocalAudioStream(false);
                 }
                 else {
                     buttonMicrophone.setColorNormal(colorAccent);
                     buttonMicrophone.setColorPressed(colorAccent);
                     buttonMicrophone.setImageResource(R.drawable.icon_mic_off_24);
                     buttonMicrophone.setLabelText(getResources().getString(R.string.menu_item_microphone_disabled));
+                    rtcEngine.muteLocalAudioStream(true);
                 }
             }
         });
@@ -366,8 +373,10 @@ public class TicTacToeFragmentGame extends Fragment {
             Log.e("debugg", Log.getStackTraceString(e));
         }
 
-        if(this.rtcEngine != null && this.permissionMicrophone)
+        if(this.rtcEngine != null && this.permissionMicrophone) {
             this.rtcEngine.enableAudio();
+            this.rtcEngine.setDefaultAudioRoutetoSpeakerphone(true);
+        }
 
         this.rtcEngine.joinChannel(this.ticTacToeGame.getAgoraToken(), this.ticTacToeGame.getAgoraChannel(), null, 0);
 

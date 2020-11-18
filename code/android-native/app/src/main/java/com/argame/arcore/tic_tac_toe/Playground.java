@@ -70,36 +70,28 @@ public class Playground extends Component3D {
                     if (!isMyTurn || Playground.this.isEditModeEnabled())
                         return;
 
-                    if (userPiece == TicTacToeGame.PIECE_X) {
-                        PieceX pieceX = new PieceX(getContext(), getViroView());
-                        pieceX.loadDefaultModel(new AsyncObject3DListener() {
-                            @Override
-                            public void onObject3DLoaded(Object3D object3D, Type type) {
-                                Playground.this.addChildNode(pieceX);
-                            }
+                    Component3D newPiece = null;
+                    if (userPiece == TicTacToeGame.PIECE_X)
+                        newPiece = new PieceX(getContext(), getViroView());
 
-                            @Override
-                            public void onObject3DFailed(String s) {
+                    else if (userPiece == TicTacToeGame.PIECE_O)
+                        newPiece = new PieceO(getContext(), getViroView());
 
-                            }
-                        });
-                        pieceX.setPosition(plane.getPositionRealtime());
-                    }
-                    else if (userPiece == TicTacToeGame.PIECE_O) {
-                        PieceO pieceO = new PieceO(getContext(), getViroView());
-                        pieceO.loadDefaultModel(new AsyncObject3DListener() {
-                            @Override
-                            public void onObject3DLoaded(Object3D object3D, Type type) {
-                                Playground.this.addChildNode(pieceO);
-                            }
+                    Component3D finalNewPiece = newPiece;
+                    newPiece.loadDefaultModel(new AsyncObject3DListener() {
+                        @Override
+                        public void onObject3DLoaded(Object3D object3D, Type type) {
+                            Playground.this.addChildNode(finalNewPiece);
+                        }
 
-                            @Override
-                            public void onObject3DFailed(String s) {
+                        @Override
+                        public void onObject3DFailed(String s) {
 
-                            }
-                        });
-                        pieceO.setPosition(plane.getPositionRealtime());
-                    }
+                        }
+                    });
+                    Vector position = plane.getPositionRealtime();
+                    position.z += 4.0f;
+                    newPiece.setPosition(position);
 
                     // Delete clickable plane
                     int planePosition = planesClickable.indexOf(plane);
@@ -108,6 +100,14 @@ public class Playground extends Component3D {
 
                     TicTacToeGameController.getInstance().makeMove(planePosition);
                     isMyTurn(false);
+
+                    // Animate new piece
+                    AnimationTransaction.begin();
+                    AnimationTransaction.setAnimationDuration(1500);
+                    AnimationTransaction.setAnimationDelay(500);
+                    AnimationTransaction.setTimingFunction(AnimationTimingFunction.EaseOut);
+                    newPiece.setPosition(new Vector(position.x, position.y, position.z - 3.3f));
+                    AnimationTransaction.commit();
                 }
 
                 @Override
@@ -132,8 +132,8 @@ public class Playground extends Component3D {
         this.loadModel(this.getViroView().getViroContext(), this.getUri(), Type.OBJ, new AsyncObject3DListener() {
             @Override
             public void onObject3DLoaded(Object3D object3D, Type type) {
-                createClickablePlanes();
                 listener.onObject3DLoaded(object3D, type);
+                createClickablePlanes();
             }
 
             @Override
@@ -157,51 +157,51 @@ public class Playground extends Component3D {
     }
 
     public void setMatrix(List<Long> pieces) {
+        List<Component3D> newPieces = new ArrayList<>(0);
         for(int i = 0; i < pieces.size(); i++) {
             Long piece = pieces.get(i);
             Node plane = this.planesClickable.get(i);
 
-            if (plane != null) {
-                if (piece == TicTacToeGame.PIECE_X) {
-                    PieceX pieceX = new PieceX(this.getContext(), this.getViroView());
-                    pieceX.loadDefaultModel(new AsyncObject3DListener() {
-                        @Override
-                        public void onObject3DLoaded(Object3D object3D, Type type) {
-                            Playground.this.addChildNode(pieceX);
-                        }
+            if (plane != null && piece != TicTacToeGame.PIECE_NEUTRAL) {
+                Component3D newPiece = null;
+                if (piece == TicTacToeGame.PIECE_X)
+                    newPiece = new PieceX(getContext(), getViroView());
 
-                        @Override
-                        public void onObject3DFailed(String s) {
+                else if (piece == TicTacToeGame.PIECE_O)
+                    newPiece = new PieceO(getContext(), getViroView());
 
-                        }
-                    });
-                    pieceX.setPosition(plane.getPositionRealtime());
+                Component3D finalNewPiece = newPiece;
+                newPiece.loadDefaultModel(new AsyncObject3DListener() {
+                    @Override
+                    public void onObject3DLoaded(Object3D object3D, Type type) {
+                        Playground.this.addChildNode(finalNewPiece);
+                    }
 
-                    // Remove plane
-                    plane.removeFromParentNode();
-                    this.planesClickable.set(i, null);
-                }
-                else if (piece == TicTacToeGame.PIECE_O) {
-                    PieceO pieceO = new PieceO(this.getContext(), this.getViroView());
-                    pieceO.loadDefaultModel(new AsyncObject3DListener() {
-                        @Override
-                        public void onObject3DLoaded(Object3D object3D, Type type) {
-                            Playground.this.addChildNode(pieceO);
-                        }
+                    @Override
+                    public void onObject3DFailed(String s) {
+                    }
+                });
 
-                        @Override
-                        public void onObject3DFailed(String s) {
+                Vector position = plane.getPositionRealtime();
+                position.z += 4.0f;
+                newPiece.setPosition(position);
+                newPieces.add(newPiece);
 
-                        }
-                    });
-                    pieceO.setPosition(plane.getPositionRealtime());
-
-                    // Remove plane
-                    plane.removeFromParentNode();
-                    this.planesClickable.set(i, null);
-                }
+                // Remove plane
+                plane.removeFromParentNode();
+                this.planesClickable.set(i, null);
             }
         }
+
+        AnimationTransaction.begin();
+        AnimationTransaction.setAnimationDuration(1500);
+        AnimationTransaction.setAnimationDelay(500);
+        AnimationTransaction.setTimingFunction(AnimationTimingFunction.EaseOut);
+        for (Component3D newPiece: newPieces) {
+            Vector position = newPiece.getPositionRealtime();
+            newPiece.setPosition(new Vector(position.x, position.y, position.z - 3.3f));
+        }
+        AnimationTransaction.commit();
     }
 
 
