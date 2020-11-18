@@ -3,7 +3,8 @@
         <item name="colorPrimary">@color/colorPrimaryNight</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkNight</item>
         <item name="colorAccent">@color/colorAccentNight</item>
-        <item name="colorBackgroundFragmentGames">@color/colorPrimaryDarkNight</item>
-        <item name="colorBackgroundGameContainer">@color/colorPrimaryNight</item>
+        <item name="colorBackgroundGeneral">@color/colorPrimaryDarkNight</item>
+        <item name="colorBackgroundContainer">@color/colorPrimaryNight</item>
+        <item name="colorTextSecondary">#d4d7d1</item>
     </style>
 </resources>

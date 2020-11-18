@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="colorBackgroundFragmentGames" format="reference|color" />
-    <attr name="colorBackgroundGameContainer" format="reference|color" />
+    <attr name="colorBackgroundGeneral" format="reference|color" />
+    <attr name="colorBackgroundContainer" format="reference|color" />
+    <attr name="colorTextSecondary" format="reference|color" />
 </resources>

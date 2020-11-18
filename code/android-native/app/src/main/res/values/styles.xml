@@ -4,8 +4,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorBackgroundFragmentGames">#ffcba3</item>
-        <item name="colorBackgroundGameContainer">@color/white</item>
+        <item name="colorBackgroundGeneral">#ffcba3</item>
+        <item name="colorBackgroundContainer">@color/white</item>
+        <item name="colorTextSecondary">#222222</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

@@ -59,12 +59,17 @@
         <TextView
             android:id="@+id/text_view_friend_nickname"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="?colorTextSecondary"/>
 
         <TextView
             android:id="@+id/text_view_friend_complete_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="?colorTextSecondary"
+            android:textSize="16sp" />
 
     </LinearLayout>
 
