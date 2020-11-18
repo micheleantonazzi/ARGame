@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="white">#ffffff</color>
     <color name="colorPrimary">#f4a261</color>
     <color name="colorPrimaryDark">#e76f51</color>
     <color name="colorAccent">#2a9d8f</color>
 
-    <color name="colorPrimaryNight">#457b9d</color>
-    <color name="colorPrimaryDarkNight">#1d3557</color>
+    <color name="colorPrimaryNight">#336686</color>
+    <color name="colorPrimaryDarkNight">#1b304e</color>
     <color name="colorAccentNight">#e63946</color>
 
     <color name="colorFriendOffline">#ff0000</color>
