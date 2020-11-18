@@ -25,12 +25,8 @@ public class Hologram extends Component3D {
 
     static public final Vector INITIAL_SCALE = new Vector(0.01f, 0.01f, 0.01f);
 
-    private View viewVideocall;
-
-    public Hologram(Context context, ViroView viroView, View viewVideocall) {
+    public Hologram(Context context, ViroView viroView) {
         super(context, viroView, Uri.parse("file:///android_asset/hologram/hologram_base.obj"));
-
-        this.viewVideocall = viewVideocall;
 
         this.setScale(INITIAL_SCALE);
     }
@@ -50,28 +46,6 @@ public class Hologram extends Component3D {
                 getMaterials().get(1).setDiffuseTexture(baseTexture);
 
                 listener.onObject3DLoaded(object, type);
-                /*
-                int pxWidth = 400;
-                int pxHeight = 822;
-                boolean isAccelerated = true;
-                AndroidViewTexture androidTexture = new AndroidViewTexture(getViroView(), pxWidth, pxHeight, isAccelerated);
-                androidTexture.attachView(viewVideocall);
-
-                // Set the Texture to be used on our surface in 3D.
-                final Material material = new Material();
-                material.setDiffuseTexture(androidTexture);
-
-                Quad surface = new Quad(0.5f, 1f);
-                surface.setMaterials(Arrays.asList(material));
-                Node surfaceNode = new Node();
-                surfaceNode.setGeometry(surface);
-                surfaceNode.setPosition(new Vector(0,80,0));
-                surfaceNode.setScale(new Vector(70, 70, 70));
-
-
-                addChildNode(surfaceNode);
-
-                 */
             }
 
             @Override

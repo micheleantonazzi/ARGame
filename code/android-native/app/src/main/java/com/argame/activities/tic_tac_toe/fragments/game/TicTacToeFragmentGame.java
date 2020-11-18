@@ -1,6 +1,7 @@
 package com.argame.activities.tic_tac_toe.fragments.game;
 
 import android.graphics.Color;
+import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,6 +43,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoCanvas;
@@ -60,7 +62,7 @@ public class TicTacToeFragmentGame extends Fragment {
     private boolean showPlanes = true;
     private boolean surfacesDetected = false;
     private boolean playgroundPositioned = false;
-    private boolean videocallPositioned = false;
+    private boolean videocallPositioned = true;
 
     // Permission fields
     private boolean permissionCamera = false;
@@ -145,17 +147,10 @@ public class TicTacToeFragmentGame extends Fragment {
                             textViewSuggestions.setText(R.string.text_view_suggestions_put_videocall_visualizer);
                             showPlanes = false;
                             playgroundPositioned = true;
+                            setupEnvironmentTerminated();
                         } else if (!videocallPositioned) {
 
-
-                            View v = getActivity().getLayoutInflater().inflate(R.layout.ar_videocall_layout, null);
-                            /*
-                            surfaceView = v.findViewById(R.id.surface_view_local_video);
-                            surfaceView.setZOrderMediaOverlay(true);
-                            rtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
-
-                             */
-                            hologram = new Hologram(getActivity(), viroView, v);
+                            hologram = new Hologram(getActivity(), viroView);
 
                             hologram.loadDefaultModel(new AsyncObject3DListener() {
 
@@ -216,35 +211,23 @@ public class TicTacToeFragmentGame extends Fragment {
 
     // Agora components
     private RtcEngine rtcEngine;
-    SurfaceView surfaceView;
     private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
 
-        @Override
-        // Listen for the onJoinChannelSuccess callback.
-        // This callback occurs when the local user successfully joins the channel.
-        public void onJoinChannelSuccess(String channel, final int uid, int elapsed) {
-            Log.i("debugg","Join channel " + channel + " success, uid: " + (uid & 0xFFFFFFFFL));
-        }
-
-        @Override
-        // Listen for the onFirstRemoteVideoDecoded callback.
-        // This callback occurs when the first video frame of a remote user is received and decoded after the remote user successfully joins the channel.
-        // You can call the setupRemoteVideo method in this callback to set up the remote video view.
-        public void onFirstRemoteVideoDecoded(final int uid, int width, int height, int elapsed) {
-            rtcEngine.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
-        }
-
-        @Override
         // Listen for the onUserOffline callback.
         // This callback occurs when the remote user leaves the channel or drops offline.
-        public void onUserOffline(final int uid, int reason) {
+        @Override
+        public void onUserOffline(final int uid, final int reason) {
+        }
+
+        // Listen for the onUserMuterAudio callback.
+        // This callback occurs when a remote user stops sending the audio stream.
+        @Override
+        public void onUserMuteAudio(final int uid, final boolean muted) {
         }
 
         @Override
-        public void onRemoteVideoStateChanged(int uid, int state, int reason, int elapsed) {
-            super.onRemoteVideoStateChanged(uid, state, reason, elapsed);
-
-            Log.d("debugg", "STATE " + state);
+        public void onRemoteAudioStateChanged(int uid, int state, int reason, int elapsed) {
+            super.onRemoteAudioStateChanged(uid, state, reason, elapsed);
         }
     };
 
@@ -346,6 +329,31 @@ public class TicTacToeFragmentGame extends Fragment {
             }
         });
 
+        FloatingActionButton buttonMicrophone = viewGame.findViewById(R.id.button_enable_microphone);
+        buttonMicrophone.setOnClickListener(new View.OnClickListener() {
+            private boolean microphoneEnabled = true;
+            private int colorAccent = getActivity().getTheme().obtainStyledAttributes(new int[] {R.attr.colorAccent}).getColor(0, Color.TRANSPARENT);
+            private int colorPrimary = getActivity().getTheme().obtainStyledAttributes(new int[] {R.attr.colorPrimary}).getColor(0, Color.TRANSPARENT);
+
+            @Override
+            public void onClick(View v) {
+                this.microphoneEnabled = !this.microphoneEnabled;
+
+                if (this.microphoneEnabled) {
+                    buttonMicrophone.setColorNormal(colorPrimary);
+                    buttonMicrophone.setColorPressed(colorPrimary);
+                    buttonMicrophone.setImageResource(R.drawable.icon_mic_24);
+                    buttonMicrophone.setLabelText(getResources().getString(R.string.menu_item_microphone_enabled));
+                }
+                else {
+                    buttonMicrophone.setColorNormal(colorAccent);
+                    buttonMicrophone.setColorPressed(colorAccent);
+                    buttonMicrophone.setImageResource(R.drawable.icon_mic_off_24);
+                    buttonMicrophone.setLabelText(getResources().getString(R.string.menu_item_microphone_disabled));
+                }
+            }
+        });
+
         this.ticTacToeGame = TicTacToeGameController.getInstance().getCurrentTicTacToeGame();
         TicTacToeGameController.getInstance().setSetupNotCompleted();
 
@@ -358,12 +366,10 @@ public class TicTacToeFragmentGame extends Fragment {
             Log.e("debugg", Log.getStackTraceString(e));
         }
 
-        // Enable RTC video and audio
-        if(this.rtcEngine != null && this.permissionCamera)
-            this.rtcEngine.enableVideo();
-
         if(this.rtcEngine != null && this.permissionMicrophone)
             this.rtcEngine.enableAudio();
+
+        this.rtcEngine.joinChannel(this.ticTacToeGame.getAgoraToken(), this.ticTacToeGame.getAgoraChannel(), null, 0);
 
         return this.viroView;
     }

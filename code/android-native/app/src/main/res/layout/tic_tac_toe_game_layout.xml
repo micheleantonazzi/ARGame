@@ -48,6 +48,15 @@
         app:menu_colorPressed="?android:colorPrimary">
 
         <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/button_enable_microphone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_mic_24"
+            app:fab_label="@string/menu_item_microphone_enabled"
+            app:fab_colorNormal="?android:colorPrimary"
+            app:fab_colorPressed="?android:colorPrimary" />
+
+        <com.github.clans.fab.FloatingActionButton
             android:id="@+id/button_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -64,5 +64,7 @@
         <string name="text_view_suggestion_parity">LA PARTITA È TERMINATA SENZA UN VINCITORE</string>
         <string name="menu_item_edit_scene">Modifica scena</string>
         <string name="menu_item_edit_scene_return_to_game">Ritorna al gioco</string>
+        <string name="menu_item_microphone_enabled">Microfono abilitato</string>
+        <string name="menu_item_microphone_disabled">Microfono disabilitato</string>
 
 </resources>

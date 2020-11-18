@@ -154,7 +154,7 @@ public class TicTacToeGameController {
 
             // Update agora channel name and token
             documentReference.update(TicTacToeGame.AGORA_CHANNEL_FIELD, "test");
-            documentReference.update(TicTacToeGame.AGORA_TOKEN_FIELD, "00629740b29ac4d480e9ff663b48521191bIAC9YnyGvOqi0N+CoHdetfnPyOh1QrhKXss6fEDIepQqugx+f9gAAAAAEACyhIJVry+tXwEAAQCvL61f");
+            documentReference.update(TicTacToeGame.AGORA_TOKEN_FIELD, "00629740b29ac4d480e9ff663b48521191bIAAZ7QlUqpm0gnP2Ri+2ItM8G7MfxPUN8KIOQ1CJq31fXwx+f9gAAAAAEADGU1aHVLKuXwEAAQBUsq5f");
 
             // Add match to users
             Map<String, Object> currentGame = new HashMap<>(3);

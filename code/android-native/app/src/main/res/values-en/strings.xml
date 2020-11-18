@@ -63,5 +63,7 @@
         <string name="text_view_suggestion_parity">THE MATCH END WIT NO WINNER</string>
         <string name="menu_item_edit_scene">Edit scene</string>
         <string name="menu_item_edit_scene_return_to_game">Return to game</string>
+        <string name="menu_item_microphone_enabled">Microphone enabled</string>
+        <string name="menu_item_microphone_disabled">Microphone disabled</string>
 
 </resources>
