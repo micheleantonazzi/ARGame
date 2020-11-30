@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.argame.R;
 import com.argame.activities.tic_tac_toe.fragments.TicTacToeFragmentGame;
@@ -105,5 +106,13 @@ public class TicTacToeActivity extends AppCompatActivity {
                     this.permissionMicrophone = true;
                 return;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (TicTacToeGameController.getInstance().getCurrentTicTacToeGame().isTerminated())
+            super.onBackPressed();
+        else
+            Toast.makeText(this, R.string.on_back_pressed_finish_game, Toast.LENGTH_LONG).show();
     }
 }

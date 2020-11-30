@@ -66,5 +66,6 @@
         <string name="menu_item_edit_scene_return_to_game">Ritorna al gioco</string>
         <string name="menu_item_microphone_enabled">Microfono abilitato</string>
         <string name="menu_item_microphone_disabled">Microfono disabilitato</string>
+        <string name="on_back_pressed_finish_game">Hey dai, finisci il gioco!</string>
 
 </resources>

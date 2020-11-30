@@ -19,7 +19,8 @@
         android:theme="@style/AppTheme"
         android:requestLegacyExternalStorage="true">
         <meta-data android:name="com.google.ar.core" android:value="optional" />
-        <activity android:name=".activities.tic_tac_toe.TicTacToeActivity"></activity>
+        <activity android:name=".activities.tic_tac_toe.TicTacToeActivity"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activities.settings.account.AccountSettingsActivity"
             android:label="@string/title_activity_account_settings"
